@@ -1,0 +1,32 @@
+*, :before, :after {
+	box-sizing: border-box;
+}
+
+h1, h2, h3, p, ul, button {
+	margin: 0 0 1rem;
+}
+
+h4 {
+	margin: 0 0 0.5rem;
+}
+
+body {
+	max-width: 75rem;
+	margin: 0 auto 25vh;
+	padding: 0 0.5rem;
+}
+
+ul {
+	margin: 0;
+	padding: 0;
+	list-style: none;
+}
+
+label {
+	margin: 0 0.25rem;
+}
+
+input,
+select {
+	margin: 0 0 0 0.25rem;
+}
