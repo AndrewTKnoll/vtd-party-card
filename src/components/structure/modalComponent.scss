@@ -1,0 +1,52 @@
+.modal-component {
+	display: inline-block;
+
+	&.modal-component--shown {
+
+		.modal-component__frame {
+			display: block;
+		}
+	}
+
+	.modal-component__frame {
+		display: none;
+		position: fixed;
+		top: 0;
+		left: 0;
+		height: 100vh;
+		width: 100vw;
+		padding: 2rem;
+		background: rgba(0, 0, 0, 0.25);
+		overflow-y: auto;
+	}
+
+	.modal-component__window {
+		display: flex;
+		flex-direction: column;
+		max-width: 41rem;
+		margin: 0 auto;
+		padding: 1rem 1rem 0;
+		background: #fff;
+	}
+
+	.modal-component__header {
+		position: relative;
+	}
+
+	.modal-component__title {
+		padding: 0 4rem;
+		font-size: 1.5rem;
+		font-weight: 700;
+		text-align: center;
+	}
+
+	.modal-component__close-button {
+		position: absolute;
+		top: 0;
+		right: 0;
+	}
+
+	.modal-component__content {
+		margin-bottom: 1rem;
+	}
+}

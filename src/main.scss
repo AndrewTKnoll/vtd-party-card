@@ -1,3 +1,5 @@
 @import "./base/reset";
 @import "./base/breakpoints";
 @import "./base/grid";
+
+@import "./components/**/*.scss";
