@@ -1,0 +1,156 @@
+.player-list-component {
+	align-items: stretch;
+
+	.player-list-component__player-card {
+		width: calc(100% / 2);
+		margin-bottom: $grid-gutter-width;
+
+		@include breakpoint-sm() {
+			width: calc(100% / 3);
+		}
+
+		@include breakpoint-md() {
+			width: calc(100% / 4);
+		}
+
+		@include breakpoint-lg() {
+			width: calc(100% / 6);
+		}
+	}
+}
+
+.player-component {
+	display: flex;
+	flex-wrap: wrap;
+	align-content: flex-start;
+	height: 100%;
+	border: 1px solid;
+	padding: 0.5rem 0.5rem 0;
+	background: #fff;
+
+	&.player-component--dead {
+
+		.player-component__is-guarded,
+		.player-component__ac-wrapper {
+			display: none;
+		}
+	}
+
+	&.player-component--not-present {
+
+		.player-component__title {
+			color: #ccc;
+		}
+
+		.player-component__checkbox-wrapper,
+		.player-component__ac-wrapper {
+			display: none;
+		}
+	}
+
+	.player-component__title-row {
+		display: flex;
+		justify-content: space-between;
+		align-items: center;
+		width: 100%;
+		margin-bottom: 0.5rem;
+	}
+
+	.player-component__title {
+		margin: 0;
+	}
+
+	.modal-component {
+
+		.modal-component__open-button {
+			margin: 0;
+		}
+	}
+
+	.player-component__checkbox-wrapper {
+		width: calc(200% / 3);
+		margin-bottom: 0.25rem;
+
+		label {
+			display: block;
+			margin-bottom: 0.25rem;
+		}
+	}
+
+	.player-component__ac-wrapper {
+		width: calc(100% / 3);
+		margin-bottom: 0.25rem;
+
+		h4 {
+			margin-bottom: 0;
+			text-align: center;
+		}
+
+		span {
+			display: block;
+			text-align: center;
+		}
+
+		.active {
+			background: #ccc;
+		}
+	}
+
+	.player-misc-settings {
+		width: 60%;
+		margin-left: 20%;
+		margin-bottom: 1rem;
+
+		label {
+			display: block;
+			margin-bottom: 0.25rem;
+		}
+
+		.player-misc-settings__ac-adjust {
+
+			input {
+				width: 4rem;
+			}
+		}
+	}
+
+	.player-stat-list {
+
+		.player-stat-list__header {
+			margin-bottom: 0.5rem;
+
+			.col {
+				width: 40%;
+				margin-left: 20%;
+
+				+ .col {
+					margin-left: 0;
+				}
+			}
+		}
+
+		.player-stat-list__row {
+			margin-bottom: 0.25rem;
+		}
+
+		.player-stat-list__label {
+			width: 20%;
+		}
+
+		.player-stat-list__input {
+			width: 40%;
+
+			&.player-stat-list__input--full-width {
+
+				input {
+					width: 100%;
+				}
+			}
+
+			input {
+				width: 50%;
+				margin: 0;
+			}
+		}
+	}
+}
