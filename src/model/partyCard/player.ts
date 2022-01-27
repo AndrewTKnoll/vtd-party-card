@@ -92,4 +92,8 @@ export class Player {
 		this.flags = new DefaultMap(false);
 		this.countFlags = new DefaultMap(0);
 	}
+
+	canGuard(otherPlayer: Player): boolean {
+		return (this.class === Class.paladin) && (otherPlayer !== this) && this.isActive && otherPlayer.isGuarded;
+	}
 }
