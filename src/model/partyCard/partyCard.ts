@@ -1,3 +1,5 @@
+import { ResetLevel } from "model/attributes/resetLevel";
+
 import { Player } from "model/partyCard/player";
 import { Class, allClasses } from "model/partyCard/class";
 
@@ -36,5 +38,13 @@ export class PartyCard {
 		});
 
 		this.dwarfTaunt = archive.dwarfTaunt;
+	}
+
+	reset(level: ResetLevel) {
+		this.players.forEach((player) => {
+			player.reset(level);
+		});
+
+		this.dwarfTaunt = false;
 	}
 }

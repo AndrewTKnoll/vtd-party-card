@@ -1,4 +1,6 @@
 import { DefaultMap } from "utilities/defaultMap";
+
+import { ResetLevel } from "model/attributes/resetLevel";
 import { Class } from "model/partyCard/class";
 
 export enum WeaponType {
@@ -58,5 +60,36 @@ export class Player {
 
 		this.flags = new DefaultMap(false, archive.flags.values);
 		this.countFlags = new DefaultMap(0, archive.countFlags.values);
+	}
+
+	reset(level: ResetLevel) {
+		if (level === ResetLevel.round) {
+			return;
+		}
+
+		this.acAdjust = 0;
+
+		if (level === ResetLevel.room) {
+			return;
+		}
+
+		this.isPresent = true;
+		this.isDead = false;
+		this.isGuarded = false;
+
+		this.currentWeapon = WeaponType.melee;
+
+		this.meleeAC = 0;
+		this.meleeWeapon = "";
+		this.meleeDamageTypes = new DefaultMap(0);
+
+		this.rangedAC = 0;
+		this.rangedWeapon = "";
+		this.rangedDamageTypes = new DefaultMap(0);
+
+		this.hasFreeMovement = false;
+
+		this.flags = new DefaultMap(false);
+		this.countFlags = new DefaultMap(0);
 	}
 }
