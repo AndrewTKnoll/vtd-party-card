@@ -36,4 +36,27 @@ export class Player {
 	constructor(classId: Class) {
 		this.class = classId;
 	}
+
+	restoreFromArchive(archive: any) {
+		this.isPresent = archive.isPresent;
+		this.isDead = archive.isDead;
+		this.isGuarded = archive.isGuarded;
+
+		this.currentWeapon = archive.currentWeapon;
+
+		this.meleeAC = archive.meleeAC;
+		this.meleeWeapon = archive.meleeWeapon;
+		this.meleeDamageTypes = new DefaultMap(0, archive.meleeDamageTypes.values);
+
+		this.rangedAC = archive.rangedAC;
+		this.rangedWeapon = archive.rangedWeapon;
+		this.rangedDamageTypes = new DefaultMap(0, archive.rangedDamageTypes.values);
+
+		this.acAdjust = archive.acAdjust;
+
+		this.hasFreeMovement = archive.hasFreeMovement;
+
+		this.flags = new DefaultMap(false, archive.flags.values);
+		this.countFlags = new DefaultMap(0, archive.countFlags.values);
+	}
 }

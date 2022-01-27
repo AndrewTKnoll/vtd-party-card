@@ -29,4 +29,12 @@ export class PartyCard {
 		const dwarf = this.player(Class.dwarf);
 		return (this.dwarfTaunt && dwarf.isPresent) ? dwarf : undefined;
 	}
+
+	restoreFromArchive(archive: any) {
+		this.players.forEach((player, index) => {
+			player.restoreFromArchive(archive.players[index]);
+		});
+
+		this.dwarfTaunt = archive.dwarfTaunt;
+	}
 }

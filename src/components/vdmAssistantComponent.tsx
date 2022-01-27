@@ -9,14 +9,32 @@ interface VDMAssistantComponentState {
 	partyCard: PartyCard;
 }
 
+const partyCardStorageKey = "partyCard";
+
 export class VDMAssistantComponent extends Component<VDMAssistantComponentProps, VDMAssistantComponentState> {
 
 	constructor(props: VDMAssistantComponentProps) {
 		super(props);
 
-		this.state = {
+		const initialState = {
 			partyCard: new PartyCard()
 		};
+
+		try {
+			const partyCardArchive = localStorage.getItem(partyCardStorageKey);
+			if (partyCardArchive) {
+				initialState.partyCard.restoreFromArchive(JSON.parse(partyCardArchive));
+			}
+		}
+		catch (error) {
+			initialState.partyCard = new PartyCard();
+		}
+
+		this.state = initialState;
+	}
+
+	override componentDidUpdate() {
+		localStorage.setItem(partyCardStorageKey, JSON.stringify(this.state.partyCard));
 	}
 
 	override render() {
