@@ -1,4 +1,4 @@
-export class DefaultMap<Type> {
+export class DefaultMap<KeyType extends keyof any, Type> {
 	private defaultValue: Type;
 	private values: { [key: string]: Type | undefined };
 
@@ -7,20 +7,20 @@ export class DefaultMap<Type> {
 		this.values = initialValues;
 	}
 
-	get(key: string): Type {
-		const storedValue = this.values[key];
+	get(key: KeyType): Type {
+		const storedValue = this.values[`${key}`];
 		if (storedValue === undefined) {
 			return this.defaultValue;
 		}
 		return storedValue;
 	}
 
-	set(key: string, value: Type) {
+	set(key: KeyType, value: Type) {
 		if (value === this.defaultValue) {
-			delete this.values[key];
+			delete this.values[`${key}`];
 		}
 		else {
-			this.values[key] = value;
+			this.values[`${key}`] = value;
 		}
 	}
 }
