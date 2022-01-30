@@ -1,6 +1,7 @@
 import React, { Component } from "react";
 
 import { DifficultyControlComponent } from "components/controls/difficultyControlComponent";
+import { RoomControlComponent } from "components/controls/roomControlComponent";
 
 import { PlayerListComponent } from "components/playerList/playerListComponent";
 
@@ -81,6 +82,8 @@ export class VDMAssistantComponent extends Component<VDMAssistantComponentProps,
 			</button>
 			<DifficultyControlComponent difficulty={this.state.dungeon.difficulty}
 				onChange={this.setDifficulty.bind(this)}/>
+			<RoomControlComponent dungeon={this.state.dungeon}
+				onChange={this.forceUpdate.bind(this)}/>
 		</>);
 	}
 }

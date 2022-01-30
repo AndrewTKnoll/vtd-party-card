@@ -6,7 +6,11 @@ import { Difficulty } from "model/attributes/difficulty";
 import { ResetLevel } from "model/attributes/resetLevel";
 
 export class Dungeon {
-	readonly rooms: Room[] = [];
+	readonly rooms: Room[] = [
+		new Room("Room 1", "1"),
+		new Room("Room 2", "2")
+	];
+	currentRoom = 0;
 
 	private _difficulty = Difficulty.normal;
 	get difficulty(): Difficulty {
@@ -21,6 +25,7 @@ export class Dungeon {
 	}
 
 	restoreFromArchive(archive: any) {
+		this.currentRoom = archive.currentRoom;
 		this.difficulty = archive.difficulty;
 
 		this.rooms.forEach((room, index) => {
@@ -31,7 +36,8 @@ export class Dungeon {
 	toJSON(): any {
 		return {
 			difficulty: this.difficulty,
-			rooms: this.rooms
+			rooms: this.rooms,
+			currentRoom: this.currentRoom
 		};
 	}
 
@@ -44,6 +50,7 @@ export class Dungeon {
 			return;
 		}
 
+		this.currentRoom = 0;
 		this.difficulty = Difficulty.normal;
 	}
 
