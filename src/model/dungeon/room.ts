@@ -1,3 +1,5 @@
+import { Monster } from "model/dungeon/monster";
+
 import { PartyCard } from "model/partyCard/partyCard";
 import { Player } from "model/partyCard/player";
 
@@ -10,7 +12,17 @@ export class Room {
 	readonly name: string;
 	readonly id: string;
 
-	difficulty = Difficulty.normal;
+	private _difficulty = Difficulty.normal;
+	get difficulty(): Difficulty {
+		return this._difficulty;
+	}
+	set difficulty(newValue: Difficulty) {
+		this._difficulty = newValue;
+
+		this.monsters.forEach((monster) => {
+			monster.difficulty = newValue
+		});
+	}
 
 	private initiativeValues: DefaultMap<Difficulty, number>;
 	get initiativeBonus(): number {
@@ -34,7 +46,15 @@ export class Room {
 		return {};
 	}
 
-	reset(level: ResetLevel) {}
+	get monsters(): Monster[] {
+		return [];
+	}
+
+	reset(level: ResetLevel) {
+		this.monsters.forEach((monster) => {
+			monster.reset(level);
+		})
+	}
 
 	prepareForParty(partyCard: PartyCard) {}
 
