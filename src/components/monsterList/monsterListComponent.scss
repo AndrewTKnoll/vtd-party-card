@@ -1,0 +1,11 @@
+.monster-list-component {
+
+	.monster-list-component__monster {
+		display: flex;
+		justify-content: space-between;
+
+		&--dead {
+			color: #ccc;
+		}
+	}
+}

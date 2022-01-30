@@ -3,6 +3,7 @@ import React, { Component } from "react";
 import { DifficultyControlComponent } from "components/controls/difficultyControlComponent";
 import { RoomControlComponent } from "components/controls/roomControlComponent";
 
+import { MonsterListComponent } from "components/monsterList/monsterListComponent";
 import { PlayerListComponent } from "components/playerList/playerListComponent";
 
 import { ResetLevel } from "model/attributes/resetLevel";
@@ -84,6 +85,7 @@ export class VDMAssistantComponent extends Component<VDMAssistantComponentProps,
 				onChange={this.setDifficulty.bind(this)}/>
 			<RoomControlComponent dungeon={this.state.dungeon}
 				onChange={this.forceUpdate.bind(this)}/>
+			<MonsterListComponent room={this.state.dungeon.rooms[this.state.dungeon.currentRoom]}/>
 		</>);
 	}
 }
