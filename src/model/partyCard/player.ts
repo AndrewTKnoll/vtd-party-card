@@ -22,18 +22,18 @@ export class Player {
 
 	meleeAC: number = 0;
 	meleeWeapon: string = "";
-	meleeDamageTypes: DefaultMap<number> = new DefaultMap(0);
+	meleeDamageTypes: DefaultMap<string, number> = new DefaultMap(0);
 
 	rangedAC: number = 0;
 	rangedWeapon: string = "";
-	rangedDamageTypes: DefaultMap<number> = new DefaultMap(0);
+	rangedDamageTypes: DefaultMap<string, number> = new DefaultMap(0);
 
 	acAdjust: number = 0;
 
 	hasFreeMovement: boolean = false;
 
-	flags: DefaultMap<boolean> = new DefaultMap(false);
-	countFlags: DefaultMap<number> = new DefaultMap(0);
+	flags: DefaultMap<string, boolean> = new DefaultMap(false);
+	countFlags: DefaultMap<string, number> = new DefaultMap(0);
 
 	constructor(classId: Class) {
 		this.class = classId;

@@ -1,16 +1,25 @@
 import React, { Component } from "react";
 
+import { DifficultyControlComponent } from "components/controls/difficultyControlComponent";
+import { RoomControlComponent } from "components/controls/roomControlComponent";
+
+import { MonsterListComponent } from "components/monsterList/monsterListComponent";
 import { PlayerListComponent } from "components/playerList/playerListComponent";
 
 import { ResetLevel } from "model/attributes/resetLevel";
 import { PartyCard } from "model/partyCard/partyCard";
+import { Dungeon } from "model/dungeon/dungeon";
+
+import { Difficulty } from "model/attributes/difficulty";
+
+const partyCardStorageKey = "partyCard";
+const dungeonStorageKey = "dungeon";
 
 interface VDMAssistantComponentProps {}
 interface VDMAssistantComponentState {
 	partyCard: PartyCard;
+	dungeon: Dungeon;
 }
-
-const partyCardStorageKey = "partyCard";
 
 export class VDMAssistantComponent extends Component<VDMAssistantComponentProps, VDMAssistantComponentState> {
 
@@ -18,7 +27,8 @@ export class VDMAssistantComponent extends Component<VDMAssistantComponentProps,
 		super(props);
 
 		const initialState = {
-			partyCard: new PartyCard()
+			partyCard: new PartyCard(),
+			dungeon: new Dungeon()
 		};
 
 		try {
@@ -31,18 +41,35 @@ export class VDMAssistantComponent extends Component<VDMAssistantComponentProps,
 			initialState.partyCard = new PartyCard();
 		}
 
+		try {
+			const dungeonArchive = localStorage.getItem(dungeonStorageKey);
+			if (dungeonArchive) {
+				initialState.dungeon.restoreFromArchive(JSON.parse(dungeonArchive));
+			}
+		}
+		catch (error) {
+			initialState.dungeon = new Dungeon();
+		}
+
 		this.state = initialState;
+	}
+
+	private setDifficulty(newDifficulty: Difficulty) {
+		this.state.dungeon.difficulty = newDifficulty;
+		this.forceUpdate();
 	}
 
 	private fullReset() {
 		if (confirm("Confirm Reset")) {
 			this.state.partyCard.reset(ResetLevel.full);
+			this.state.dungeon.reset(ResetLevel.full);
 			this.forceUpdate();
 		}
 	}
 
 	override componentDidUpdate() {
 		localStorage.setItem(partyCardStorageKey, JSON.stringify(this.state.partyCard));
+		localStorage.setItem(dungeonStorageKey, JSON.stringify(this.state.dungeon));
 	}
 
 	override render() {
@@ -54,6 +81,11 @@ export class VDMAssistantComponent extends Component<VDMAssistantComponentProps,
 
 				Full Reset
 			</button>
+			<DifficultyControlComponent difficulty={this.state.dungeon.difficulty}
+				onChange={this.setDifficulty.bind(this)}/>
+			<RoomControlComponent dungeon={this.state.dungeon}
+				onChange={this.forceUpdate.bind(this)}/>
+			<MonsterListComponent room={this.state.dungeon.rooms[this.state.dungeon.currentRoom]}/>
 		</>);
 	}
 }
