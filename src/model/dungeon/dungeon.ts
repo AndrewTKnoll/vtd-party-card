@@ -10,7 +10,13 @@ export class Dungeon {
 		new Room("Room 1", "1"),
 		new Room("Room 2", "2")
 	];
-	currentRoom = 0;
+	private currentRoomIndex = 0;
+	get currentRoom(): Room {
+		return this.rooms[this.currentRoomIndex];
+	}
+	set currentRoom(newRoom: Room) {
+		this.currentRoomIndex = this.rooms.indexOf(newRoom);
+	}
 
 	private _difficulty = Difficulty.normal;
 	get difficulty(): Difficulty {
@@ -25,7 +31,7 @@ export class Dungeon {
 	}
 
 	restoreFromArchive(archive: any) {
-		this.currentRoom = archive.currentRoom;
+		this.currentRoomIndex = archive.currentRoom;
 		this.difficulty = archive.difficulty;
 
 		this.rooms.forEach((room, index) => {
@@ -37,7 +43,7 @@ export class Dungeon {
 		return {
 			difficulty: this.difficulty,
 			rooms: this.rooms,
-			currentRoom: this.currentRoom
+			currentRoom: this.currentRoomIndex
 		};
 	}
 
@@ -50,7 +56,7 @@ export class Dungeon {
 			return;
 		}
 
-		this.currentRoom = 0;
+		this.currentRoomIndex = 0;
 		this.difficulty = Difficulty.normal;
 	}
 

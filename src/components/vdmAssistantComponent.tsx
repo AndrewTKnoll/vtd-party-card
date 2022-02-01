@@ -1,7 +1,6 @@
 import React, { Component } from "react";
 
-import { DifficultyControlComponent } from "components/controls/difficultyControlComponent";
-import { RoomControlComponent } from "components/controls/roomControlComponent";
+import { ItemListSelectComponent } from "components/controls/itemListSelectComponent";
 
 import { MonsterListComponent } from "components/monsterList/monsterListComponent";
 import { PlayerListComponent } from "components/playerList/playerListComponent";
@@ -9,8 +8,9 @@ import { PlayerListComponent } from "components/playerList/playerListComponent";
 import { ResetLevel } from "model/attributes/resetLevel";
 import { PartyCard } from "model/partyCard/partyCard";
 import { Dungeon } from "model/dungeon/dungeon";
+import { Room } from "model/dungeon/room";
 
-import { Difficulty } from "model/attributes/difficulty";
+import { Difficulty, allDifficulties, nameForDifficulty } from "model/attributes/difficulty";
 
 const partyCardStorageKey = "partyCard";
 const dungeonStorageKey = "dungeon";
@@ -59,6 +59,11 @@ export class VDMAssistantComponent extends Component<VDMAssistantComponentProps,
 		this.forceUpdate();
 	}
 
+	private setCurrentRoom(newRoom: Room) {
+		this.state.dungeon.currentRoom = newRoom;
+		this.forceUpdate();
+	}
+
 	private fullReset() {
 		if (confirm("Confirm Reset")) {
 			this.state.partyCard.reset(ResetLevel.full);
@@ -81,11 +86,17 @@ export class VDMAssistantComponent extends Component<VDMAssistantComponentProps,
 
 				Full Reset
 			</button>
-			<DifficultyControlComponent difficulty={this.state.dungeon.difficulty}
+			<ItemListSelectComponent isOptional={false}
+				items={allDifficulties}
+				labelForItem={nameForDifficulty}
+				selectedItem={this.state.dungeon.difficulty}
 				onChange={this.setDifficulty.bind(this)}/>
-			<RoomControlComponent dungeon={this.state.dungeon}
-				onChange={this.forceUpdate.bind(this)}/>
-			<MonsterListComponent room={this.state.dungeon.rooms[this.state.dungeon.currentRoom]}/>
+			<ItemListSelectComponent isOptional={false}
+				items={this.state.dungeon.rooms}
+				labelForItem={(room) => { return room.name; }}
+				selectedItem={this.state.dungeon.currentRoom}
+				onChange={this.setCurrentRoom.bind(this)}/>
+			<MonsterListComponent room={this.state.dungeon.currentRoom}/>
 		</>);
 	}
 }
