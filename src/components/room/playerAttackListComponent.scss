@@ -1,0 +1,34 @@
+.player-attack-list {
+
+	.player-attack-list__complete {
+		width: 8%;
+
+		button {
+			margin: 0;
+		}
+	}
+
+	.player-attack-list__title {
+		width: 10%;
+	}
+
+	.player-attack-list__type {
+		width: 20%;
+	}
+
+	.player-attack-list__target {
+		width: 26%;
+
+		input {
+			width: 4rem;
+		}
+	}
+
+	.player-attack-list__aoe {
+		width: 10%;
+
+		input {
+			width: 4rem;
+		}
+	}
+}
