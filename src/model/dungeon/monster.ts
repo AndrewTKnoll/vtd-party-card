@@ -1,8 +1,11 @@
+import { DamageType } from "model/attributes/damageType";
 import { Difficulty } from "model/attributes/difficulty";
 import { ResetLevel } from "model/attributes/resetLevel";
 
 import { Class } from "model/partyCard/class";
 import { Player } from "model/partyCard/player";
+import { PlayerAttackType } from "model/playerAttack/playerAttackType";
+import { PlayerAttackCritMultiplier } from "model/playerAttack/playerAttackCritMultiplier";
 
 import { DefaultMap } from "utilities/defaultMap";
 
@@ -64,6 +67,12 @@ export class Monster {
 
 	get statusNote(): string {
 		return "";
+	}
+
+	takeDamage(amount: number, multiplier: PlayerAttackCritMultiplier, player: Player, attackType: PlayerAttackType, damageType: DamageType | undefined, aoe: boolean) {
+		this.currentDamage += amount;
+		this.roundDamageFromPlayers.set(player.class, this.roundDamageFromPlayers.get(player.class) + amount);
+		this.totalDamageFromPlayers.set(player.class, this.totalDamageFromPlayers.get(player.class) + amount);
 	}
 
 	damageFromPlayer(player: Player, roundOnly: boolean): number {

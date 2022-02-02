@@ -1,9 +1,10 @@
-import React, { Component } from "react";
+import React, { Component, RefObject } from "react";
 
 import { ItemListSelectComponent } from "components/controls/itemListSelectComponent";
 
 import { MonsterListComponent } from "components/monsterList/monsterListComponent";
 import { PlayerListComponent } from "components/playerList/playerListComponent";
+import { PlayerAttackListComponent } from "components/room/playerAttackListComponent";
 
 import { ResetLevel } from "model/attributes/resetLevel";
 import { PartyCard } from "model/partyCard/partyCard";
@@ -22,9 +23,12 @@ interface VDMAssistantComponentState {
 }
 
 export class VDMAssistantComponent extends Component<VDMAssistantComponentProps, VDMAssistantComponentState> {
+	private playerAttackListRef: RefObject<PlayerAttackListComponent>;
 
 	constructor(props: VDMAssistantComponentProps) {
 		super(props);
+
+		this.playerAttackListRef = React.createRef();
 
 		const initialState = {
 			partyCard: new PartyCard(),
@@ -61,6 +65,8 @@ export class VDMAssistantComponent extends Component<VDMAssistantComponentProps,
 
 	private setCurrentRoom(newRoom: Room) {
 		this.state.dungeon.currentRoom = newRoom;
+
+		this.playerAttackListRef.current?.clearAttacks();
 		this.forceUpdate();
 	}
 
@@ -68,6 +74,8 @@ export class VDMAssistantComponent extends Component<VDMAssistantComponentProps,
 		if (confirm("Confirm Reset")) {
 			this.state.partyCard.reset(ResetLevel.full);
 			this.state.dungeon.reset(ResetLevel.full);
+
+			this.playerAttackListRef.current?.clearAttacks();
 			this.forceUpdate();
 		}
 	}
@@ -97,6 +105,10 @@ export class VDMAssistantComponent extends Component<VDMAssistantComponentProps,
 				selectedItem={this.state.dungeon.currentRoom}
 				onChange={this.setCurrentRoom.bind(this)}/>
 			<MonsterListComponent room={this.state.dungeon.currentRoom}/>
+			<PlayerAttackListComponent ref={this.playerAttackListRef}
+				partyCard={this.state.partyCard}
+				currentRoom={this.state.dungeon.currentRoom}
+				attackCompleted={this.forceUpdate.bind(this)}/>
 		</>);
 	}
 }
