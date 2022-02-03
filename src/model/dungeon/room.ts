@@ -6,6 +6,8 @@ import { Player } from "model/partyCard/player";
 import { Difficulty } from "model/attributes/difficulty";
 import { ResetLevel } from "model/attributes/resetLevel";
 
+import { RoomAction } from "model/roomAction/roomAction";
+
 import { DefaultMap } from "utilities/defaultMap";
 
 export class Room {
@@ -44,6 +46,10 @@ export class Room {
 
 	toJSON(): any {
 		return {};
+	}
+
+	get actions(): RoomAction[] {
+		return [];
 	}
 
 	get monsters(): Monster[] {
