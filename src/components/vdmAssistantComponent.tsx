@@ -5,6 +5,7 @@ import { ItemListSelectComponent } from "components/controls/itemListSelectCompo
 import { MonsterListComponent } from "components/monsterList/monsterListComponent";
 import { PlayerListComponent } from "components/playerList/playerListComponent";
 import { PlayerAttackListComponent } from "components/room/playerAttackListComponent";
+import { RoomActionComponent } from "components/room/roomActionComponent";
 
 import { ResetLevel } from "model/attributes/resetLevel";
 import { PartyCard } from "model/partyCard/partyCard";
@@ -24,11 +25,13 @@ interface VDMAssistantComponentState {
 
 export class VDMAssistantComponent extends Component<VDMAssistantComponentProps, VDMAssistantComponentState> {
 	private playerAttackListRef: RefObject<PlayerAttackListComponent>;
+	private roomActionRef: RefObject<RoomActionComponent>;
 
 	constructor(props: VDMAssistantComponentProps) {
 		super(props);
 
 		this.playerAttackListRef = React.createRef();
+		this.roomActionRef = React.createRef();
 
 		const initialState = {
 			partyCard: new PartyCard(),
@@ -67,6 +70,7 @@ export class VDMAssistantComponent extends Component<VDMAssistantComponentProps,
 		this.state.dungeon.currentRoom = newRoom;
 
 		this.playerAttackListRef.current?.clearAttacks();
+		this.roomActionRef.current?.clearResults();
 		this.forceUpdate();
 	}
 
@@ -76,6 +80,7 @@ export class VDMAssistantComponent extends Component<VDMAssistantComponentProps,
 			this.state.dungeon.reset(ResetLevel.full);
 
 			this.playerAttackListRef.current?.clearAttacks();
+			this.roomActionRef.current?.clearResults();
 			this.forceUpdate();
 		}
 	}
@@ -109,6 +114,10 @@ export class VDMAssistantComponent extends Component<VDMAssistantComponentProps,
 				partyCard={this.state.partyCard}
 				currentRoom={this.state.dungeon.currentRoom}
 				attackCompleted={this.forceUpdate.bind(this)}/>
+			<RoomActionComponent ref={this.roomActionRef}
+				partyCard={this.state.partyCard}
+				currentRoom={this.state.dungeon.currentRoom}
+				actionCompleted={this.forceUpdate.bind(this)}/>
 		</>);
 	}
 }
