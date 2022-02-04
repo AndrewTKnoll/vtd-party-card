@@ -61,7 +61,7 @@ export class RoomActionComponent extends Component<RoomActionComponentProps, Roo
 		if (attack.type === MonsterAttackType.weapon) {
 			const guard = (attack.paladin ? "(guard) " : "");
 			const result = (attack.isHit ? `Hit: ${attack.damageAmount} ${attack.damageType}` : "Miss");
-			resultText = `${guard}${result}${attack.note ? ` ${attack.note}` : ""}`;
+			resultText = `${guard}${result}${attack.note ? ` (${attack.note})` : ""}`;
 		}
 		else {
 			if (attack.result === MonsterSaveAttackResult.success) {
