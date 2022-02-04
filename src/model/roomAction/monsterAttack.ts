@@ -80,7 +80,7 @@ export class MonsterWeaponAttack {
 		this.damageAmount = damageAmount;
 		this.damageType = damageType;
 
-		this.note = (note ? ` ${note}` : "");
+		this.note = note || "";
 
 		this.completionHandler = completionHandler;
 	}
@@ -93,6 +93,15 @@ export class MonsterWeaponAttack {
 export enum MonsterSaveAttackResult {
 	success = "success",
 	failure = "failure"
+}
+
+export const allMonsterSaveAttackResults : MonsterSaveAttackResult[] = [
+	MonsterSaveAttackResult.success,
+	MonsterSaveAttackResult.failure
+];
+
+export function nameForMonsterSaveAttackResult(result: MonsterSaveAttackResult) {
+	return result.charAt(0).toUpperCase() + result.slice(1);
 }
 
 export class MonsterSaveAttack {
