@@ -40,6 +40,9 @@ const baseConfig = {
 				"sass-loader",
 				"glob-import-loader"
 			]
+		},{
+			test: /\.png$/,
+			type: "asset/inline"
 		}]
 	},
 	plugins: [
