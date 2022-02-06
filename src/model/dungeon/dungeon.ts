@@ -47,9 +47,9 @@ export class Dungeon {
 		};
 	}
 
-	reset(level: ResetLevel) {
+	reset(level: ResetLevel, party: PartyCard) {
 		this.rooms.forEach((room) => {
-			room.reset(level);
+			room.reset(level, party);
 		});
 
 		if (level < ResetLevel.full) {

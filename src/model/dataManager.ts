@@ -1,3 +1,4 @@
+import { ResetLevel } from "model/attributes/resetLevel";
 import { Dungeon } from "model/dungeon/dungeon";
 import { PartyCard } from "model/partyCard/partyCard";
 
@@ -33,5 +34,10 @@ export class DataManager {
 	save() {
 		localStorage.setItem(dungeonStorageKey, JSON.stringify(this.dungeon));
 		localStorage.setItem(partyCardStorageKey, JSON.stringify(this.partyCard));
+	}
+
+	reset(level: ResetLevel) {
+		this.dungeon.reset(level, this.partyCard);
+		this.partyCard.reset(level);
 	}
 }

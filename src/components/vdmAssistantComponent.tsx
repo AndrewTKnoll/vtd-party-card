@@ -45,8 +45,7 @@ export class VDMAssistantComponent extends Component<VDMAssistantComponentProps,
 
 	private fullReset() {
 		if (confirm("Confirm Reset")) {
-			this.props.data.partyCard.reset(ResetLevel.full);
-			this.props.data.dungeon.reset(ResetLevel.full);
+			this.props.data.reset(ResetLevel.full);
 
 			this.playerAttackListRef.current?.clearAttacks();
 			this.roomActionRef.current?.clearResults();

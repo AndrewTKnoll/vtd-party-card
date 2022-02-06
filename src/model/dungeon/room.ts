@@ -56,7 +56,7 @@ export class Room {
 		return [];
 	}
 
-	reset(level: ResetLevel) {
+	reset(level: ResetLevel, party: PartyCard) {
 		this.monsters.forEach((monster) => {
 			monster.reset(level);
 		})
