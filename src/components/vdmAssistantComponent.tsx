@@ -8,20 +8,16 @@ import { PlayerAttackListComponent } from "components/room/playerAttackListCompo
 import { RoomActionComponent } from "components/room/roomActionComponent";
 
 import { ResetLevel } from "model/attributes/resetLevel";
-import { PartyCard } from "model/partyCard/partyCard";
-import { Dungeon } from "model/dungeon/dungeon";
 import { Room } from "model/dungeon/room";
 
 import { Difficulty, allDifficulties, nameForDifficulty } from "model/attributes/difficulty";
 
-const partyCardStorageKey = "partyCard";
-const dungeonStorageKey = "dungeon";
+import { DataManager } from "model/dataManager";
 
-interface VDMAssistantComponentProps {}
-interface VDMAssistantComponentState {
-	partyCard: PartyCard;
-	dungeon: Dungeon;
+interface VDMAssistantComponentProps {
+	data: DataManager;
 }
+interface VDMAssistantComponentState {}
 
 export class VDMAssistantComponent extends Component<VDMAssistantComponentProps, VDMAssistantComponentState> {
 	private playerAttackListRef: RefObject<PlayerAttackListComponent>;
@@ -32,42 +28,15 @@ export class VDMAssistantComponent extends Component<VDMAssistantComponentProps,
 
 		this.playerAttackListRef = React.createRef();
 		this.roomActionRef = React.createRef();
-
-		const initialState = {
-			partyCard: new PartyCard(),
-			dungeon: new Dungeon()
-		};
-
-		try {
-			const partyCardArchive = localStorage.getItem(partyCardStorageKey);
-			if (partyCardArchive) {
-				initialState.partyCard.restoreFromArchive(JSON.parse(partyCardArchive));
-			}
-		}
-		catch (error) {
-			initialState.partyCard = new PartyCard();
-		}
-
-		try {
-			const dungeonArchive = localStorage.getItem(dungeonStorageKey);
-			if (dungeonArchive) {
-				initialState.dungeon.restoreFromArchive(JSON.parse(dungeonArchive));
-			}
-		}
-		catch (error) {
-			initialState.dungeon = new Dungeon();
-		}
-
-		this.state = initialState;
 	}
 
 	private setDifficulty(newDifficulty: Difficulty) {
-		this.state.dungeon.difficulty = newDifficulty;
+		this.props.data.dungeon.difficulty = newDifficulty;
 		this.forceUpdate();
 	}
 
 	private setCurrentRoom(newRoom: Room) {
-		this.state.dungeon.currentRoom = newRoom;
+		this.props.data.dungeon.currentRoom = newRoom;
 
 		this.playerAttackListRef.current?.clearAttacks();
 		this.roomActionRef.current?.clearResults();
@@ -76,8 +45,8 @@ export class VDMAssistantComponent extends Component<VDMAssistantComponentProps,
 
 	private fullReset() {
 		if (confirm("Confirm Reset")) {
-			this.state.partyCard.reset(ResetLevel.full);
-			this.state.dungeon.reset(ResetLevel.full);
+			this.props.data.partyCard.reset(ResetLevel.full);
+			this.props.data.dungeon.reset(ResetLevel.full);
 
 			this.playerAttackListRef.current?.clearAttacks();
 			this.roomActionRef.current?.clearResults();
@@ -86,13 +55,12 @@ export class VDMAssistantComponent extends Component<VDMAssistantComponentProps,
 	}
 
 	override componentDidUpdate() {
-		localStorage.setItem(partyCardStorageKey, JSON.stringify(this.state.partyCard));
-		localStorage.setItem(dungeonStorageKey, JSON.stringify(this.state.dungeon));
+		this.props.data.save();
 	}
 
 	override render() {
 		return (<>
-			<PlayerListComponent partyCard={this.state.partyCard}
+			<PlayerListComponent partyCard={this.props.data.partyCard}
 				onPlayerChange={this.forceUpdate.bind(this)}/>
 			<button type="button"
 				onClick={this.fullReset.bind(this)}>
@@ -102,21 +70,21 @@ export class VDMAssistantComponent extends Component<VDMAssistantComponentProps,
 			<ItemListSelectComponent isOptional={false}
 				items={allDifficulties}
 				labelForItem={nameForDifficulty}
-				selectedItem={this.state.dungeon.difficulty}
+				selectedItem={this.props.data.dungeon.difficulty}
 				onChange={this.setDifficulty.bind(this)}/>
 			<ItemListSelectComponent isOptional={false}
-				items={this.state.dungeon.rooms}
+				items={this.props.data.dungeon.rooms}
 				labelForItem={(room) => { return room.name; }}
-				selectedItem={this.state.dungeon.currentRoom}
+				selectedItem={this.props.data.dungeon.currentRoom}
 				onChange={this.setCurrentRoom.bind(this)}/>
-			<MonsterListComponent room={this.state.dungeon.currentRoom}/>
+			<MonsterListComponent room={this.props.data.dungeon.currentRoom}/>
 			<PlayerAttackListComponent ref={this.playerAttackListRef}
-				partyCard={this.state.partyCard}
-				currentRoom={this.state.dungeon.currentRoom}
+				partyCard={this.props.data.partyCard}
+				currentRoom={this.props.data.dungeon.currentRoom}
 				attackCompleted={this.forceUpdate.bind(this)}/>
 			<RoomActionComponent ref={this.roomActionRef}
-				partyCard={this.state.partyCard}
-				currentRoom={this.state.dungeon.currentRoom}
+				partyCard={this.props.data.partyCard}
+				currentRoom={this.props.data.dungeon.currentRoom}
 				actionCompleted={this.forceUpdate.bind(this)}/>
 		</>);
 	}
