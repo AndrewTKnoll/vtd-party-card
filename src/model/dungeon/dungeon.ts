@@ -10,13 +10,6 @@ export class Dungeon {
 		new Room("Room 1", "1"),
 		new Room("Room 2", "2")
 	];
-	private currentRoomIndex = 0;
-	get currentRoom(): Room {
-		return this.rooms[this.currentRoomIndex];
-	}
-	set currentRoom(newRoom: Room) {
-		this.currentRoomIndex = this.rooms.indexOf(newRoom);
-	}
 
 	private _difficulty = Difficulty.normal;
 	get difficulty(): Difficulty {
@@ -31,7 +24,6 @@ export class Dungeon {
 	}
 
 	restoreFromArchive(archive: any) {
-		this.currentRoomIndex = archive.currentRoom;
 		this.difficulty = archive.difficulty;
 
 		this.rooms.forEach((room, index) => {
@@ -42,8 +34,7 @@ export class Dungeon {
 	toJSON(): any {
 		return {
 			difficulty: this.difficulty,
-			rooms: this.rooms,
-			currentRoom: this.currentRoomIndex
+			rooms: this.rooms
 		};
 	}
 
@@ -56,7 +47,6 @@ export class Dungeon {
 			return;
 		}
 
-		this.currentRoomIndex = 0;
 		this.difficulty = Difficulty.normal;
 	}
 

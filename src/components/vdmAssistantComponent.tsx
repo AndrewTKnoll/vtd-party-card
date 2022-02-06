@@ -36,7 +36,7 @@ export class VDMAssistantComponent extends Component<VDMAssistantComponentProps,
 	}
 
 	private setCurrentRoom(newRoom: Room) {
-		this.props.data.dungeon.currentRoom = newRoom;
+		this.props.data.currentRoom = newRoom;
 
 		this.playerAttackListRef.current?.clearAttacks();
 		this.roomActionRef.current?.clearResults();
@@ -74,16 +74,16 @@ export class VDMAssistantComponent extends Component<VDMAssistantComponentProps,
 			<ItemListSelectComponent isOptional={false}
 				items={this.props.data.dungeon.rooms}
 				labelForItem={(room) => { return room.name; }}
-				selectedItem={this.props.data.dungeon.currentRoom}
+				selectedItem={this.props.data.currentRoom}
 				onChange={this.setCurrentRoom.bind(this)}/>
-			<MonsterListComponent room={this.props.data.dungeon.currentRoom}/>
+			<MonsterListComponent room={this.props.data.currentRoom}/>
 			<PlayerAttackListComponent ref={this.playerAttackListRef}
 				partyCard={this.props.data.partyCard}
-				currentRoom={this.props.data.dungeon.currentRoom}
+				currentRoom={this.props.data.currentRoom}
 				attackCompleted={this.forceUpdate.bind(this)}/>
 			<RoomActionComponent ref={this.roomActionRef}
 				partyCard={this.props.data.partyCard}
-				currentRoom={this.props.data.dungeon.currentRoom}
+				currentRoom={this.props.data.currentRoom}
 				actionCompleted={this.forceUpdate.bind(this)}/>
 		</>);
 	}
