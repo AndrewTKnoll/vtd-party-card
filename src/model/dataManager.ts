@@ -1,3 +1,4 @@
+import { Difficulty } from "model/attributes/difficulty";
 import { ResetLevel } from "model/attributes/resetLevel";
 import { Dungeon } from "model/dungeon/dungeon";
 import { Room } from "model/dungeon/room";
@@ -17,6 +18,18 @@ export class DataManager {
 		this.currentRoomIndex = this.dungeon.rooms.indexOf(newRoom);
 	}
 
+	private _difficulty = Difficulty.normal;
+	get difficulty(): Difficulty {
+		return this._difficulty;
+	}
+	set difficulty(newValue: Difficulty) {
+		this._difficulty = newValue;
+
+		this.dungeon.rooms.forEach((room) => {
+			room.difficulty = newValue;
+		});
+	}
+
 	constructor() {
 		let archive = undefined;
 		try {
@@ -32,6 +45,7 @@ export class DataManager {
 			this.partyCard.restoreFromArchive(archive.partyCard);
 
 			this.currentRoomIndex = archive.currentRoom;
+			this.difficulty = archive.difficulty;
 		}
 	}
 
@@ -39,7 +53,8 @@ export class DataManager {
 		localStorage.setItem(storageKey, JSON.stringify({
 			dungeon: this.dungeon,
 			partyCard: this.partyCard,
-			currentRoom: this.currentRoomIndex
+			currentRoom: this.currentRoomIndex,
+			difficulty: this._difficulty
 		}));
 	}
 

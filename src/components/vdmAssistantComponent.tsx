@@ -31,7 +31,7 @@ export class VDMAssistantComponent extends Component<VDMAssistantComponentProps,
 	}
 
 	private setDifficulty(newDifficulty: Difficulty) {
-		this.props.data.dungeon.difficulty = newDifficulty;
+		this.props.data.difficulty = newDifficulty;
 		this.forceUpdate();
 	}
 
@@ -69,7 +69,7 @@ export class VDMAssistantComponent extends Component<VDMAssistantComponentProps,
 			<ItemListSelectComponent isOptional={false}
 				items={allDifficulties}
 				labelForItem={nameForDifficulty}
-				selectedItem={this.props.data.dungeon.difficulty}
+				selectedItem={this.props.data.difficulty}
 				onChange={this.setDifficulty.bind(this)}/>
 			<ItemListSelectComponent isOptional={false}
 				items={this.props.data.dungeon.rooms}
