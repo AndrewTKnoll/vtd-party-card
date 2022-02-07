@@ -1,0 +1,19 @@
+.room-select-component {
+	margin-bottom: 1rem;
+
+	.col {
+		display: flex;
+		flex-direction: column;
+		justify-content: center;
+		width: calc(100% / 7);
+	}
+
+	button {
+		width: 100%;
+		margin-bottom: 0;
+
+		+ button {
+			margin-top: 0.25rem;
+		}
+	}
+}

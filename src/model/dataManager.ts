@@ -10,12 +10,23 @@ export class DataManager {
 	readonly dungeon = new Dungeon();
 	readonly partyCard = new PartyCard();
 
-	private currentRoomIndex = 0;
+	private currentRoomIndex: [number, number] = [0, 0];
 	get currentRoom(): Room {
-		return this.dungeon.rooms[this.currentRoomIndex];
+		return this.dungeon.rooms[this.currentRoomIndex[0]][this.currentRoomIndex[1]];
 	}
 	set currentRoom(newRoom: Room) {
-		this.currentRoomIndex = this.dungeon.rooms.indexOf(newRoom);
+		let newPosition = 0;
+		let newOption = 0;
+
+		this.dungeon.rooms.forEach((position, positionIndex) => {
+			const optionIndex = position.indexOf(newRoom);
+			if (optionIndex >= 0) {
+				newPosition = positionIndex;
+				newOption = optionIndex;
+			}
+		});
+
+		this.currentRoomIndex = [newPosition, newOption];
 	}
 
 	private _difficulty = Difficulty.normal;
@@ -25,8 +36,10 @@ export class DataManager {
 	set difficulty(newValue: Difficulty) {
 		this._difficulty = newValue;
 
-		this.dungeon.rooms.forEach((room) => {
-			room.difficulty = newValue;
+		this.dungeon.rooms.forEach((position) => {
+			position.forEach((option) => {
+				option.difficulty = newValue;
+			});
 		});
 	}
 
@@ -66,6 +79,6 @@ export class DataManager {
 			return;
 		}
 
-		this.currentRoomIndex = 0;
+		this.currentRoomIndex = [0, 0];
 	}
 }

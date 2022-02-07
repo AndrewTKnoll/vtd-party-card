@@ -1,6 +1,7 @@
 import React, { Component, RefObject } from "react";
 
 import { ItemListSelectComponent } from "components/controls/itemListSelectComponent";
+import { RoomSelectComponent } from "components/controls/roomSelectComponent";
 
 import { MonsterListComponent } from "components/monsterList/monsterListComponent";
 import { PlayerListComponent } from "components/playerList/playerListComponent";
@@ -61,6 +62,8 @@ export class VDMAssistantComponent extends Component<VDMAssistantComponentProps,
 		return (<>
 			<PlayerListComponent partyCard={this.props.data.partyCard}
 				onPlayerChange={this.forceUpdate.bind(this)}/>
+			<RoomSelectComponent data={this.props.data}
+				onChange={this.setCurrentRoom.bind(this)}/>
 			<button type="button"
 				onClick={this.fullReset.bind(this)}>
 
@@ -71,11 +74,6 @@ export class VDMAssistantComponent extends Component<VDMAssistantComponentProps,
 				labelForItem={nameForDifficulty}
 				selectedItem={this.props.data.difficulty}
 				onChange={this.setDifficulty.bind(this)}/>
-			<ItemListSelectComponent isOptional={false}
-				items={this.props.data.dungeon.rooms}
-				labelForItem={(room) => { return room.name; }}
-				selectedItem={this.props.data.currentRoom}
-				onChange={this.setCurrentRoom.bind(this)}/>
 			<MonsterListComponent room={this.props.data.currentRoom}/>
 			<PlayerAttackListComponent ref={this.playerAttackListRef}
 				partyCard={this.props.data.partyCard}

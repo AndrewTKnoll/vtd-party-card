@@ -6,13 +6,15 @@ import { ResetLevel } from "model/attributes/resetLevel";
 
 export class Dungeon {
 	readonly rooms: Room[] = [
-		new Room("Room 1", "1"),
-		new Room("Room 2", "2")
+		[new Room("Room 1", "1")],
+		[new Room("Room 2 Combat", "2c"), new Room("Room 2 Puzzle", "2p")]
 	];
 
 	restoreFromArchive(archive: any) {
-		this.rooms.forEach((room, index) => {
-			room.restoreFromArchive(archive.rooms[index]);
+		this.rooms.forEach((position, positionIndex) => {
+			position.forEach((option, optionIndex) => {
+				option.restoreFromArchive(archive.rooms[positionIndex][optionIndex]);
+			});
 		});
 	}
 
@@ -23,14 +25,18 @@ export class Dungeon {
 	}
 
 	reset(level: ResetLevel, party: PartyCard) {
-		this.rooms.forEach((room) => {
-			room.reset(level, party);
+		this.rooms.forEach((position) => {
+			position.forEach((option) => {
+				option.reset(level, party);
+			});
 		});
 	}
 
 	prepareForParty(partyCard: PartyCard) {
-		this.rooms.forEach((room) => {
-			room.prepareForParty(partyCard);
+		this.rooms.forEach((position) => {
+			position.forEach((option) => {
+				option.prepareForParty(partyCard);
+			});
 		});
 	}
 }

@@ -1,0 +1,52 @@
+import React, { Component, ReactNode } from "react";
+
+import { DataManager } from "model/dataManager";
+
+import { Room } from "model/dungeon/room";
+
+interface RoomSelectComponentProps {
+	data: DataManager;
+	onChange: (newRoom: Room) => void;
+}
+interface RoomSelectComponentState {}
+
+export class RoomSelectComponent extends Component<RoomSelectComponentProps, RoomSelectComponentState> {
+
+	private newRoomSelected(room: Room) {
+		this.props.onChange(room);
+	}
+
+	private renderOption(option: Room, positionIndex: number, optionIndex: number) {
+		return (
+			<button key={optionIndex}
+				type="button"
+				disabled={option === this.props.data.currentRoom}
+				onClick={this.newRoomSelected.bind(this, option)}>
+
+				{`Room ${option.id}`}
+			</button>
+		);
+	}
+
+	private renderPosition(position: Room[], positionIndex: number): ReactNode {
+		return (
+			<li key={positionIndex}
+				className="col">
+
+				{position.map((option, optionIndex) => {
+					return this.renderOption(option, positionIndex, optionIndex);
+				})}
+			</li>
+		);
+	}
+
+	override render(): ReactNode {
+		return (
+			<ul className="room-select-component row">
+				{this.props.data.dungeon.rooms.map((position, positionIndex) => {
+					return this.renderPosition(position, positionIndex);
+				})}
+			</ul>
+		);
+	}
+}
