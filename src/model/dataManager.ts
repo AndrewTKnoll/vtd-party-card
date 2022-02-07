@@ -3,21 +3,7 @@ import { Dungeon } from "model/dungeon/dungeon";
 import { Room } from "model/dungeon/room";
 import { PartyCard } from "model/partyCard/partyCard";
 
-const dungeonStorageKey = "dungeon";
-const partyCardStorageKey = "partyCard";
-const currentRoomStorageKey = "currentRoom";
-
-function readFromLocalStorage(key: string): any {
-	try {
-		const archive = localStorage.getItem(key);
-		if (archive) {
-			return JSON.parse(archive);
-		}
-	}
-	catch (error) {
-		return undefined;
-	}
-}
+const storageKey = "data";
 
 export class DataManager {
 	readonly dungeon = new Dungeon();
@@ -32,26 +18,29 @@ export class DataManager {
 	}
 
 	constructor() {
-		const dungeonArchive = readFromLocalStorage(dungeonStorageKey);
-		if (dungeonArchive) {
-			this.dungeon.restoreFromArchive(dungeonArchive);
+		let archive = undefined;
+		try {
+			const archiveString = localStorage.getItem(storageKey);
+			if (archiveString) {
+				archive = JSON.parse(archiveString);
+			}
 		}
+		catch (error) {}
 
-		const partyCardArchive = readFromLocalStorage(partyCardStorageKey);
-		if (partyCardArchive) {
-			this.partyCard.restoreFromArchive(partyCardArchive);
-		}
+		if (archive) {
+			this.dungeon.restoreFromArchive(archive.dungeon);
+			this.partyCard.restoreFromArchive(archive.partyCard);
 
-		const currentRoomArchive = readFromLocalStorage(currentRoomStorageKey);
-		if (currentRoomArchive) {
-			this.currentRoomIndex = currentRoomArchive;
+			this.currentRoomIndex = archive.currentRoom;
 		}
 	}
 
 	save() {
-		localStorage.setItem(dungeonStorageKey, JSON.stringify(this.dungeon));
-		localStorage.setItem(partyCardStorageKey, JSON.stringify(this.partyCard));
-		localStorage.setItem(currentRoomStorageKey, JSON.stringify(this.currentRoomIndex));
+		localStorage.setItem(storageKey, JSON.stringify({
+			dungeon: this.dungeon,
+			partyCard: this.partyCard,
+			currentRoom: this.currentRoomIndex
+		}));
 	}
 
 	reset(level: ResetLevel) {
