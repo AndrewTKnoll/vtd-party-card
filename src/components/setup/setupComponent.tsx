@@ -31,6 +31,10 @@ export class SetupComponent extends Component<SetupComponentProps, SetupComponen
 		navigator.clipboard.writeText(this.props.data.dungeon.eventPasswords[this.props.data.difficulty]);
 	}
 
+	private copySkillTestsToClipboard() {
+		navigator.clipboard.writeText(this.props.data.skillTestLinks.join("\n"));
+	}
+
 	override render() {
 		return (
 			<CollapseComponent headerText="Setup"
@@ -59,6 +63,16 @@ export class SetupComponent extends Component<SetupComponentProps, SetupComponen
 					</span>
 					<button type="button"
 						onClick={this.copyPasswordToClipboard.bind(this)}>
+
+						Copy to Clipboard
+					</button>
+				</div>
+				<div className="col">
+					<span>
+						Skill Test Links
+					</span>
+					<button type="button"
+						onClick={this.copySkillTestsToClipboard.bind(this)}>
 
 						Copy to Clipboard
 					</button>
