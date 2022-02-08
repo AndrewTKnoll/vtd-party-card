@@ -8,8 +8,6 @@ import { PlayerAttackListComponent } from "components/room/playerAttackListCompo
 import { RoomActionComponent } from "components/room/roomActionComponent";
 import { SetupComponent } from "components/setup/setupComponent";
 
-import { Room } from "model/dungeon/room";
-
 import { DataManager } from "model/dataManager";
 
 interface VDMAssistantComponentProps {
@@ -34,14 +32,6 @@ export class VDMAssistantComponent extends Component<VDMAssistantComponentProps,
 		this.forceUpdate();
 	}
 
-	private setCurrentRoom(newRoom: Room) {
-		this.props.data.currentRoom = newRoom;
-
-		this.playerAttackListRef.current?.clearAttacks();
-		this.roomActionRef.current?.clearResults();
-		this.forceUpdate();
-	}
-
 	override componentDidUpdate() {
 		this.props.data.save();
 	}
@@ -51,9 +41,9 @@ export class VDMAssistantComponent extends Component<VDMAssistantComponentProps,
 			<SetupComponent data={this.props.data}
 				onChange={this.clearAttackLists.bind(this)}/>
 			<PlayerListComponent partyCard={this.props.data.partyCard}
-				onPlayerChange={this.forceUpdate.bind(this)}/>
+				onChange={this.forceUpdate.bind(this)}/>
 			<RoomSelectComponent data={this.props.data}
-				onChange={this.setCurrentRoom.bind(this)}/>
+				onChange={this.clearAttackLists.bind(this)}/>
 			<MonsterListComponent room={this.props.data.currentRoom}
 				onChange={this.forceUpdate.bind(this)}/>
 			<PlayerAttackListComponent ref={this.playerAttackListRef}

@@ -7,7 +7,7 @@ import { PartyCard } from "model/partyCard/partyCard";
 
 interface PlayerListComponentProps {
 	partyCard: PartyCard;
-	onPlayerChange: () => void;
+	onChange: () => void;
 }
 interface PlayerListComponentState {}
 
@@ -25,7 +25,7 @@ export class PlayerListComponent extends Component<PlayerListComponentProps, Pla
 								className="col player-list-component__player-card">
 								<PlayerComponent
 									player={player}
-									onChange={this.props.onPlayerChange}/>
+									onChange={this.props.onChange}/>
 							</li>
 						);
 					})}
