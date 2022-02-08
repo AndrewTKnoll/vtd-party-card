@@ -7,7 +7,7 @@ import { PartyCard } from "model/partyCard/partyCard";
 const storageKey = "data";
 
 export class DataManager {
-	readonly dungeon = new Dungeon();
+	readonly dungeon: Dungeon = new Dungeon();
 	readonly partyCard = new PartyCard();
 
 	private currentRoomIndex: [number, number] = [0, 0];

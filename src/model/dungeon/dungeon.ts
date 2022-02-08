@@ -5,10 +5,7 @@ import { PartyCard } from "model/partyCard/partyCard";
 import { ResetLevel } from "model/attributes/resetLevel";
 
 export class Dungeon {
-	readonly rooms: Room[] = [
-		[new Room("Room 1", "1")],
-		[new Room("Room 2 Combat", "2c"), new Room("Room 2 Puzzle", "2p")]
-	];
+	readonly rooms: Room[][] = [];
 
 	restoreFromArchive(archive: any) {
 		this.rooms.forEach((position, positionIndex) => {
