@@ -77,6 +77,18 @@ export class SetupComponent extends Component<SetupComponentProps, SetupComponen
 						Copy to Clipboard
 					</button>
 				</div>
+				<div className="col">
+					<h3>
+						Pre-Event Checklist
+					</h3>
+					<ul>
+						{this.props.data.preEventChecklistItems.map((item, index) => {
+							return (
+								<li key={index}>{item}</li>
+							);
+						})}
+					</ul>
+				</div>
 			</CollapseComponent>
 		);
 	}

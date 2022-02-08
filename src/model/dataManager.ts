@@ -52,6 +52,20 @@ export class DataManager {
 		];
 	}
 
+	get preEventChecklistItems(): string[] {
+		return [
+			"Difficulty set?",
+			"Party card filled out?",
+			"Bard instrument set?",
+			"Initiative tzar selected?",
+			"Paladin default guard?",
+			"Strict horn reminder",
+			"Adventure codeword entered?",
+			"Dice roller codeword entered?",
+			"Remember to move rooms"
+		];
+	}
+
 	constructor() {
 		let archive = undefined;
 		try {
