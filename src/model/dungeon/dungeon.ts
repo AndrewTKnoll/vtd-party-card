@@ -1,8 +1,7 @@
-import { Room } from "model/dungeon/room";
-
-import { PartyCard } from "model/partyCard/partyCard";
-
+import { Difficulty } from "model/attributes/difficulty";
 import { ResetLevel } from "model/attributes/resetLevel";
+import { Room } from "model/dungeon/room";
+import { PartyCard } from "model/partyCard/partyCard";
 
 export class Dungeon {
 	readonly rooms: Room[][] = [];
@@ -18,6 +17,15 @@ export class Dungeon {
 	toJSON(): any {
 		return {
 			rooms: this.rooms
+		};
+	}
+
+	get eventPasswords(): Record<Difficulty, string> {
+		return {
+			[Difficulty.normal]: "",
+			[Difficulty.hardcore]: "",
+			[Difficulty.nightmare]: "",
+			[Difficulty.epic]: ""
 		};
 	}
 

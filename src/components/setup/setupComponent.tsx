@@ -27,21 +27,42 @@ export class SetupComponent extends Component<SetupComponentProps, SetupComponen
 		}
 	}
 
+	private copyPasswordToClipboard() {
+		navigator.clipboard.writeText(this.props.data.dungeon.eventPasswords[this.props.data.difficulty]);
+	}
+
 	override render() {
 		return (
 			<CollapseComponent headerText="Setup"
-				headerLevel="h2">
+				headerLevel="h2"
+				contentClass="row">
 
-				<button type="button"
-					onClick={this.fullReset.bind(this)}>
+				<div className="col">
+					<button type="button"
+						onClick={this.fullReset.bind(this)}>
 
-					Full Reset
-				</button>
-				<ItemListSelectComponent isOptional={false}
-					items={allDifficulties}
-					labelForItem={nameForDifficulty}
-					selectedItem={this.props.data.difficulty}
-					onChange={this.setDifficulty.bind(this)}/>
+						Full Reset
+					</button>
+				</div>
+				<label className="col">
+					Difficulty:
+
+					<ItemListSelectComponent isOptional={false}
+						items={allDifficulties}
+						labelForItem={nameForDifficulty}
+						selectedItem={this.props.data.difficulty}
+						onChange={this.setDifficulty.bind(this)}/>
+				</label>
+				<div className="col">
+					<span>
+						{`Event Password: ${this.props.data.dungeon.eventPasswords[this.props.data.difficulty]}`}
+					</span>
+					<button type="button"
+						onClick={this.copyPasswordToClipboard.bind(this)}>
+
+						Copy to Clipboard
+					</button>
+				</div>
 			</CollapseComponent>
 		);
 	}
