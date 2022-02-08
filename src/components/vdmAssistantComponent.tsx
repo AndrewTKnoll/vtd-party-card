@@ -1,17 +1,14 @@
 import React, { Component, RefObject } from "react";
 
-import { ItemListSelectComponent } from "components/controls/itemListSelectComponent";
 import { RoomSelectComponent } from "components/controls/roomSelectComponent";
 
 import { MonsterListComponent } from "components/monsterList/monsterListComponent";
 import { PlayerListComponent } from "components/playerList/playerListComponent";
 import { PlayerAttackListComponent } from "components/room/playerAttackListComponent";
 import { RoomActionComponent } from "components/room/roomActionComponent";
+import { SetupComponent } from "components/setup/setupComponent";
 
-import { ResetLevel } from "model/attributes/resetLevel";
 import { Room } from "model/dungeon/room";
-
-import { Difficulty, allDifficulties, nameForDifficulty } from "model/attributes/difficulty";
 
 import { DataManager } from "model/dataManager";
 
@@ -31,8 +28,9 @@ export class VDMAssistantComponent extends Component<VDMAssistantComponentProps,
 		this.roomActionRef = React.createRef();
 	}
 
-	private setDifficulty(newDifficulty: Difficulty) {
-		this.props.data.difficulty = newDifficulty;
+	private clearAttackLists() {
+		this.playerAttackListRef.current?.clearAttacks();
+		this.roomActionRef.current?.clearResults();
 		this.forceUpdate();
 	}
 
@@ -44,36 +42,18 @@ export class VDMAssistantComponent extends Component<VDMAssistantComponentProps,
 		this.forceUpdate();
 	}
 
-	private fullReset() {
-		if (confirm("Confirm Reset")) {
-			this.props.data.reset(ResetLevel.full);
-
-			this.playerAttackListRef.current?.clearAttacks();
-			this.roomActionRef.current?.clearResults();
-			this.forceUpdate();
-		}
-	}
-
 	override componentDidUpdate() {
 		this.props.data.save();
 	}
 
 	override render() {
 		return (<>
+			<SetupComponent data={this.props.data}
+				onChange={this.clearAttackLists.bind(this)}/>
 			<PlayerListComponent partyCard={this.props.data.partyCard}
 				onPlayerChange={this.forceUpdate.bind(this)}/>
 			<RoomSelectComponent data={this.props.data}
 				onChange={this.setCurrentRoom.bind(this)}/>
-			<button type="button"
-				onClick={this.fullReset.bind(this)}>
-
-				Full Reset
-			</button>
-			<ItemListSelectComponent isOptional={false}
-				items={allDifficulties}
-				labelForItem={nameForDifficulty}
-				selectedItem={this.props.data.difficulty}
-				onChange={this.setDifficulty.bind(this)}/>
 			<MonsterListComponent room={this.props.data.currentRoom}
 				onChange={this.forceUpdate.bind(this)}/>
 			<PlayerAttackListComponent ref={this.playerAttackListRef}

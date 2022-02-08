@@ -79,6 +79,7 @@ export class DataManager {
 			return;
 		}
 
+		this.difficulty = Difficulty.normal;
 		this.currentRoomIndex = [0, 0];
 	}
 }
