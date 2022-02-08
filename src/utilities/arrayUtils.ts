@@ -4,7 +4,7 @@ declare global {
 	interface Array<T> {
 		separate(separator: (element: T) => boolean): [T[], T[]];
 		getItemsInRange(distance: number, centerIndex: number, includeCenter: boolean): T[];
-		selectItems(itemCount: number): T[];
+		selectItems(itemCount: number, firstElements?: T[]): T[];
 	}
 }
 
@@ -39,21 +39,16 @@ Array.prototype.getItemsInRange = function<T>(this: T[], distance: number, cente
 	});
 }
 
-Array.prototype.selectItems = function<T>(this: T[], itemCount: number, firstElement?: T | undefined): T[] {
-	let remainingElements = [...this];
-	let selectedElements: T[] = [];
-
-	if (firstElement) {
-		selectedElements.push(firstElement);
-
-		remainingElements = remainingElements.filter((element) => {
-			element !== firstElement;
-		});
-	}
+Array.prototype.selectItems = function<T>(this: T[], itemCount: number, firstElements: T[] = []): T[] {
+	let selectedElements = [...firstElements];
 
 	if (this.length === 0) {
-		return [...this];
+		return selectedElements;
 	}
+
+	let remainingElements = this.filter((element) => {
+		return !selectedElements.includes(element);
+	});
 
 	while (selectedElements.length < itemCount) {
 		if (remainingElements.length === 0) {

@@ -34,6 +34,8 @@ export class Monster {
 		return this.currentDamage < this.maxHP;
 	}
 
+	isTaunted = false
+
 	constructor(name: string, maxHP: { [key: string]: number }) {
 		this.name = name;
 
@@ -44,18 +46,21 @@ export class Monster {
 		this.roundDamageFromPlayers = new DefaultMap(0, archive.roundDamageFromPlayers.values);
 		this.totalDamageFromPlayers = new DefaultMap(0, archive.totalDamageFromPlayers.values);
 		this.currentDamage = archive.currentDamage;
+		this.isTaunted = archive.isTaunted;
 	}
 
 	toJSON(): any {
 		return {
 			roundDamageFromPlayers: this.roundDamageFromPlayers,
 			totalDamageFromPlayers: this.totalDamageFromPlayers,
-			currentDamage: this.currentDamage
+			currentDamage: this.currentDamage,
+			isTaunted: this.isTaunted
 		};
 	}
 
 	reset(level: ResetLevel) {
 		this.roundDamageFromPlayers = new DefaultMap(0);
+		this.isTaunted = false;
 
 		if (level < ResetLevel.full) {
 			return;

@@ -74,7 +74,8 @@ export class VDMAssistantComponent extends Component<VDMAssistantComponentProps,
 				labelForItem={nameForDifficulty}
 				selectedItem={this.props.data.difficulty}
 				onChange={this.setDifficulty.bind(this)}/>
-			<MonsterListComponent room={this.props.data.currentRoom}/>
+			<MonsterListComponent room={this.props.data.currentRoom}
+				onChange={this.forceUpdate.bind(this)}/>
 			<PlayerAttackListComponent ref={this.playerAttackListRef}
 				partyCard={this.props.data.partyCard}
 				currentRoom={this.props.data.currentRoom}

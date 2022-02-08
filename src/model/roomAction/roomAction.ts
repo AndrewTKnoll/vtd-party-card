@@ -1,4 +1,4 @@
-import { Class, allClasses } from "model/partyCard/class";
+import { allClasses } from "model/partyCard/class";
 import { PartyCard } from "model/partyCard/partyCard";
 import { MonsterAttack } from "model/roomAction/monsterAttack";
 import { RoomActionResult } from "model/roomAction/roomActionResult";
@@ -31,14 +31,6 @@ export class RoomAction {
 		if (party.activePlayers.length === 0) {
 			return undefined;
 		}
-
-		const dwarf = party.player(Class.dwarf);
-		const dwarfGuarded = dwarf.isGuarded;
-
-		if (party.dwarfTaunt) {
-			dwarf.isGuarded = false;
-		}
-
 		const attacks = this.attackGenerator(party);
 		attacks.sort((first, second) => {
 			const firstIndex = allClasses.indexOf(first.target.class);
@@ -46,8 +38,6 @@ export class RoomAction {
 
 			return firstIndex - secondIndex;
 		});
-
-		dwarf.isGuarded = dwarfGuarded;
 
 		return new RoomActionResult(this, party, attacks);
 	}
