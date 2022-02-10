@@ -1,11 +1,15 @@
-import React, { Component } from "react";
+import React, { Component, ReactNode, ChangeEvent } from "react";
 
 import { ItemListSelectComponent } from "components/controls/itemListSelectComponent";
 import { CollapseComponent } from "components/structure/collapseComponent";
+import { TimerComponent } from "components/widgets/timerComponent";
 
 import { Difficulty, allDifficulties, nameForDifficulty } from "model/attributes/difficulty";
 import { ResetLevel } from "model/attributes/resetLevel";
+import { roomTimeDuration } from "model/dungeon/room";
 import { DataManager } from "model/dataManager";
+
+const timezoneOffsetScale = 60 * 1000;
 
 interface SetupComponentProps {
 	data: DataManager;
@@ -17,6 +21,14 @@ export class SetupComponent extends Component<SetupComponentProps, SetupComponen
 
 	private setDifficulty(newDifficulty: Difficulty) {
 		this.props.data.difficulty = newDifficulty;
+		this.props.onChange();
+	}
+
+	private startTimeChanged(event: ChangeEvent<HTMLInputElement>) {
+		const rawDate = new Date(event.target.value);
+		const offset = this.props.data.dungeon.timezoneOffset - rawDate.getTimezoneOffset();
+
+		this.props.data.startTime = new Date(rawDate.getTime() + (offset * timezoneOffsetScale));
 		this.props.onChange();
 	}
 
@@ -35,7 +47,28 @@ export class SetupComponent extends Component<SetupComponentProps, SetupComponen
 		navigator.clipboard.writeText(this.props.data.skillTestLinks.join("\n"));
 	}
 
-	override render() {
+	override render(): ReactNode {
+		let dateString = "";
+		let room1StartTime;
+		let introVideoStartTime;
+		let recapVideoStartTime;
+
+		if (this.props.data.startTime) {
+			dateString = (new Date(
+				this.props.data.startTime.getTime() - this.props.data.dungeon.timezoneOffset * timezoneOffsetScale
+			)).toISOString().substring(0, 16);
+
+			room1StartTime = new Date(this.props.data.startTime.getTime() + roomTimeDuration * 3);
+		}
+
+		if (room1StartTime) {
+			introVideoStartTime = new Date(room1StartTime.getTime() - this.props.data.dungeon.introVideoLength);
+
+			if (this.props.data.dungeon.recapVideoLength) {
+				recapVideoStartTime = new Date(introVideoStartTime.getTime() - this.props.data.dungeon.recapVideoLength);
+			}
+		}
+
 		return (
 			<CollapseComponent headerText="Setup"
 				headerLevel="h2"
@@ -76,6 +109,32 @@ export class SetupComponent extends Component<SetupComponentProps, SetupComponen
 
 						Copy to Clipboard
 					</button>
+				</div>
+				<div className="col">
+					<h3>
+						Event Times
+					</h3>
+					<label>
+						Ticket Start Time:
+						<input type="datetime-local"
+							value={dateString}
+							onChange={this.startTimeChanged.bind(this)}/>
+					</label>
+					{recapVideoStartTime !== undefined &&
+						<TimerComponent targetDate={recapVideoStartTime}
+							prefixText="Time until recap video:"
+							afterTimeText={"after start"}/>
+					}
+					{introVideoStartTime !== undefined &&
+						<TimerComponent targetDate={introVideoStartTime}
+							prefixText="Time until intro video:"
+							afterTimeText={"after start"}/>
+					}
+					{room1StartTime !== undefined &&
+						<TimerComponent targetDate={room1StartTime}
+							prefixText="Time until room one:"
+							afterTimeText={"after start"}/>
+					}
 				</div>
 				<div className="col">
 					<h3>

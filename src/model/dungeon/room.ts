@@ -10,6 +10,8 @@ import { RoomAction } from "model/roomAction/roomAction";
 
 import { DefaultMap } from "utilities/defaultMap";
 
+export const roomTimeDuration = 12 * 60 * 1000;
+
 export class Room {
 	readonly name: string;
 	readonly id: string;

@@ -29,6 +29,16 @@ export class Dungeon {
 		};
 	}
 
+	get timezoneOffset(): number {
+		return 0;
+	}
+	get recapVideoLength(): number | undefined {
+		return undefined;
+	}
+	get introVideoLength(): number {
+		return 0;
+	}
+
 	reset(level: ResetLevel, party: PartyCard) {
 		this.rooms.forEach((position) => {
 			position.forEach((option) => {

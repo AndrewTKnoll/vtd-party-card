@@ -43,6 +43,8 @@ export class DataManager {
 		});
 	}
 
+	startTime: Date | undefined = undefined;
+
 	get skillTestLinks(): string[] {
 		return [
 			"https://truedungeon.com/files/Wizard_Skill_Test.pdf",
@@ -82,6 +84,7 @@ export class DataManager {
 
 			this.currentRoomIndex = archive.currentRoom;
 			this.difficulty = archive.difficulty;
+			this.startTime = new Date(archive.startTime);
 		}
 	}
 
@@ -90,7 +93,8 @@ export class DataManager {
 			dungeon: this.dungeon,
 			partyCard: this.partyCard,
 			currentRoom: this.currentRoomIndex,
-			difficulty: this._difficulty
+			difficulty: this._difficulty,
+			startTime: this.startTime?.getTime()
 		}));
 	}
 
@@ -103,6 +107,7 @@ export class DataManager {
 		}
 
 		this.difficulty = Difficulty.normal;
+		this.startTime = undefined;
 		this.currentRoomIndex = [0, 0];
 	}
 }
