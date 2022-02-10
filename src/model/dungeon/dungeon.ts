@@ -1,14 +1,10 @@
+import { Difficulty } from "model/attributes/difficulty";
+import { ResetLevel } from "model/attributes/resetLevel";
 import { Room } from "model/dungeon/room";
-
 import { PartyCard } from "model/partyCard/partyCard";
 
-import { ResetLevel } from "model/attributes/resetLevel";
-
 export class Dungeon {
-	readonly rooms: Room[] = [
-		[new Room("Room 1", "1")],
-		[new Room("Room 2 Combat", "2c"), new Room("Room 2 Puzzle", "2p")]
-	];
+	readonly rooms: Room[][] = [];
 
 	restoreFromArchive(archive: any) {
 		this.rooms.forEach((position, positionIndex) => {
@@ -22,6 +18,25 @@ export class Dungeon {
 		return {
 			rooms: this.rooms
 		};
+	}
+
+	get eventPasswords(): Record<Difficulty, string> {
+		return {
+			[Difficulty.normal]: "",
+			[Difficulty.hardcore]: "",
+			[Difficulty.nightmare]: "",
+			[Difficulty.epic]: ""
+		};
+	}
+
+	get timezoneOffset(): number {
+		return 0;
+	}
+	get recapVideoLength(): number | undefined {
+		return undefined;
+	}
+	get introVideoLength(): number {
+		return 0;
 	}
 
 	reset(level: ResetLevel, party: PartyCard) {

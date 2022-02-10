@@ -6,14 +6,15 @@ import { Room } from "model/dungeon/room";
 
 interface RoomSelectComponentProps {
 	data: DataManager;
-	onChange: (newRoom: Room) => void;
+	onChange: () => void;
 }
 interface RoomSelectComponentState {}
 
 export class RoomSelectComponent extends Component<RoomSelectComponentProps, RoomSelectComponentState> {
 
 	private newRoomSelected(room: Room) {
-		this.props.onChange(room);
+		this.props.data.currentRoom = room;
+		this.props.onChange();
 	}
 
 	private renderOption(option: Room, positionIndex: number, optionIndex: number) {

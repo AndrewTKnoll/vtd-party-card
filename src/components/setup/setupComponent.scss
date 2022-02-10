@@ -1,0 +1,74 @@
+.setup {
+
+	.col {
+		width: 100%;
+	}
+
+	.setup__box {
+		margin-bottom: 1rem;
+		border: 1px solid;
+		padding: 0.5rem 0.5rem 0;
+		background: #fff;
+	}
+
+	.setup__main-col {
+		@include breakpoint-sm() {
+			width: 50%;
+		}
+
+		@include breakpoint-md() {
+			width: calc(200% / 3);
+		}
+	}
+
+	.setup__settings-col {
+		@include breakpoint-md() {
+			width: 50%;
+		}
+
+		button {
+			margin: 0;
+		}
+	}
+
+	.setup__settings-row {
+		display: flex;
+		justify-content: space-between;
+		margin-bottom: 1rem;
+	}
+
+	.setup__time-col {
+		@include breakpoint-md() {
+			width: 50%;
+		}
+
+		input {
+			display: block;
+			margin: 0 0 0.5rem;
+		}
+
+		.timer {
+			margin-bottom: 0.25rem;
+		}
+	}
+
+	.setup__checklist-col {
+		@include breakpoint-sm() {
+			width: 50%;
+		}
+
+		@include breakpoint-md() {
+			width: calc(100% / 3);
+		}
+
+		ul {
+			margin-bottom: 1rem;
+			padding-left: 1rem;
+			list-style: initial;
+		}
+
+		li {
+			margin-bottom: 0.25rem;
+		}
+	}
+}
