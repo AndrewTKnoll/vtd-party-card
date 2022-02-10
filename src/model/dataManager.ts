@@ -69,22 +69,22 @@ export class DataManager {
 	}
 
 	constructor() {
-		let archive = undefined;
 		try {
 			const archiveString = localStorage.getItem(storageKey);
-			if (archiveString) {
-				archive = JSON.parse(archiveString);
+			if (!archiveString) {
+				return;
 			}
-		}
-		catch (error) {}
+			const archive = JSON.parse(archiveString);
 
-		if (archive) {
 			this.dungeon.restoreFromArchive(archive.dungeon);
 			this.partyCard.restoreFromArchive(archive.partyCard);
 
 			this.currentRoomIndex = archive.currentRoom;
 			this.difficulty = archive.difficulty;
-			this.startTime = new Date(archive.startTime);
+			this.startTime = archive.startTime ? new Date(archive.startTime) : undefined;
+		}
+		catch (error) {
+			this.reset(ResetLevel.full);
 		}
 	}
 
