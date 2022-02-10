@@ -1,0 +1,16 @@
+.timer {
+	display: flex;
+	justify-content: space-between;
+
+	.timer__prefix {
+		margin-right: 0.25rem;
+	}
+
+	.timer__interval {
+		font-family: monospace;
+	}
+
+	.timer__suffix {
+		margin-left: 0.25rem;
+	}
+}
