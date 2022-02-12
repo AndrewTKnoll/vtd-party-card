@@ -1,6 +1,7 @@
 import { SocketRequestMessage } from "model/diceRoller/socket/socketRequestMessage";
 import { SocketResponseMessage } from "model/diceRoller/socket/socketResponseMessage";
 import { SocketWrapper } from "model/diceRoller/socket/socketWrapper";
+import { RollState, RawRollState } from "model/diceRoller/rollState";
 import { RollType } from "model/diceRoller/rollType";
 
 const endpointUrl = "https://us-central1-tdroller-1ac5a.cloudfunctions.net/gm";
@@ -21,9 +22,19 @@ export class DiceRoller {
 		this.listenToSlot(true);
 	}
 
+	private rawRollState = new RawRollState();
+	private _rollState: RollState = {
+		type: "disabled"
+	};
+	get rollState(): RollState {
+		return this._rollState;
+	}
+
+	private stateCallback: () => void;
 	private errorCallback: (error: string) => void;
 
-	constructor(errorCallback: (error: string) => void) {
+	constructor(stateCallback: () => void, errorCallback: (error: string) => void) {
+		this.stateCallback = stateCallback;
 		this.errorCallback = errorCallback;
 
 		this.reconnect();
@@ -47,7 +58,20 @@ export class DiceRoller {
 		}
 	}
 
-	private socketMessage(message: SocketResponseMessage) {}
+	private socketMessage(message: SocketResponseMessage) {
+		switch (message.type) {
+			case "settings":
+				this.rawRollState.updateWith(message);
+				if (this.rawRollState.state) {
+					this._rollState = this.rawRollState.state;
+					this.stateCallback();
+				}
+				else {
+					this.errorCallback(`Inconsistent state update\n\nCurrent:\n${JSON.stringify(this.rollState)}\n\nUpdate:\n${JSON.stringify(message)}`)
+				}
+				break;
+		}
+	}
 
 	/* commands */
 
