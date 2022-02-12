@@ -1,16 +1,55 @@
+import { SocketRequestMessage } from "model/diceRoller/socket/socketRequestMessage";
+import { SocketResponseMessage } from "model/diceRoller/socket/socketResponseMessage";
+import { SocketWrapper } from "model/diceRoller/socket/socketWrapper";
 import { RollType } from "model/diceRoller/rollType";
 
 const endpointUrl = "https://us-central1-tdroller-1ac5a.cloudfunctions.net/gm";
+const socketUrl = "wss://s-usc1c-nss-337.firebaseio.com/.ws?v=5&ns=tdroller-1ac5a-default-rtdb";
+const socketSdk = "sdk.js.9-4-1";
 
 export class DiceRoller {
+	private socket!: SocketWrapper;
+
 	authToken: string | undefined = undefined;
-	slotId: string | undefined = undefined;
+	private _slotId: string | undefined = undefined;
+	get slotId(): string | undefined {
+		return this._slotId;
+	}
+	set slotId(newValue: string | undefined) {
+		this.listenToSlot(false);
+		this._slotId = newValue;
+		this.listenToSlot(true);
+	}
 
 	private errorCallback: (error: string) => void;
 
 	constructor(errorCallback: (error: string) => void) {
 		this.errorCallback = errorCallback;
+
+		this.reconnect();
 	}
+
+	/* socket management */
+
+	reconnect() {
+		this.socket?.close();
+
+		this.socket = new SocketWrapper(socketUrl, this.socketMessage.bind(this), this.errorCallback);
+		this.socket.send(SocketRequestMessage.sdk(socketSdk));
+
+		this.listenToSlot(true);
+	}
+
+	private listenToSlot(listen: boolean) {
+		if (this.slotId) {
+			this.socket.send(SocketRequestMessage.listen(listen, "settings", this.slotId));
+			this.socket.send(SocketRequestMessage.listen(listen, "rolls", this.slotId));
+		}
+	}
+
+	private socketMessage(message: SocketResponseMessage) {}
+
+	/* commands */
 
 	async logIn(password: string) {
 		if (this.authToken) {
