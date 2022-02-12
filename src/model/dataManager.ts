@@ -1,5 +1,6 @@
 import { Difficulty } from "model/attributes/difficulty";
 import { ResetLevel } from "model/attributes/resetLevel";
+import { DiceRoller } from "model/diceRoller/diceRoller";
 import { Dungeon } from "model/dungeon/dungeon";
 import { Room } from "model/dungeon/room";
 import { PartyCard } from "model/partyCard/partyCard";
@@ -9,6 +10,7 @@ const storageKey = "data";
 export class DataManager {
 	readonly dungeon: Dungeon = new Dungeon();
 	readonly partyCard = new PartyCard();
+	readonly diceRoller: DiceRoller;
 
 	private currentRoomIndex: [number, number] = [0, 0];
 	get currentRoom(): Room {
@@ -69,6 +71,10 @@ export class DataManager {
 	}
 
 	constructor() {
+		this.diceRoller = new DiceRoller((error) => {
+			alert(error);
+		});
+
 		try {
 			const archiveString = localStorage.getItem(storageKey);
 			if (!archiveString) {
@@ -82,6 +88,15 @@ export class DataManager {
 			this.currentRoomIndex = archive.currentRoom;
 			this.difficulty = archive.difficulty;
 			this.startTime = archive.startTime ? new Date(archive.startTime) : undefined;
+			this.diceRoller.slotId = archive.slotId;
+
+			const sessionArchiveString = sessionStorage.getItem(storageKey);
+			if (!sessionArchiveString) {
+				return;
+			}
+			const sessionArchive = JSON.parse(sessionArchiveString);
+
+			this.diceRoller.authToken = sessionArchive.authToken;
 		}
 		catch (error) {
 			this.reset(ResetLevel.full);
@@ -94,7 +109,12 @@ export class DataManager {
 			partyCard: this.partyCard,
 			currentRoom: this.currentRoomIndex,
 			difficulty: this._difficulty,
-			startTime: this.startTime?.getTime()
+			startTime: this.startTime?.getTime(),
+			slotId: this.diceRoller.slotId
+		}));
+
+		sessionStorage.setItem(storageKey, JSON.stringify({
+			authToken: this.diceRoller.authToken
 		}));
 	}
 
@@ -106,8 +126,9 @@ export class DataManager {
 			return;
 		}
 
+		this.currentRoomIndex = [0, 0];
 		this.difficulty = Difficulty.normal;
 		this.startTime = undefined;
-		this.currentRoomIndex = [0, 0];
+		this.diceRoller.slotId = undefined;
 	}
 }
