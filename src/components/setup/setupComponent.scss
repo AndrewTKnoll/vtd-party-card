@@ -42,7 +42,26 @@
 			width: 50%;
 		}
 
-		input {
+		.validated-text-input {
+			display: flex;
+			align-items: baseline;
+			margin-bottom: 1rem;
+
+			span {
+				margin-right: 0.5rem;
+			}
+
+			input {
+				width: 6rem;
+				margin: 0 0.5rem 0 0;
+			}
+
+			button {
+				margin: 0;
+			}
+		}
+
+		input[type="datetime-local"] {
 			display: block;
 			margin: 0 0 0.5rem;
 		}
