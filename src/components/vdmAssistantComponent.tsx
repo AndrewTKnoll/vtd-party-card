@@ -2,10 +2,8 @@ import React, { Component, RefObject } from "react";
 
 import { LoginComponent } from "components/loginComponent";
 import { RoomSelectComponent } from "components/controls/roomSelectComponent";
-import { MonsterListComponent } from "components/monsterList/monsterListComponent";
 import { PlayerListComponent } from "components/playerList/playerListComponent";
-import { PlayerAttackListComponent } from "components/room/playerAttackListComponent";
-import { RoomActionComponent } from "components/room/roomActionComponent";
+import { RoomComponent } from "components/room/roomComponent";
 import { SetupComponent } from "components/setup/setupComponent";
 
 import { DataManager } from "model/dataManager";
@@ -16,19 +14,16 @@ interface VDMAssistantComponentProps {
 interface VDMAssistantComponentState {}
 
 export class VDMAssistantComponent extends Component<VDMAssistantComponentProps, VDMAssistantComponentState> {
-	private playerAttackListRef: RefObject<PlayerAttackListComponent>;
-	private roomActionRef: RefObject<RoomActionComponent>;
+	private roomComponentRef: RefObject<RoomComponent>;
 
 	constructor(props: VDMAssistantComponentProps) {
 		super(props);
 
-		this.playerAttackListRef = React.createRef();
-		this.roomActionRef = React.createRef();
+		this.roomComponentRef = React.createRef();
 	}
 
 	private clearAttackLists() {
-		this.playerAttackListRef.current?.clearAttacks();
-		this.roomActionRef.current?.clearResults();
+		this.roomComponentRef.current?.clearAttacks();
 		this.forceUpdate();
 	}
 
@@ -51,16 +46,9 @@ export class VDMAssistantComponent extends Component<VDMAssistantComponentProps,
 				onChange={this.forceUpdate.bind(this)}/>
 			<RoomSelectComponent data={this.props.data}
 				onChange={this.clearAttackLists.bind(this)}/>
-			<MonsterListComponent room={this.props.data.currentRoom}
+			<RoomComponent ref={this.roomComponentRef}
+				data={this.props.data}
 				onChange={this.forceUpdate.bind(this)}/>
-			<PlayerAttackListComponent ref={this.playerAttackListRef}
-				partyCard={this.props.data.partyCard}
-				currentRoom={this.props.data.currentRoom}
-				attackCompleted={this.forceUpdate.bind(this)}/>
-			<RoomActionComponent ref={this.roomActionRef}
-				partyCard={this.props.data.partyCard}
-				currentRoom={this.props.data.currentRoom}
-				actionCompleted={this.forceUpdate.bind(this)}/>
 		</>);
 	}
 }
