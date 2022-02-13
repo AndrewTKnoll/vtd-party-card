@@ -33,13 +33,11 @@ export class DiceRoller {
 		return this._rollState;
 	}
 
-	private stateCallback: () => void;
-	private rollCallback: (roll: Roll) => void;
+	stateCallback?: (() => void) | undefined;
+	rollCallback?: ((roll: Roll) => void) | undefined;
 	private errorCallback: (error: string) => void;
 
-	constructor(stateCallback: () => void, rollCallback: (roll: Roll) => void, errorCallback: (error: string) => void) {
-		this.stateCallback = stateCallback;
-		this.rollCallback = rollCallback;
+	constructor(errorCallback: (error: string) => void) {
 		this.errorCallback = errorCallback;
 
 		this.reconnect();
@@ -50,7 +48,7 @@ export class DiceRoller {
 	reconnect() {
 		this.socket?.close();
 
-		this.socket = new SocketWrapper(socketUrl, this.socketMessage.bind(this), this.errorCallback);
+		this.socket = new SocketWrapper(socketUrl, this.socketMessage.bind(this), this.socketError.bind(this));
 		this.socket.send(SocketRequestMessage.sdk(socketSdk));
 
 		this.listenToSlot(true);
@@ -63,13 +61,20 @@ export class DiceRoller {
 		}
 	}
 
+	private socketError(error: string, notify: boolean) {
+		if (notify) {
+			this.errorCallback(error);
+		}
+		this.reconnect();
+	}
+
 	private socketMessage(message: SocketResponseMessage) {
 		switch (message.type) {
 			case "settings":
 				this.rawRollState.updateWith(message);
 				if (this.rawRollState.state) {
 					this._rollState = this.rawRollState.state;
-					this.stateCallback();
+					this.stateCallback?.();
 				}
 				else {
 					this.errorCallback(`Inconsistent state update\n\nCurrent:\n${JSON.stringify(this.rollState)}\n\nUpdate:\n${JSON.stringify(message)}`)
@@ -93,7 +98,7 @@ export class DiceRoller {
 				return;
 			}
 			this.rolls.push(roll);
-			this.rollCallback(roll);
+			this.rollCallback?.(roll);
 		});
 	}
 

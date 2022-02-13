@@ -11,9 +11,9 @@ export class SocketWrapper {
 	private pendingMessages: SocketRequestMessage[] = [];
 
 	private messageCallback: (message: SocketResponseMessage) => void;
-	private errorCallback: (error: string) => void;
+	private errorCallback: (error: string, notifiy: boolean) => void;
 
-	constructor(url: string, messageCallback: (message: SocketResponseMessage) => void, errorCallback: (error: string) => void) {
+	constructor(url: string, messageCallback: (message: SocketResponseMessage) => void, errorCallback: (error: string, notify: boolean) => void) {
 		this.socket = new WebSocket(socketURL);
 
 		this.socket.addEventListener("open", this.socketOpened.bind(this));
@@ -51,11 +51,11 @@ export class SocketWrapper {
 	}
 
 	private receivedError(event: any) {
-		this.handleError("unidentified socket error");
+		this.handleError("unidentified socket error", false);
 	}
 
-	private handleError(error: string) {
-		this.errorCallback(error);
+	private handleError(error: string, notify: boolean) {
+		this.errorCallback(error, notify);
 		this.close();
 	}
 
@@ -65,7 +65,7 @@ export class SocketWrapper {
 			this.messageCallback(parseResponse(data.d));
 		}
 		catch (error) {
-			this.handleError(`${error}`);
+			this.handleError(`${error}`, true);
 		}
 	}
 
@@ -88,7 +88,7 @@ export class SocketWrapper {
 			this.resetPing();
 		}
 		catch (error) {
-			this.handleError(`${error}`);
+			this.handleError(`${error}`, true);
 		}
 	}
 }
