@@ -6,70 +6,23 @@ import { DamageType, allDamageTypes, nameForDamageType } from "model/attributes/
 import { Monster } from "model/dungeon/monster";
 import { Room } from "model/dungeon/room";
 import { nameForClass } from "model/partyCard/class";
-import { PartyCard } from "model/partyCard/partyCard";
 
 import { PlayerAttack } from "model/playerAttack/playerAttack";
 import { PlayerAttackType, allPlayerAttackTypes, nameForPlayerAttackType } from "model/playerAttack/playerAttackType";
 import { PlayerAttackCritMultiplier, allPlayerAttackCritMultipliers, nameForPlayerAttackCritMultiplier } from "model/playerAttack/playerAttackCritMultiplier";
 
 interface PlayerAttackListComponentProps {
-	partyCard: PartyCard;
 	currentRoom: Room;
-	attackCompleted: () => void;
-}
-interface PlayerAttackListComponentState {
 	attacks: PlayerAttack[];
+	attackCompleted: (attack: PlayerAttack) => void;
 }
+interface PlayerAttackListComponentState {}
 
 function targetLabelForMonster(monster: Monster): string {
 	return monster.name;
 }
 
 export class PlayerAttackListComponent extends Component<PlayerAttackListComponentProps, PlayerAttackListComponentState> {
-
-	constructor(props: PlayerAttackListComponentProps) {
-		super(props);
-
-		this.state = {
-			attacks: []
-		};
-	}
-
-	private createAttacks() {
-		this.setState({
-			attacks: this.props.partyCard.activePlayers.map((player) => {
-				const attack = new PlayerAttack(player, this.props.currentRoom);
-				attack.primaryTarget = this.props.currentRoom.monsters[0];
-				attack.secondaryTarget = this.props.currentRoom.monsters[0];
-
-				return attack;
-			})
-		});
-	}
-
-	clearAttacks() {
-		this.setState({
-			attacks: []
-		});
-	}
-
-	private completeAllAttacks() {
-		this.state.attacks.forEach((attack) => {
-			attack.complete();
-		});
-		this.clearAttacks();
-		this.props.attackCompleted();
-	}
-
-	private completeAttack(completeAttack: PlayerAttack) {
-		completeAttack.complete();
-		this.setState({
-			attacks: this.state.attacks.filter((attack) => {
-				return completeAttack !== attack;
-			})
-		});
-		this.props.attackCompleted();
-	}
 
 	private attackTypeChanged(attack: PlayerAttack, newAttackType: PlayerAttackType | undefined) {
 		attack.attackType = newAttackType;
@@ -109,7 +62,9 @@ export class PlayerAttackListComponent extends Component<PlayerAttackListCompone
 		return (<>
 			<div className="player-attack-list__complete col">
 				<button type="button"
-					onClick={this.completeAttack.bind(this, attack)}>
+					onClick={() => {
+						this.props.attackCompleted(attack);
+					}}>
 
 					Complete
 				</button>
@@ -181,26 +136,8 @@ export class PlayerAttackListComponent extends Component<PlayerAttackListCompone
 
 	override render() {
 		return (<>
-			<button type="button"
-				disabled={this.state.attacks.length > 0}
-				onClick={this.createAttacks.bind(this)}>
-
-				Player Attack
-			</button>
-			<button type="button"
-				disabled={this.state.attacks.length === 0}
-				onClick={this.clearAttacks.bind(this)}>
-
-				Clear Attacks
-			</button>
-			<button type="button"
-				disabled={this.state.attacks.length === 0}
-				onClick={this.completeAllAttacks.bind(this)}>
-
-				Complete Attacks
-			</button>
 			<ul className="player-attack-list">
-				{this.state.attacks.map((attack, index) => {
+				{this.props.attacks.map((attack, index) => {
 					return (
 						<li key={attack.player.class}
 							className="row">
