@@ -1,7 +1,7 @@
 import React, { Component, RefObject } from "react";
 
+import { LoginComponent } from "components/loginComponent";
 import { RoomSelectComponent } from "components/controls/roomSelectComponent";
-
 import { MonsterListComponent } from "components/monsterList/monsterListComponent";
 import { PlayerListComponent } from "components/playerList/playerListComponent";
 import { PlayerAttackListComponent } from "components/room/playerAttackListComponent";
@@ -37,6 +37,13 @@ export class VDMAssistantComponent extends Component<VDMAssistantComponentProps,
 	}
 
 	override render() {
+		if (!this.props.data.diceRoller.authToken) {
+			return (
+				<LoginComponent diceRoller={this.props.data.diceRoller}
+					onLogin={this.forceUpdate.bind(this)}/>
+			);
+		}
+
 		return (<>
 			<SetupComponent data={this.props.data}
 				onChange={this.clearAttackLists.bind(this)}/>
