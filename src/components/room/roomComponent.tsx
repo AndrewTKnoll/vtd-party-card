@@ -6,6 +6,7 @@ import { RoomActionComponent } from "components/room/roomActionComponent";
 import { TimerComponent } from "components/widgets/timerComponent";
 
 import { DataManager } from "model/dataManager";
+import { ResetLevel } from "model/attributes/resetLevel";
 import { Roll } from "model/diceRoller/roll";
 import { roomTimeDuration } from "model/dungeon/room";
 import { PlayerAttack } from "model/playerAttack/playerAttack";
@@ -99,6 +100,15 @@ export class RoomComponent extends Component<RoomComponentProps, RoomComponentSt
 		}
 	}
 
+	private roundReset() {
+		this.props.data.reset(ResetLevel.round);
+		this.setState({
+			playerAttacks: [],
+			roomActionResult: undefined
+		});
+		this.props.onChange();
+	}
+
 	clearAttacks() {
 		this.setState({
 			playerAttacks: [],
@@ -185,14 +195,21 @@ export class RoomComponent extends Component<RoomComponentProps, RoomComponentSt
 				</div>
 				<div className="room-component__control-col col">
 					<h3>Actions</h3>
-					{!hasAttacks && <>
-						<div className="room-component__control-row">
+					<div className="room-component__control-row">
+						<button type="button"
+							onClick={this.roundReset.bind(this)}>
+
+							Round Reset
+						</button>
+						{!hasAttacks &&
 							<button type="button"
 								onClick={this.createPlayerAttacks.bind(this)}>
 
 								Player Attack
 							</button>
-						</div>
+						}
+					</div>
+					{!hasAttacks &&
 						<div className="room-component__control-row">
 							{this.props.data.currentRoom.actions.map((action) => {
 								return (
@@ -205,7 +222,7 @@ export class RoomComponent extends Component<RoomComponentProps, RoomComponentSt
 								);
 							})}
 						</div>
-					</>}
+					}
 					{hasAttacks &&
 						<div className="room-component__control-row">
 							<button type="button"
