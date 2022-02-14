@@ -151,45 +151,70 @@ export class RoomComponent extends Component<RoomComponentProps, RoomComponentSt
 	override render(): ReactNode {
 		const hasAttacks = this.state.playerAttacks.length > 0 || this.state.roomActionResult !== undefined;
 
-		return (<>
-			<MonsterListComponent room={this.props.data.currentRoom}
-				onChange={this.props.onChange}/>
-			<button type="button"
-				disabled={hasAttacks}
-				onClick={this.createPlayerAttacks.bind(this)}>
+		return (
+			<div className="room-component row">
+				<h2 className="room-component__title col">
+					{this.props.data.currentRoom.name}
+				</h2>
+				<div className="room-component__monster-col col">
+					<MonsterListComponent room={this.props.data.currentRoom}
+						onChange={this.props.onChange}/>
+				</div>
+				<div className="room-component__control-col col">
+					<h3>Actions</h3>
+					{!hasAttacks && <>
+						<div className="room-component__control-row">
+							<button type="button"
+								onClick={this.createPlayerAttacks.bind(this)}>
 
-				Player Attack
-			</button>
-			<button type="button"
-				disabled={!hasAttacks}
-				onClick={this.clearAttacks.bind(this)}>
+								Player Attack
+							</button>
+						</div>
+						<div className="room-component__control-row">
+							{this.props.data.currentRoom.actions.map((action) => {
+								return (
+									<button key={action.name}
+										type="button"
+										onClick={this.performRoomAction.bind(this, action)}>
 
-				Clear Attacks
-			</button>
-			<button type="button"
-				disabled={!hasAttacks}
-				onClick={this.completeAllAttacks.bind(this)}>
+										{action.name}
+									</button>
+								);
+							})}
+						</div>
+					</>}
+					{hasAttacks &&
+						<div className="room-component__control-row">
+							<button type="button"
+								onClick={this.clearAttacks.bind(this)}>
 
-				Complete Attacks
-			</button>
-			{this.props.data.currentRoom.actions.map((action) => {
-				return (
-					<button key={action.name}
-						type="button"
-						disabled={hasAttacks}
-						onClick={this.performRoomAction.bind(this, action)}>
+								Clear Attacks
+							</button>
+							<button type="button"
+								onClick={this.completeAllAttacks.bind(this)}>
 
-						{action.name}
-					</button>
-				);
-			})}
-			<PlayerAttackListComponent attacks={this.state.playerAttacks}
-				currentRoom={this.props.data.currentRoom}
-				attackCompleted={this.completePlayerAttack.bind(this)}/>
-			<RoomActionComponent result={this.state.roomActionResult}
-				partyCard={this.props.data.partyCard}
-				currentRoom={this.props.data.currentRoom}
-				actionCompleted={this.props.onChange}/>
-		</>);
+								Complete Attacks
+							</button>
+						</div>
+					}
+				</div>
+				<div className="room-component__info-col col">
+					<h3>Info</h3>
+				</div>
+				<div className="room-component__action-col col">
+					{this.state.playerAttacks.length > 0 &&
+						<PlayerAttackListComponent attacks={this.state.playerAttacks}
+							currentRoom={this.props.data.currentRoom}
+							attackCompleted={this.completePlayerAttack.bind(this)}/>
+					}
+					{this.state.roomActionResult !== undefined &&
+						<RoomActionComponent result={this.state.roomActionResult}
+							partyCard={this.props.data.partyCard}
+							currentRoom={this.props.data.currentRoom}
+							actionCompleted={this.props.onChange}/>
+					}
+				</div>
+			</div>
+		);
 	}
 }
