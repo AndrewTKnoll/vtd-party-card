@@ -16,7 +16,7 @@ import { RoomActionResult } from "model/roomAction/roomActionResult";
 interface RoomActionComponentProps {
 	currentRoom: Room;
 	partyCard: PartyCard;
-	result: RoomActionResult | undefined;
+	result: RoomActionResult;
 	actionCompleted: () => void;
 }
 interface RoomActionComponentState {}
@@ -75,11 +75,12 @@ export class RoomActionComponent extends Component<RoomActionComponentProps, Roo
 
 	override render() {
 		return (<>
+			<h3>{this.props.result.action.name}</h3>
 			<ul className="room-action-result-list">
 				{this.props.result?.attacks.map((attack, index) => {
 					return (
 						<li key={index}
-							className="row">
+							className="room-action-result-list__attack row">
 
 							{this.renderAttack(attack)}
 						</li>
