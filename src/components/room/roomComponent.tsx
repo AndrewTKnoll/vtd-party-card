@@ -3,14 +3,18 @@ import React, { Component, ReactNode } from "react";
 import { MonsterListComponent } from "components/room/monsterListComponent";
 import { PlayerAttackListComponent } from "components/room/playerAttackListComponent";
 import { RoomActionComponent } from "components/room/roomActionComponent";
+import { TimerComponent } from "components/widgets/timerComponent";
 
 import { DataManager } from "model/dataManager";
 import { Roll } from "model/diceRoller/roll";
+import { roomTimeDuration } from "model/dungeon/room";
 import { PlayerAttack } from "model/playerAttack/playerAttack";
 import { PlayerAttackType } from "model/playerAttack/playerAttackType";
 import { MonsterSaveAttackResult } from "model/roomAction/monsterAttack";
 import { RoomAction } from "model/roomAction/roomAction";
 import { RoomActionResult } from "model/roomAction/roomActionResult";
+
+const prepTimeRoomCount = 3;
 
 interface RoomComponentProps {
 	data: DataManager;
@@ -148,6 +152,25 @@ export class RoomComponent extends Component<RoomComponentProps, RoomComponentSt
 		});
 	}
 
+	private renderRoomTimer(): ReactNode {
+		if (!this.props.data.startTime) {
+			return false;
+		}
+
+		const roomStartTime = new Date(
+				this.props.data.startTime.getTime() + ((this.props.data.currentRoomPosition + prepTimeRoomCount) * roomTimeDuration)
+			);
+		const roomEndTime = new Date(roomStartTime.getTime() + roomTimeDuration);
+
+		return (
+			<TimerComponent targetDate={roomEndTime}
+				countdownStartDate={roomStartTime}
+				prefixText="Time until room end:"
+				beforeTimeText="Room hasn't started yet"
+				afterTimeText="Room is complete"/>
+		);
+	}
+
 	override render(): ReactNode {
 		const hasAttacks = this.state.playerAttacks.length > 0 || this.state.roomActionResult !== undefined;
 
@@ -200,6 +223,7 @@ export class RoomComponent extends Component<RoomComponentProps, RoomComponentSt
 				</div>
 				<div className="room-component__info-col col">
 					<h3>Info</h3>
+					{this.renderRoomTimer()}
 				</div>
 				<div className="room-component__action-col col">
 					{this.state.playerAttacks.length > 0 &&

@@ -30,6 +30,9 @@ export class DataManager {
 
 		this.currentRoomIndex = [newPosition, newOption];
 	}
+	get currentRoomPosition(): number {
+		return this.currentRoomIndex[0];
+	}
 
 	private _difficulty = Difficulty.normal;
 	get difficulty(): Difficulty {
