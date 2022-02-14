@@ -17,26 +17,31 @@ export class MonsterListComponent extends Component<MonsterListComponentProps, M
 	}
 
 	override render() {
-		return (
+		return (<>
+			<h3>Monsters</h3>
 			<ul className="monster-list-component">
 				{this.props.room.monsters.map((monster) => {
 					return (
 						<li key={monster.name}
-							className={`monster-list-component__monster${monster.isAlive ? "" : " monster-list-component__monster--dead"}`}>
+							className={`monster-list-component__monster${monster.isAlive ? "" : " monster-list-component__monster--dead"} row`}>
 
-							<span>{`${monster.name}${monster.statusNote ? ` (${monster.statusNote})` : ""}`}</span>
-							<label>
+							<span className="monster-list-component__name col">
+								{`${monster.name}${monster.statusNote ? ` (${monster.statusNote})` : ""}`}
+							</span>
+							<label className="monster-list-component__taunt col">
 								<input type="checkbox"
 									checked={monster.isTaunted}
 									onChange={this.monsterTaunted.bind(this, monster)}/>
 
 								Taunted
 							</label>
-							<span>{`${monster.currentDamage} of ${monster.maxHP}`}</span>
+							<span className="monster-list-component__health col">
+								{`${monster.currentDamage} of ${monster.maxHP}`}
+							</span>
 						</li>
 					);
 				})}
 			</ul>
-		);
+		</>);
 	}
 }

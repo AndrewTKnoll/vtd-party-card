@@ -1,6 +1,6 @@
 import React, { Component, ReactNode } from "react";
 
-import { MonsterListComponent } from "components/monsterList/monsterListComponent";
+import { MonsterListComponent } from "components/room/monsterListComponent";
 import { PlayerAttackListComponent } from "components/room/playerAttackListComponent";
 import { RoomActionComponent } from "components/room/roomActionComponent";
 

@@ -1,0 +1,26 @@
+.monster-list-component {
+	margin-bottom: 1rem;
+
+	.monster-list-component__monster {
+		display: flex;
+		justify-content: space-between;
+		margin-bottom: 0.25rem;
+
+		&--dead {
+			color: #ccc;
+		}
+	}
+
+	.monster-list-component__name {
+		width: calc(100% - 12rem);
+	}
+
+	.monster-list-component__taunt {
+		width: 6rem;
+	}
+
+	.monster-list-component__health {
+		width: 6rem;
+		text-align: right;
+	}
+}
