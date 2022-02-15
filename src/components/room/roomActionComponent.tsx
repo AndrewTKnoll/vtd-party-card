@@ -11,44 +11,17 @@ import { PartyCard } from "model/partyCard/partyCard";
 import { WeaponType } from "model/partyCard/player";
 
 import { MonsterAttack, MonsterSaveAttack, MonsterAttackType, MonsterSaveAttackResult, allMonsterSaveAttackResults, nameForMonsterSaveAttackResult } from "model/roomAction/monsterAttack";
-import { RoomAction } from "model/roomAction/roomAction";
 import { RoomActionResult } from "model/roomAction/roomActionResult";
 
 interface RoomActionComponentProps {
 	currentRoom: Room;
 	partyCard: PartyCard;
+	result: RoomActionResult;
 	actionCompleted: () => void;
 }
-interface RoomActionComponentState {
-	result: RoomActionResult | undefined;
-}
+interface RoomActionComponentState {}
 
 export class RoomActionComponent extends Component<RoomActionComponentProps, RoomActionComponentState> {
-
-	constructor(props: RoomActionComponentProps) {
-		super(props);
-
-		this.state = {
-			result: undefined
-		};
-	}
-
-	private performAction(action: RoomAction) {
-		this.setState({
-			result: action.perform(this.props.partyCard)
-		});
-	}
-
-	clearResults() {
-		this.setState({
-			result: undefined
-		});
-	}
-
-	private completeAction() {
-		this.state.result?.complete();
-		this.clearResults();
-	}
 
 	private saveAttackResultChanged(attack: MonsterSaveAttack, newResult: MonsterSaveAttackResult | undefined) {
 		attack.result = newResult;
@@ -102,34 +75,12 @@ export class RoomActionComponent extends Component<RoomActionComponentProps, Roo
 
 	override render() {
 		return (<>
-			{this.props.currentRoom.actions.map((action) => {
-				return (
-					<button key={action.name}
-						type="button"
-						disabled={this.state.result !== undefined}
-						onClick={this.performAction.bind(this, action)}>
-
-						{action.name}
-					</button>
-				);
-			})}
-			<button type="button"
-				disabled={this.state.result === undefined}
-				onClick={this.clearResults.bind(this)}>
-
-				Clear Room Action
-			</button>
-			<button type="button"
-				disabled={this.state.result === undefined}
-				onClick={this.completeAction.bind(this)}>
-
-				Complete Room Action
-			</button>
+			<h3>{this.props.result.action.name}</h3>
 			<ul className="room-action-result-list">
-				{this.state.result?.attacks.map((attack, index) => {
+				{this.props.result?.attacks.map((attack, index) => {
 					return (
 						<li key={index}
-							className="row">
+							className="room-action-result-list__attack row">
 
 							{this.renderAttack(attack)}
 						</li>

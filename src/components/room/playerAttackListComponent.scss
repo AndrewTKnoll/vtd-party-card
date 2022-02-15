@@ -1,34 +1,80 @@
 .player-attack-list {
 
-	.player-attack-list__complete {
-		width: 8%;
+	.player-attack-list__attack {
+		margin-bottom: 0.5rem;
+	}
 
-		button {
-			margin: 0;
+	.player-attack-list__name-col {
+		display: flex;
+		justify-content: space-between;
+		width: 100%;
+		margin-bottom: 0.25rem;
+
+		@include breakpoint-sm() {
+			width: 50%;
+		}
+
+		@include breakpoint-lg() {
+			width: 16%;
 		}
 	}
 
-	.player-attack-list__title {
-		width: 10%;
+	.player-attack-list__complete-button {
+		margin: 0;
 	}
 
 	.player-attack-list__type {
-		width: 20%;
-	}
+		display: flex;
+		width: 100%;
+		margin-bottom: 0.25rem;
+		padding-left: calc($grid-gutter-width / 2 + 1rem);
 
-	.player-attack-list__target {
-		width: 26%;
+		@include breakpoint-sm() {
+			width: 50%;
+		}
 
-		input {
-			width: 4rem;
+		@include breakpoint-lg() {
+			width: 24%;
+			padding-left: calc($grid-gutter-width / 2);
+		}
+
+		select {
+			margin: 0 0.25rem 0 0;
 		}
 	}
 
 	.player-attack-list__aoe {
-		width: 10%;
 
 		input {
 			width: 4rem;
 		}
+	}
+
+	.player-attack-list__target {
+		width: 100%;
+		margin-bottom: 0.25rem;
+		padding-left: calc($grid-gutter-width / 2 + 1rem);
+
+		@include breakpoint-sm() {
+			width: 50%;
+		}
+
+		@include breakpoint-lg() {
+			width: 30%;
+			padding-left: calc($grid-gutter-width / 2);
+		}
+
+		&.player-attack-list__target--none {
+			color: #ccc;
+		}
+
+		input {
+			width: 4rem;
+		}
+	}
+
+	.player-attack-list__target-name {
+		display: inline-block;
+		width: 4rem;
 	}
 }

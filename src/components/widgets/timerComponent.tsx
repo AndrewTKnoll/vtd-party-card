@@ -33,7 +33,9 @@ function unregisterTimer(oldTimer: TimerComponent) {
 
 interface TimerComponentProps {
 	targetDate: Date;
+	countdownStartDate?: Date;
 	hours?: boolean;
+	beforeTimeText?: string
 	afterTimeText?: string;
 	prefixText?: string;
 	suffixText?: string;
@@ -65,6 +67,14 @@ export class TimerComponent extends Component<TimerComponentProps, TimerComponen
 			return (
 				<span className="timer__text">
 					{this.props.afterTimeText}
+				</span>
+			);
+		}
+
+		if (this.props.countdownStartDate && this.props.countdownStartDate >= this.state.now && this.props.beforeTimeText) {
+			return (
+				<span className="timer__text">
+					{this.props.beforeTimeText}
 				</span>
 			);
 		}

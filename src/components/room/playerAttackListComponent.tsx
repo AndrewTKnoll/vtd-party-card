@@ -6,70 +6,23 @@ import { DamageType, allDamageTypes, nameForDamageType } from "model/attributes/
 import { Monster } from "model/dungeon/monster";
 import { Room } from "model/dungeon/room";
 import { nameForClass } from "model/partyCard/class";
-import { PartyCard } from "model/partyCard/partyCard";
 
 import { PlayerAttack } from "model/playerAttack/playerAttack";
 import { PlayerAttackType, allPlayerAttackTypes, nameForPlayerAttackType } from "model/playerAttack/playerAttackType";
 import { PlayerAttackCritMultiplier, allPlayerAttackCritMultipliers, nameForPlayerAttackCritMultiplier } from "model/playerAttack/playerAttackCritMultiplier";
 
 interface PlayerAttackListComponentProps {
-	partyCard: PartyCard;
 	currentRoom: Room;
-	attackCompleted: () => void;
-}
-interface PlayerAttackListComponentState {
 	attacks: PlayerAttack[];
+	attackCompleted: (attack: PlayerAttack) => void;
 }
+interface PlayerAttackListComponentState {}
 
 function targetLabelForMonster(monster: Monster): string {
 	return monster.name;
 }
 
 export class PlayerAttackListComponent extends Component<PlayerAttackListComponentProps, PlayerAttackListComponentState> {
-
-	constructor(props: PlayerAttackListComponentProps) {
-		super(props);
-
-		this.state = {
-			attacks: []
-		};
-	}
-
-	private createAttacks() {
-		this.setState({
-			attacks: this.props.partyCard.activePlayers.map((player) => {
-				const attack = new PlayerAttack(player, this.props.currentRoom);
-				attack.primaryTarget = this.props.currentRoom.monsters[0];
-				attack.secondaryTarget = this.props.currentRoom.monsters[0];
-
-				return attack;
-			})
-		});
-	}
-
-	clearAttacks() {
-		this.setState({
-			attacks: []
-		});
-	}
-
-	private completeAllAttacks() {
-		this.state.attacks.forEach((attack) => {
-			attack.complete();
-		});
-		this.clearAttacks();
-		this.props.attackCompleted();
-	}
-
-	private completeAttack(completeAttack: PlayerAttack) {
-		completeAttack.complete();
-		this.setState({
-			attacks: this.state.attacks.filter((attack) => {
-				return completeAttack !== attack;
-			})
-		});
-		this.props.attackCompleted();
-	}
 
 	private attackTypeChanged(attack: PlayerAttack, newAttackType: PlayerAttackType | undefined) {
 		attack.attackType = newAttackType;
@@ -105,107 +58,100 @@ export class PlayerAttackListComponent extends Component<PlayerAttackListCompone
 		this.forceUpdate();
 	}
 
-	private renderAttackItem(attack: PlayerAttack, index: number): ReactNode {
+	override render(): ReactNode {
 		return (<>
-			<div className="player-attack-list__complete col">
-				<button type="button"
-					onClick={this.completeAttack.bind(this, attack)}>
-
-					Complete
-				</button>
-			</div>
-			<span className="player-attack-list__title col">
-				{nameForClass(attack.player.class)}
-			</span>
-			<div className="player-attack-list__type col">
-				Type:
-				<ItemListSelectComponent<PlayerAttackType> isOptional={true}
-					items={allPlayerAttackTypes}
-					labelForItem={nameForPlayerAttackType}
-					selectedItem={attack.attackType}
-					onChange={this.attackTypeChanged.bind(this, attack)}/>
-				{attack.attackType === PlayerAttackType.melee &&
-					<span>{attack.player.meleeWeapon}</span>
-				}
-				{attack.attackType === PlayerAttackType.ranged &&
-					<span>{attack.player.rangedWeapon}</span>
-				}
-				{attack.attackType === PlayerAttackType.spell &&
-					<ItemListSelectComponent<DamageType> isOptional={true}
-						items={allDamageTypes}
-						labelForItem={nameForDamageType}
-						selectedItem={attack.damageType}
-						onChange={this.damageTypeChanged.bind(this, attack)}/>
-				}
-			</div>
-			<div className="player-attack-list__target col">
-				First:
-				<ItemListSelectComponent<Monster> isOptional={true}
-					items={this.props.currentRoom.monsters}
-					labelForItem={targetLabelForMonster}
-					selectedItem={attack.primaryTarget}
-					onChange={this.targetChanged.bind(this, attack, true)}/>
-				<input type="number"
-					value={attack.primaryDamageAmount}
-					onChange={this.damageAmountChanged.bind(this, attack, "primaryDamageAmount")}/>
-				<ItemListSelectComponent isOptional={false}
-					items={allPlayerAttackCritMultipliers}
-					labelForItem={nameForPlayerAttackCritMultiplier}
-					selectedItem={attack.primaryCritMultiplier}
-					onChange={this.critMultiplierChange.bind(this, attack, "primaryCritMultiplier")}/>
-			</div>
-			<div className="player-attack-list__target col">
-				Second:
-				<ItemListSelectComponent<Monster> isOptional={true}
-					items={this.props.currentRoom.monsters}
-					labelForItem={targetLabelForMonster}
-					selectedItem={attack.secondaryTarget}
-					onChange={this.targetChanged.bind(this, attack, false)}/>
-				<input type="number"
-					value={attack.secondaryDamageAmount}
-					onChange={this.damageAmountChanged.bind(this, attack, "secondaryDamageAmount")}/>
-				<ItemListSelectComponent isOptional={false}
-					items={allPlayerAttackCritMultipliers}
-					labelForItem={nameForPlayerAttackCritMultiplier}
-					selectedItem={attack.secondaryCritMultiplier}
-					onChange={this.critMultiplierChange.bind(this, attack, "secondaryCritMultiplier")}/>
-			</div>
-			<div className="player-attack-list__aoe col">
-				AoE:
-				<input type="number"
-					value={attack.aoeDamageAmount}
-					onChange={this.damageAmountChanged.bind(this, attack, "aoeDamageAmount")}/>
-			</div>
-		</>);
-	}
-
-	override render() {
-		return (<>
-			<button type="button"
-				disabled={this.state.attacks.length > 0}
-				onClick={this.createAttacks.bind(this)}>
-
-				Player Attack
-			</button>
-			<button type="button"
-				disabled={this.state.attacks.length === 0}
-				onClick={this.clearAttacks.bind(this)}>
-
-				Clear Attacks
-			</button>
-			<button type="button"
-				disabled={this.state.attacks.length === 0}
-				onClick={this.completeAllAttacks.bind(this)}>
-
-				Complete Attacks
-			</button>
+			<h3>Player Attacks</h3>
 			<ul className="player-attack-list">
-				{this.state.attacks.map((attack, index) => {
+				{this.props.attacks.map((attack, index) => {
 					return (
 						<li key={attack.player.class}
-							className="row">
+							className="player-attack-list__attack row">
 
-							{this.renderAttackItem(attack, index)}
+							<div className="player-attack-list__name-col col">
+								<span className="player-attack-list__class-name">
+									{nameForClass(attack.player.class)}
+								</span>
+								<button type="button"
+									className="player-attack-list__complete-button"
+									onClick={() => {
+										this.props.attackCompleted(attack);
+									}}>
+
+									Complete
+								</button>
+							</div>
+							<div className="player-attack-list__type col">
+								<ItemListSelectComponent<PlayerAttackType> isOptional={true}
+									items={allPlayerAttackTypes}
+									labelForItem={nameForPlayerAttackType}
+									selectedItem={attack.attackType}
+									onChange={this.attackTypeChanged.bind(this, attack)}/>
+								{attack.attackType === PlayerAttackType.melee &&
+									<span className="player-attack-list__weapon-label">
+										{attack.player.meleeWeapon}
+									</span>
+								}
+								{attack.attackType === PlayerAttackType.ranged &&
+									<span className="player-attack-list__weapon-label">
+										{attack.player.rangedWeapon}
+									</span>
+								}
+								{attack.attackType === PlayerAttackType.spell && <>
+									<ItemListSelectComponent<DamageType> isOptional={true}
+										items={allDamageTypes}
+										labelForItem={nameForDamageType}
+										selectedItem={attack.damageType}
+										onChange={this.damageTypeChanged.bind(this, attack)}/>
+									<div className="player-attack-list__aoe">
+										AoE:
+										<input type="number"
+											value={attack.aoeDamageAmount}
+											onChange={this.damageAmountChanged.bind(this, attack, "aoeDamageAmount")}/>
+									</div>
+								</>}
+							</div>
+							<div className={`player-attack-list__target${attack.attackType === undefined ? " player-attack-list__target--none" : ""} col`}>
+								<span className="player-attack-list__target-name">
+									First:
+								</span>
+								<ItemListSelectComponent<Monster> isOptional={true}
+									disabled={attack.attackType === undefined}
+									items={this.props.currentRoom.monsters}
+									labelForItem={targetLabelForMonster}
+									selectedItem={attack.primaryTarget}
+									onChange={this.targetChanged.bind(this, attack, true)}/>
+								<input type="number"
+									disabled={attack.attackType === undefined}
+									value={attack.primaryDamageAmount}
+									onChange={this.damageAmountChanged.bind(this, attack, "primaryDamageAmount")}/>
+								<ItemListSelectComponent isOptional={false}
+									disabled={attack.attackType === undefined}
+									items={allPlayerAttackCritMultipliers}
+									labelForItem={nameForPlayerAttackCritMultiplier}
+									selectedItem={attack.primaryCritMultiplier}
+									onChange={this.critMultiplierChange.bind(this, attack, "primaryCritMultiplier")}/>
+							</div>
+							<div className={`player-attack-list__target${attack.attackType === undefined ? " player-attack-list__target--none" : ""} col`}>
+								<span className="player-attack-list__target-name">
+									Second:
+								</span>
+								<ItemListSelectComponent<Monster> isOptional={true}
+									disabled={attack.attackType === undefined}
+									items={this.props.currentRoom.monsters}
+									labelForItem={targetLabelForMonster}
+									selectedItem={attack.secondaryTarget}
+									onChange={this.targetChanged.bind(this, attack, false)}/>
+								<input type="number"
+									disabled={attack.attackType === undefined}
+									value={attack.secondaryDamageAmount}
+									onChange={this.damageAmountChanged.bind(this, attack, "secondaryDamageAmount")}/>
+								<ItemListSelectComponent isOptional={false}
+									disabled={attack.attackType === undefined}
+									items={allPlayerAttackCritMultipliers}
+									labelForItem={nameForPlayerAttackCritMultiplier}
+									selectedItem={attack.secondaryCritMultiplier}
+									onChange={this.critMultiplierChange.bind(this, attack, "secondaryCritMultiplier")}/>
+							</div>
 						</li>
 					);
 				})}

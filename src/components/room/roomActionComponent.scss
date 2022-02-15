@@ -1,18 +1,22 @@
 .room-action-result-list {
 
+	.room-action-result-list__attack {
+		margin-bottom: 0.25rem;
+	}
+
 	.room-action-result-list__title {
-		width: 10%;
+		width: 6.75rem;
 	}
 
 	.room-action-result-list__target {
-		width: 5%;
+		width: 4rem;
 	}
 
 	.room-action-result-list__roll {
-		width: 10%;
+		width: 7.5rem;
 	}
 
 	.room-action-result-list__result {
-		width: 75%
+		width: calc(100% - 18.25rem);
 	}
 }

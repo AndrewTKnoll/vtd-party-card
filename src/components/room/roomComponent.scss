@@ -1,0 +1,57 @@
+.room-component {
+
+	.room-component__title {
+		width: 100%;
+		text-align: center;
+	}
+
+	.room-component__monster-col,
+	.room-component__control-col,
+	.room-component__info-col {
+		width: 100%;
+
+		@include breakpoint-sm() {
+			width: 50%;
+		}
+
+		@include breakpoint-md() {
+			width: calc(100% / 3);
+		}
+	}
+
+	.room-component__control-row {
+		display: flex;
+		justify-content: space-between;
+
+		button {
+			margin-bottom: 0.5rem;
+		}
+	}
+
+	.room-component__action-col {
+		width: 100%;
+
+		h3 {
+			text-align: center;
+		}
+	}
+
+	.room-action-result-list,
+	.initiative-action-component {
+
+		@include breakpoint-sm() {
+			width: 80%;
+			margin-left: 10%
+		}
+
+		@include breakpoint-md() {
+			width: 60%;
+			margin-left: 20%
+		}
+
+		@include breakpoint-lg() {
+			width: 50%;
+			margin-left: 25%
+		}
+	}
+}
