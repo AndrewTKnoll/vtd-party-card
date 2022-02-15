@@ -17,6 +17,17 @@ interface RollHit {
 }
 type HitType = AutoHit | RollHit;
 
+export interface MonsterWeaponAttackParams {
+	target: Player;
+	paladin?: Player | undefined;
+	weaponOverride?: WeaponType | undefined;
+	hitBonus?: number | undefined;
+	damageAmount: number;
+	damageType: string;
+	note?: string | undefined;
+	completionHandler?: ((attack: MonsterWeaponAttack) => void) | undefined;
+}
+
 export class MonsterWeaponAttack {
 	readonly type = MonsterAttackType.weapon;
 
@@ -56,33 +67,24 @@ export class MonsterWeaponAttack {
 
 	private completionHandler: ((attack: MonsterWeaponAttack) => void) | undefined;
 
-	constructor(
-		target: Player,
-		paladin: Player | undefined,
-		weaponOverride: WeaponType | undefined,
-		hitBonus: number | undefined,
-		damageAmount: number,
-		damageType: string,
-		note?: string | undefined,
-		completionHandler?: ((attack: MonsterWeaponAttack) => void) | undefined
-	) {
-		if (typeof(hitBonus) === "number") {
+	constructor(params: MonsterWeaponAttackParams) {
+		if (typeof(params.hitBonus) === "number") {
 			const roll = Math.floor(Math.random() * 20) + 1;
-			this.hit = { auto: false, roll: roll, total: roll + hitBonus };
+			this.hit = { auto: false, roll: roll, total: roll + params.hitBonus };
 		}
 		else {
 			this.hit = { auto: true };
 		}
 
-		this.target = target;
-		this.paladin = (paladin?.canGuard(target) ? paladin : undefined);
-		this.weaponOverride = weaponOverride;
-		this.damageAmount = damageAmount;
-		this.damageType = damageType;
+		this.target = params.target;
+		this.paladin = (params.paladin?.canGuard(params.target) ? params.paladin : undefined);
+		this.weaponOverride = params.weaponOverride;
+		this.damageAmount = params.damageAmount;
+		this.damageType = params.damageType;
 
-		this.note = note || "";
+		this.note = params.note || "";
 
-		this.completionHandler = completionHandler;
+		this.completionHandler = params.completionHandler;
 	}
 
 	complete() {
@@ -104,6 +106,14 @@ export function nameForMonsterSaveAttackResult(result: MonsterSaveAttackResult) 
 	return result.charAt(0).toUpperCase() + result.slice(1);
 }
 
+export interface MonsterSaveAttackParams {
+	target: Player;
+	save: SaveType;
+	successMessage: string;
+	failureMessage: string;
+	completionHandler?: ((attack: MonsterSaveAttack) => void) | undefined;
+}
+
 export class MonsterSaveAttack {
 	readonly type = MonsterAttackType.save;
 
@@ -117,18 +127,12 @@ export class MonsterSaveAttack {
 
 	private completionHandler: ((attack: MonsterSaveAttack) => void) | undefined;
 
-	constructor(
-		target: Player,
-		save: SaveType,
-		successMessage: string,
-		failureMessage: string,
-		completionHandler?: ((attack: MonsterSaveAttack) => void) | undefined
-	) {
-		this.target = target;
-		this.save = save;
-		this.successMessage = successMessage;
-		this.failureMessage = failureMessage;
-		this.completionHandler = completionHandler;
+	constructor(params: MonsterSaveAttackParams) {
+		this.target = params.target;
+		this.save = params.save;
+		this.successMessage = params.successMessage;
+		this.failureMessage = params.failureMessage;
+		this.completionHandler = params.completionHandler;
 	}
 
 	complete() {
