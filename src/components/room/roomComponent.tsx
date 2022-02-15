@@ -1,5 +1,6 @@
 import React, { Component, ReactNode } from "react";
 
+import { InitiativeActionComponent } from "components/room/initiativeActionComponent";
 import { MonsterListComponent } from "components/room/monsterListComponent";
 import { PlayerAttackListComponent } from "components/room/playerAttackListComponent";
 import { RoomActionComponent } from "components/room/roomActionComponent";
@@ -11,6 +12,7 @@ import { Roll } from "model/diceRoller/roll";
 import { roomTimeDuration } from "model/dungeon/room";
 import { PlayerAttack } from "model/playerAttack/playerAttack";
 import { PlayerAttackType } from "model/playerAttack/playerAttackType";
+import { InitiativeAction } from "model/roomAction/initiativeAction";
 import { MonsterSaveAttackResult } from "model/roomAction/monsterAttack";
 import { RoomAction } from "model/roomAction/roomAction";
 import { RoomActionResult } from "model/roomAction/roomActionResult";
@@ -24,6 +26,7 @@ interface RoomComponentProps {
 interface RoomComponentState {
 	playerAttacks: PlayerAttack[];
 	roomActionResult: RoomActionResult | undefined;
+	initiativeAction: InitiativeAction | undefined;
 }
 
 export class RoomComponent extends Component<RoomComponentProps, RoomComponentState> {
@@ -34,7 +37,8 @@ export class RoomComponent extends Component<RoomComponentProps, RoomComponentSt
 
 		this.state = {
 			playerAttacks: [],
-			roomActionResult: undefined
+			roomActionResult: undefined,
+			initiativeAction: undefined
 		};
 	}
 
@@ -43,6 +47,10 @@ export class RoomComponent extends Component<RoomComponentProps, RoomComponentSt
 			prevProps.data.diceRoller.rollCallback = undefined;
 			this.props.data.diceRoller.rollCallback = this.handlePlayerRoll.bind(this);
 		}
+	}
+
+	private handleAllPlayerRolls() {
+		this.props.data.diceRoller.rolls.forEach(this.handlePlayerRoll.bind(this));
 	}
 
 	private handlePlayerRoll(roll: Roll) {
@@ -98,21 +106,35 @@ export class RoomComponent extends Component<RoomComponentProps, RoomComponentSt
 				this.forceUpdate();
 			})
 		}
+
+		if (roll.type === "initiative" && this.state.initiativeAction) {
+			this.state.initiativeAction.playerRollReceived = true;
+			this.state.initiativeAction.playerRoll = roll.dieResult;
+			this.state.initiativeAction.playerTotal = roll.modifiedResult;
+
+			this.forceUpdate();
+		}
 	}
 
 	private roundReset() {
 		this.props.data.reset(ResetLevel.round);
+		this.clearAttacks();
+		this.props.onChange();
+	}
+
+	private rollInitiative() {
 		this.setState({
 			playerAttacks: [],
-			roomActionResult: undefined
-		});
-		this.props.onChange();
+			roomActionResult: undefined,
+			initiativeAction: new InitiativeAction(this.props.data.currentRoom)
+		}, this.handleAllPlayerRolls.bind(this));
 	}
 
 	clearAttacks() {
 		this.setState({
 			playerAttacks: [],
-			roomActionResult: undefined
+			roomActionResult: undefined,
+			initiativeAction: undefined
 		});
 	}
 
@@ -143,23 +165,17 @@ export class RoomComponent extends Component<RoomComponentProps, RoomComponentSt
 
 				return attack;
 			}),
-			roomActionResult: undefined
-		}, () => {
-			this.props.data.diceRoller.rolls.forEach((roll) => {
-				this.handlePlayerRoll(roll);
-			});
-		});
+			roomActionResult: undefined,
+			initiativeAction: undefined
+		}, this.handleAllPlayerRolls.bind(this));
 	}
 
 	private performRoomAction(action: RoomAction) {
 		this.setState({
 			playerAttacks: [],
-			roomActionResult: action.perform(this.props.data.partyCard)
-		}, () => {
-			this.props.data.diceRoller.rolls.forEach((roll) => {
-				this.handlePlayerRoll(roll);
-			});
-		});
+			roomActionResult: action.perform(this.props.data.partyCard),
+			initiativeAction: undefined
+		}, this.handleAllPlayerRolls.bind(this));
 	}
 
 	private renderRoomTimer(): ReactNode {
@@ -182,7 +198,9 @@ export class RoomComponent extends Component<RoomComponentProps, RoomComponentSt
 	}
 
 	override render(): ReactNode {
-		const hasAttacks = this.state.playerAttacks.length > 0 || this.state.roomActionResult !== undefined;
+		const hasAttacks = this.state.playerAttacks.length > 0 ||
+			this.state.roomActionResult !== undefined ||
+			this.state.initiativeAction !== undefined;
 
 		return (
 			<div className="room-component row">
@@ -201,13 +219,18 @@ export class RoomComponent extends Component<RoomComponentProps, RoomComponentSt
 
 							Round Reset
 						</button>
-						{!hasAttacks &&
+						{!hasAttacks && <>
+							<button type="button"
+								onClick={this.rollInitiative.bind(this)}>
+
+								Roll Initiative
+							</button>
 							<button type="button"
 								onClick={this.createPlayerAttacks.bind(this)}>
 
 								Player Attack
 							</button>
-						}
+						</>}
 					</div>
 					{!hasAttacks &&
 						<div className="room-component__control-row">
@@ -230,11 +253,13 @@ export class RoomComponent extends Component<RoomComponentProps, RoomComponentSt
 
 								Clear Attacks
 							</button>
-							<button type="button"
-								onClick={this.completeAllAttacks.bind(this)}>
+							{this.state.initiativeAction === undefined &&
+								<button type="button"
+									onClick={this.completeAllAttacks.bind(this)}>
 
-								Complete Attacks
-							</button>
+									Complete Attacks
+								</button>
+							}
 						</div>
 					}
 				</div>
@@ -253,6 +278,9 @@ export class RoomComponent extends Component<RoomComponentProps, RoomComponentSt
 							partyCard={this.props.data.partyCard}
 							currentRoom={this.props.data.currentRoom}
 							actionCompleted={this.props.onChange}/>
+					}
+					{this.state.initiativeAction !== undefined &&
+						<InitiativeActionComponent action={this.state.initiativeAction}/>
 					}
 				</div>
 			</div>

@@ -36,7 +36,8 @@
 		}
 	}
 
-	.room-action-result-list {
+	.room-action-result-list,
+	.initiative-action-component {
 
 		@include breakpoint-sm() {
 			width: 80%;
