@@ -134,4 +134,8 @@ export class DataManager {
 		this.startTime = undefined;
 		this.diceRoller.slotId = undefined;
 	}
+
+	prepareForParty() {
+		this.dungeon.prepareForParty(this.partyCard);
+	}
 }

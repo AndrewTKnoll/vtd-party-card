@@ -40,6 +40,11 @@ export class SetupComponent extends Component<SetupComponentProps, SetupComponen
 		}
 	}
 
+	private prepareForParty() {
+		this.props.data.prepareForParty();
+		this.props.onChange();
+	}
+
 	private copyPasswordToClipboard() {
 		navigator.clipboard.writeText(this.props.data.dungeon.eventPasswords[this.props.data.difficulty]);
 	}
@@ -100,6 +105,13 @@ export class SetupComponent extends Component<SetupComponentProps, SetupComponen
 											selectedItem={this.props.data.difficulty}
 											onChange={this.setDifficulty.bind(this)}/>
 									</label>
+								</div>
+								<div className="setup__settings-row">
+									<button type="button"
+										onClick={this.prepareForParty.bind(this)}>
+
+										Prepare Dungeon for Party
+									</button>
 								</div>
 								<div className="setup__settings-row">
 									<span>
