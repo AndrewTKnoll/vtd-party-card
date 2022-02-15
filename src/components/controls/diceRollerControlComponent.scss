@@ -1,0 +1,13 @@
+.dice-roller-control-component {
+	margin-bottom: 0.75rem;
+
+	.col {
+		display: flex;
+		flex-direction: column;
+		width: 50%;
+	}
+
+	button {
+		margin-bottom: 0.25rem;
+	}
+}

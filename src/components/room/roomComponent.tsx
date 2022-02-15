@@ -1,5 +1,6 @@
 import React, { Component, ReactNode } from "react";
 
+import { DiceRollerControlComponent } from "components/controls/diceRollerControlComponent";
 import { InitiativeActionComponent } from "components/room/initiativeActionComponent";
 import { MonsterListComponent } from "components/room/monsterListComponent";
 import { PlayerAttackListComponent } from "components/room/playerAttackListComponent";
@@ -212,8 +213,10 @@ export class RoomComponent extends Component<RoomComponentProps, RoomComponentSt
 						onChange={this.props.onChange}/>
 				</div>
 				<div className="room-component__control-col col">
-					<h3>Actions</h3>
-					<div className="room-component__control-row">
+					<h3>Dice Roller</h3>
+					<DiceRollerControlComponent diceRoller={this.props.data.diceRoller}/>
+					<h3>Room Actions</h3>
+					<div className="room-component__control-row row">
 						<button type="button"
 							onClick={this.roundReset.bind(this)}>
 
@@ -233,7 +236,7 @@ export class RoomComponent extends Component<RoomComponentProps, RoomComponentSt
 						</>}
 					</div>
 					{!hasAttacks &&
-						<div className="room-component__control-row">
+						<div className="room-component__control-row row">
 							{this.props.data.currentRoom.actions.map((action) => {
 								return (
 									<button key={action.name}
@@ -247,7 +250,7 @@ export class RoomComponent extends Component<RoomComponentProps, RoomComponentSt
 						</div>
 					}
 					{hasAttacks &&
-						<div className="room-component__control-row">
+						<div className="room-component__control-row row">
 							<button type="button"
 								onClick={this.clearAttacks.bind(this)}>
 
