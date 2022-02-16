@@ -20,7 +20,7 @@ type HitType = AutoHit | RollHit;
 export interface MonsterWeaponAttackParams {
 	target: Player;
 	paladin?: Player | undefined;
-	weaponOverride?: WeaponType | undefined;
+	weaponOverride?: WeaponType | "naked" | undefined;
 	hitBonus?: number | undefined;
 	damageAmount: number;
 	damageType: string;
@@ -34,8 +34,8 @@ export class MonsterWeaponAttack {
 	readonly target: Player;
 	readonly paladin: Player | undefined;
 
-	private weaponOverride: WeaponType | undefined;
-	get effectiveWeapon(): WeaponType {
+	private weaponOverride: WeaponType | "naked" | undefined;
+	get effectiveWeapon(): WeaponType | "naked" {
 		return this.weaponOverride || (this.paladin || this.target).currentWeapon;
 	}
 
@@ -43,7 +43,14 @@ export class MonsterWeaponAttack {
 
 	get effectiveAC(): number {
 		const target = this.paladin || this.target;
-		return (this.effectiveWeapon === WeaponType.melee ? target.meleeAC : target.rangedAC) + target.acAdjust;
+		switch (this.effectiveWeapon) {
+			case WeaponType.melee:
+				return target.meleeAC + target.acAdjust;
+			case WeaponType.ranged:
+				return target.rangedAC + target.acAdjust;
+			case "naked":
+				return target.nakedAC + target.acAdjust;
+		}
 	}
 
 	get isHit(): boolean {

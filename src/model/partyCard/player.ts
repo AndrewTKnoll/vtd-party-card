@@ -1,7 +1,7 @@
 import { DefaultMap } from "utilities/defaultMap";
 
 import { ResetLevel } from "model/attributes/resetLevel";
-import { Class } from "model/partyCard/class";
+import { Class, nakedACForClass } from "model/partyCard/class";
 
 export enum WeaponType {
 	melee = "melee",
@@ -27,6 +27,10 @@ export class Player {
 	rangedAC: number = 0;
 	rangedWeapon: string = "";
 	rangedDamageTypes: DefaultMap<string, number> = new DefaultMap(0);
+
+	get nakedAC(): number {
+		return nakedACForClass(this.class);
+	}
 
 	acAdjust: number = 0;
 

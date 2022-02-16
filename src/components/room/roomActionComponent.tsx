@@ -51,8 +51,8 @@ export class RoomActionComponent extends Component<RoomActionComponentProps, Roo
 			</span>
 			<span className="room-action-result-list__target col">
 				{attack.type === MonsterAttackType.weapon ?
-					`${attack.effectiveAC} ${attack.effectiveWeapon === WeaponType.melee ?
-					"M" : "R"}` : shortNameForSaveType(attack.save)
+					`${attack.effectiveAC} ${attack.effectiveWeapon === WeaponType.ranged ? "R" : "M"}` :
+					shortNameForSaveType(attack.save)
 				}
 			</span>
 			<span className="room-action-result-list__roll col">
