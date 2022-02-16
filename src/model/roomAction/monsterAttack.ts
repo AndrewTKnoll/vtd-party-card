@@ -22,6 +22,7 @@ export interface MonsterWeaponAttackParams {
 	paladin?: Player | undefined;
 	weaponOverride?: WeaponType | "naked" | undefined;
 	hitBonus?: number | undefined;
+	autoHitThreshold?: number | undefined;
 	damageAmount: number;
 	damageType: string;
 	note?: string | undefined;
@@ -39,6 +40,7 @@ export class MonsterWeaponAttack {
 		return this.weaponOverride || (this.paladin || this.target).currentWeapon;
 	}
 
+	readonly autoHitThreshold: number;
 	readonly hit: HitType;
 
 	get effectiveAC(): number {
@@ -57,7 +59,7 @@ export class MonsterWeaponAttack {
 		if (this.hit.auto) {
 			return true;
 		}
-		if (this.hit.roll === 20) {
+		if (this.hit.roll >= this.autoHitThreshold) {
 			return true;
 		}
 		if (this.hit.roll === 1) {
@@ -82,6 +84,8 @@ export class MonsterWeaponAttack {
 		else {
 			this.hit = { auto: true };
 		}
+
+		this.autoHitThreshold = params.autoHitThreshold || 20;
 
 		this.target = params.target;
 		this.paladin = (params.paladin?.canGuard(params.target) ? params.paladin : undefined);
