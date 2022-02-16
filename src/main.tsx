@@ -5,7 +5,7 @@ import "./main.scss";
 import React from "react";
 import ReactDOM from "react-dom";
 
-import { VDMAssistantComponent } from "components/vdmAssistantComponent";
+import { VTDPartyCardComponent } from "components/vtdPartyCardComponent";
 
 import { DataManager } from "model/dataManager";
 
@@ -13,5 +13,5 @@ import { DataManager } from "model/dataManager";
 
 const data = new DataManager();
 
-const wrapper = document.querySelector(".vdm-assistant");
-ReactDOM.render(<VDMAssistantComponent data={data}/>, wrapper);
+const wrapper = document.querySelector(".vtd-party-card");
+ReactDOM.render(<VTDPartyCardComponent data={data}/>, wrapper);

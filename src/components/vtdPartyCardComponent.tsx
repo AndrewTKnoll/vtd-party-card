@@ -8,15 +8,15 @@ import { SetupComponent } from "components/setup/setupComponent";
 
 import { DataManager } from "model/dataManager";
 
-interface VDMAssistantComponentProps {
+interface VTDPartyCardComponentProps {
 	data: DataManager;
 }
-interface VDMAssistantComponentState {}
+interface VTDPartyCardComponentState {}
 
-export class VDMAssistantComponent extends Component<VDMAssistantComponentProps, VDMAssistantComponentState> {
+export class VTDPartyCardComponent extends Component<VTDPartyCardComponentProps, VTDPartyCardComponentState> {
 	private roomComponentRef: RefObject<RoomComponent>;
 
-	constructor(props: VDMAssistantComponentProps) {
+	constructor(props: VTDPartyCardComponentProps) {
 		super(props);
 
 		this.roomComponentRef = React.createRef();
