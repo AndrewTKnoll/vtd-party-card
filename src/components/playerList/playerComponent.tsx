@@ -3,11 +3,13 @@ import React, { Component, ChangeEvent, ReactNode } from "react";
 import { ModalComponent } from "components/structure/modalComponent";
 
 import { DamageType, allDamageTypes, nameForDamageType } from "model/attributes/damageType";
+import { Room } from "model/dungeon/room";
 import { Player, WeaponType } from "model/partyCard/player";
 import { nameForClass } from "model/partyCard/class";
 
 interface PlayerComponentProps {
 	player: Player;
+	currentRoom: Room;
 	onChange: () => void;
 }
 interface PlayerComponentState {}
@@ -108,6 +110,8 @@ export class PlayerComponent extends Component<PlayerComponentProps, PlayerCompo
 	}
 
 	override render() {
+		const statusNote = this.props.currentRoom.statusForPlayer(this.props.player);
+
 		return (
 			<div className={`player-component${this.props.player.isDead ? " player-component--dead" : ""}${this.props.player.isPresent ? "" : " player-component--not-present"}`}>
 				<div className="player-component__title-row">
@@ -157,6 +161,10 @@ export class PlayerComponent extends Component<PlayerComponentProps, PlayerCompo
 							onChange={this.setBooleanValue.bind(this, "isGuarded")}/>
 						Guarded
 					</label>
+					{statusNote !== "" && this.props.player.isActive && <>
+						<h4>Status:</h4>
+						<span>{statusNote}</span>
+					</>}
 				</div>
 				<div className="player-component__ac-wrapper">
 					<h4>AC</h4>
