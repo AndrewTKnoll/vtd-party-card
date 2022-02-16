@@ -1,7 +1,7 @@
 import React, { Component, ReactNode } from "react";
 
+import { ResetLevel } from "model/attributes/resetLevel";
 import { DataManager } from "model/dataManager";
-
 import { Room } from "model/dungeon/room";
 
 interface RoomSelectComponentProps {
@@ -14,6 +14,7 @@ export class RoomSelectComponent extends Component<RoomSelectComponentProps, Roo
 
 	private newRoomSelected(room: Room) {
 		this.props.data.currentRoom = room;
+		this.props.data.reset(ResetLevel.room);
 		this.props.onChange();
 	}
 
