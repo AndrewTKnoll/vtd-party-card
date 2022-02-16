@@ -65,6 +65,10 @@ export class PlayerAttack {
 			);
 		}
 
+		if (this.aoeDamageAmount === 0) {
+			return;
+		}
+
 		this.room.monsters.forEach((monster) => {
 			if (monster === this.primaryTarget && this.primaryDamageAmount > 0) {
 				return;
