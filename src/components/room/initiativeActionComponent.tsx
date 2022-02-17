@@ -20,7 +20,7 @@ export class InitiativeActionComponent extends Component<InitiativeActionCompone
 			return "Tie - Roll Off";
 		}
 
-		return (monsterTotal > playerTotal) ? "Monster Wins" : "Players Win";
+		return (monsterTotal > playerTotal) ? "Monster Wins" : `Players Win${playerTotal >= 15 ? " (Quick Strike)" : ""}`;
 	}
 
 	override render(): ReactNode {
