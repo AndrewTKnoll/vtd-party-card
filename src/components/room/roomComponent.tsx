@@ -203,69 +203,73 @@ export class RoomComponent extends Component<RoomComponentProps, RoomComponentSt
 			this.state.roomActionResult !== undefined ||
 			this.state.initiativeAction !== undefined;
 
+		const hasMonsters = this.props.data.currentRoom.monsters.length > 0;
+
 		return (
 			<div className="room-component row">
 				<h2 className="room-component__title col">
 					{this.props.data.currentRoom.name}
 				</h2>
-				<div className="room-component__monster-col col">
-					<MonsterListComponent room={this.props.data.currentRoom}
-						onChange={this.props.onChange}/>
-				</div>
-				<div className="room-component__control-col col">
-					<h3>Dice Roller</h3>
-					<DiceRollerControlComponent diceRoller={this.props.data.diceRoller}/>
-					<h3>Room Actions</h3>
-					<div className="room-component__control-row row">
-						<button type="button"
-							onClick={this.roundReset.bind(this)}>
-
-							Round Reset
-						</button>
-						{!hasAttacks && <>
-							<button type="button"
-								onClick={this.rollInitiative.bind(this)}>
-
-								Roll Initiative
-							</button>
-							<button type="button"
-								onClick={this.createPlayerAttacks.bind(this)}>
-
-								Player Attack
-							</button>
-						</>}
+				{hasMonsters && <>
+					<div className="room-component__monster-col col">
+						<MonsterListComponent room={this.props.data.currentRoom}
+							onChange={this.props.onChange}/>
 					</div>
-					{!hasAttacks &&
-						<div className="room-component__control-row row">
-							{this.props.data.currentRoom.actions.map((action) => {
-								return (
-									<button key={action.name}
-										type="button"
-										onClick={this.performRoomAction.bind(this, action)}>
-
-										{action.name}
-									</button>
-								);
-							})}
-						</div>
-					}
-					{hasAttacks &&
+					<div className="room-component__control-col col">
+						<h3>Dice Roller</h3>
+						<DiceRollerControlComponent diceRoller={this.props.data.diceRoller}/>
+						<h3>Room Actions</h3>
 						<div className="room-component__control-row row">
 							<button type="button"
-								onClick={this.clearAttacks.bind(this)}>
+								onClick={this.roundReset.bind(this)}>
 
-								Clear Attacks
+								Round Reset
 							</button>
-							{this.state.initiativeAction === undefined &&
+							{!hasAttacks && <>
 								<button type="button"
-									onClick={this.completeAllAttacks.bind(this)}>
+									onClick={this.rollInitiative.bind(this)}>
 
-									Complete Attacks
+									Roll Initiative
 								</button>
-							}
+								<button type="button"
+									onClick={this.createPlayerAttacks.bind(this)}>
+
+									Player Attack
+								</button>
+							</>}
 						</div>
-					}
-				</div>
+						{!hasAttacks &&
+							<div className="room-component__control-row row">
+								{this.props.data.currentRoom.actions.map((action) => {
+									return (
+										<button key={action.name}
+											type="button"
+											onClick={this.performRoomAction.bind(this, action)}>
+
+											{action.name}
+										</button>
+									);
+								})}
+							</div>
+						}
+						{hasAttacks &&
+							<div className="room-component__control-row row">
+								<button type="button"
+									onClick={this.clearAttacks.bind(this)}>
+
+									Clear Attacks
+								</button>
+								{this.state.initiativeAction === undefined &&
+									<button type="button"
+										onClick={this.completeAllAttacks.bind(this)}>
+
+										Complete Attacks
+									</button>
+								}
+							</div>
+						}
+					</div>
+				</>}
 				<div className="room-component__info-col col">
 					<h3>Info</h3>
 					{this.renderRoomTimer()}
