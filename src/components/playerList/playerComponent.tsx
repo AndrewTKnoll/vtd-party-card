@@ -21,7 +21,7 @@ export class PlayerComponent extends Component<PlayerComponentProps, PlayerCompo
 		this.props.onChange();
 	}
 
-	private setNumberValue(key: "meleeAC" | "rangedAC" | "acAdjust", event: ChangeEvent<HTMLInputElement>) {
+	private setNumberValue(key: "meleeAC" | "rangedAC" | "acAdjust" | "meleeDamageBonus" | "rangedDamageBonus", event: ChangeEvent<HTMLInputElement>) {
 		this.props.player[key] = this.getNumberFrom(event);
 		this.props.onChange();
 	}
@@ -82,6 +82,21 @@ export class PlayerComponent extends Component<PlayerComponentProps, PlayerCompo
 						<input type="text"
 							value={this.props.player.rangedWeapon}
 							onChange={this.setStringValue.bind(this, "rangedWeapon")}/>
+					</div>
+				</li>
+				<li className="player-stat-list__row row">
+					<label className="player-stat-list__label col">
+						Damage Bonus
+					</label>
+					<div className="player-stat-list__input col">
+						<input type="number"
+							value={this.props.player.meleeDamageBonus}
+							onChange={this.setNumberValue.bind(this, "meleeDamageBonus")}/>
+					</div>
+					<div className="player-stat-list__input col">
+						<input type="number"
+							value={this.props.player.rangedDamageBonus}
+							onChange={this.setNumberValue.bind(this, "rangedDamageBonus")}/>
 					</div>
 				</li>
 				{allDamageTypes.map((damageType: DamageType) => {

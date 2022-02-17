@@ -22,10 +22,12 @@ export class Player {
 
 	meleeAC: number = 0;
 	meleeWeapon: string = "";
+	meleeDamageBonus: number = 0;
 	meleeDamageTypes: DefaultMap<string, number> = new DefaultMap(0);
 
 	rangedAC: number = 0;
 	rangedWeapon: string = "";
+	rangedDamageBonus: number = 0;
 	rangedDamageTypes: DefaultMap<string, number> = new DefaultMap(0);
 
 	get nakedAC(): number {
@@ -52,10 +54,12 @@ export class Player {
 
 		this.meleeAC = archive.meleeAC;
 		this.meleeWeapon = archive.meleeWeapon;
+		this.meleeDamageBonus = archive.meleeDamageBonus;
 		this.meleeDamageTypes = new DefaultMap(0, archive.meleeDamageTypes.values);
 
 		this.rangedAC = archive.rangedAC;
 		this.rangedWeapon = archive.rangedWeapon;
+		this.rangedDamageBonus = archive.rangedDamageBonus;
 		this.rangedDamageTypes = new DefaultMap(0, archive.rangedDamageTypes.values);
 
 		this.acAdjust = archive.acAdjust;
@@ -85,10 +89,12 @@ export class Player {
 
 		this.meleeAC = 0;
 		this.meleeWeapon = "";
+		this.meleeDamageBonus = 0;
 		this.meleeDamageTypes = new DefaultMap(0);
 
 		this.rangedAC = 0;
 		this.rangedWeapon = "";
+		this.rangedDamageBonus = 0;
 		this.rangedDamageTypes = new DefaultMap(0);
 
 		this.hasFreeMovement = false;
