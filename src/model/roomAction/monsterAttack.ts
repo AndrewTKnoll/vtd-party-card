@@ -25,7 +25,7 @@ export interface MonsterWeaponAttackParams {
 	autoHitThreshold?: number | undefined;
 	damageAmount: number;
 	damageType: string;
-	note?: string | undefined;
+	note?: string | ((attack: MonsterWeaponAttack) => string) | undefined;
 	completionHandler?: ((attack: MonsterWeaponAttack) => void) | undefined;
 }
 
@@ -93,7 +93,7 @@ export class MonsterWeaponAttack {
 		this.damageAmount = params.damageAmount;
 		this.damageType = params.damageType;
 
-		this.note = params.note || "";
+		this.note = (typeof(params.note) === "function") ? params.note(this) : (params.note || "");
 
 		this.completionHandler = params.completionHandler;
 	}
