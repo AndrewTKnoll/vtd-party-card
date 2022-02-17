@@ -34,7 +34,10 @@ export class Monster {
 		return this.currentDamage < this.maxHP;
 	}
 
-	isTaunted = false
+	isTaunted = false;
+	get isTauntable(): boolean {
+		return true;
+	}
 
 	constructor(name: string, maxHP: { [key: string]: number }) {
 		this.name = name;

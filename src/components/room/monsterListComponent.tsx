@@ -28,13 +28,15 @@ export class MonsterListComponent extends Component<MonsterListComponentProps, M
 							<span className="monster-list-component__name col">
 								{`${monster.name}${monster.statusNote ? ` (${monster.statusNote})` : ""}`}
 							</span>
-							<label className="monster-list-component__taunt col">
-								<input type="checkbox"
-									checked={monster.isTaunted}
-									onChange={this.monsterTaunted.bind(this, monster)}/>
+							{monster.isTauntable &&
+								<label className="monster-list-component__taunt col">
+									<input type="checkbox"
+										checked={monster.isTaunted}
+										onChange={this.monsterTaunted.bind(this, monster)}/>
 
-								Taunted
-							</label>
+									Taunted
+								</label>
+							}
 							<span className="monster-list-component__health col">
 								{`${monster.currentDamage} of ${monster.maxHP}`}
 							</span>
