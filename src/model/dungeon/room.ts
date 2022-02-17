@@ -1,3 +1,5 @@
+import { ReactNode } from "react";
+
 import { Monster } from "model/dungeon/monster";
 
 import { PartyCard } from "model/partyCard/partyCard";
@@ -56,6 +58,18 @@ export class Room {
 
 	get monsters(): Monster[] {
 		return [];
+	}
+
+	get infoColumnNotes(): ReactNode {
+		return false;
+	}
+
+	get secondaryColumnNotes(): ReactNode {
+		return false;
+	}
+
+	get mainSectionNotes(): ReactNode {
+		return false;
 	}
 
 	reset(level: ResetLevel, party: PartyCard) {

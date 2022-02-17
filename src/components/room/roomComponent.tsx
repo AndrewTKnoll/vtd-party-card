@@ -206,7 +206,7 @@ export class RoomComponent extends Component<RoomComponentProps, RoomComponentSt
 		const hasMonsters = this.props.data.currentRoom.monsters.length > 0;
 
 		return (
-			<div className="room-component row">
+			<div className={`room-component room-${this.props.data.currentRoom.id} row`}>
 				<h2 className="room-component__title col">
 					{this.props.data.currentRoom.name}
 				</h2>
@@ -273,7 +273,13 @@ export class RoomComponent extends Component<RoomComponentProps, RoomComponentSt
 				<div className="room-component__info-col col">
 					<h3>Info</h3>
 					{this.renderRoomTimer()}
+					{this.props.data.currentRoom.infoColumnNotes}
 				</div>
+				{this.props.data.currentRoom.secondaryColumnNotes &&
+					<div className="room-component__secondary-info-col col">
+						{this.props.data.currentRoom.secondaryColumnNotes}
+					</div>
+				}
 				<div className="room-component__action-col col">
 					{this.state.playerAttacks.length > 0 &&
 						<PlayerAttackListComponent attacks={this.state.playerAttacks}
@@ -290,6 +296,11 @@ export class RoomComponent extends Component<RoomComponentProps, RoomComponentSt
 						<InitiativeActionComponent action={this.state.initiativeAction}/>
 					}
 				</div>
+				{this.props.data.currentRoom.mainSectionNotes &&
+					<div className="room-component__main-info-col col">
+						{this.props.data.currentRoom.mainSectionNotes}
+					</div>
+				}
 			</div>
 		);
 	}

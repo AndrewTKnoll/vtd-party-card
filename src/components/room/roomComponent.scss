@@ -19,6 +19,18 @@
 		}
 	}
 
+	.room-component__secondary-info-col {
+		width: 100%;
+
+		@include breakpoint-sm() {
+			width: 50%;
+		}
+
+		@include breakpoint-md() {
+			width: calc(200% / 3);
+		}
+	}
+
 	.room-component__control-row {
 		display: flex;
 		margin-bottom: 0.5rem;
@@ -28,8 +40,31 @@
 		}
 	}
 
+	.room-component__main-info-col {
+		width: 100%;
+	}
+
+	.room-component__info-col,
+	.room-component__secondary-info-col,
+	.room-component__main-info-col {
+
+		.collapse-component {
+
+			.collapse-component__header {
+				font-size: 1rem;
+			}
+		}
+
+		ul {
+			list-style: initial;
+			margin-bottom: 0.5rem;
+			padding-left: 1rem;
+		}
+	}
+
 	.room-component__action-col {
 		width: 100%;
+		margin-bottom: 1rem;
 
 		h3 {
 			text-align: center;
