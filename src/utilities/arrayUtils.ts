@@ -4,6 +4,7 @@ declare global {
 	interface Array<T> {
 		separate(separator: (element: T) => boolean): [T[], T[]];
 		getItemsInRange(distance: number, centerIndex: number, includeCenter: boolean): T[];
+		getHighValueItems(evaluator: (item: T) => number): T[];
 		selectItems(itemCount: number, firstElements?: T[]): T[];
 	}
 }
@@ -37,6 +38,26 @@ Array.prototype.getItemsInRange = function<T>(this: T[], distance: number, cente
 			(index >= wrappedFirstIndex) ||
 			((index >= firstIndex) && (index <= lastIndex));
 	});
+}
+
+Array.prototype.getHighValueItems = function<T>(this: T[], evaluator: (item: T) => number): T[] {
+	let highValueItems: T[] = [];
+	let highValue = 0;
+
+	this.forEach((item) => {
+		const itemValue = evaluator(item);
+
+		if (itemValue > highValue) {
+			highValueItems = [item];
+			highValue = itemValue;
+			return;
+		}
+		if (itemValue == highValue) {
+			highValueItems.push(item);
+		}
+	});
+
+	return highValueItems;
 }
 
 Array.prototype.selectItems = function<T>(this: T[], itemCount: number, firstElements: T[] = []): T[] {
