@@ -33,8 +33,9 @@ export class RoomActionComponent extends Component<RoomActionComponentProps, Roo
 
 		if (attack.type === MonsterAttackType.weapon) {
 			const guard = (attack.paladin ? "(guard) " : "");
-			const autoHit = (!attack.hit.auto && attack.hit.roll >= attack.autoHitThreshold) && attack.hit.total < attack.effectiveAC ? ` (nat ${attack.hit.roll})` : ""
-			const result = (attack.isHit ? `Hit${autoHit}: ${attack.damageAmount} ${attack.damageType}` : "Miss");
+			const autoHit = !attack.hit.auto && (attack.hit.roll >= attack.autoHitThreshold) && (attack.hit.total < attack.effectiveAC) ? ` (nat ${attack.hit.roll})` : "";
+			const autoMiss = !attack.hit.auto && (attack.hit.roll === 1) && (attack.hit.total >= attack.effectiveAC) ? ` (nat 1)` : "";
+			const result = (attack.isHit ? `Hit${autoHit}: ${attack.damageAmount} ${attack.damageType}` : `Miss ${autoMiss}`);
 			resultText = `${guard}${result}${attack.note ? ` (${attack.note})` : ""}`;
 		}
 		else {
