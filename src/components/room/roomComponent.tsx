@@ -2,6 +2,7 @@ import React, { Component, ReactNode } from "react";
 
 import { DiceRollerControlComponent } from "components/controls/diceRollerControlComponent";
 import { InitiativeActionComponent } from "components/room/initiativeActionComponent";
+import { ItemsOfInterestComponent } from "components/room/itemsOfInterestComponent";
 import { MonsterListComponent } from "components/room/monsterListComponent";
 import { PlayerAttackListComponent } from "components/room/playerAttackListComponent";
 import { RoomActionComponent } from "components/room/roomActionComponent";
@@ -279,6 +280,8 @@ export class RoomComponent extends Component<RoomComponentProps, RoomComponentSt
 				<div className="room-component__info-col col">
 					<h3>Info</h3>
 					{this.renderRoomTimer()}
+					<ItemsOfInterestComponent tokens={this.props.data.currentRoom.tokensOfInterest}
+						spells={this.props.data.currentRoom.spellsOfInterest}/>
 					{this.props.data.currentRoom.infoColumnNotes}
 				</div>
 				{this.props.data.currentRoom.secondaryColumnNotes &&

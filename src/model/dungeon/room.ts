@@ -14,6 +14,12 @@ import { DefaultMap } from "utilities/defaultMap";
 
 export const roomTimeDuration = 12 * 60 * 1000;
 
+export interface ItemOfInterest {
+	readonly name: string;
+	readonly description: ReactNode;
+	readonly tokenDBLink?: string | undefined;
+}
+
 export class Room {
 	readonly name: string;
 	readonly id: string;
@@ -68,6 +74,14 @@ export class Room {
 			targets = this.monsters;
 		}
 		return targets[0];
+	}
+
+	get tokensOfInterest(): ItemOfInterest[] {
+		return [];
+	}
+
+	get spellsOfInterest(): ItemOfInterest[] {
+		return [];
 	}
 
 	get infoColumnNotes(): ReactNode {
