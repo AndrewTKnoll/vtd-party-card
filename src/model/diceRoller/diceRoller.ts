@@ -92,8 +92,8 @@ export class DiceRoller {
 		if (rollChange.slotId !== this.slotId) {
 			return;
 		}
-		rollChange.rolls.forEach((rollData) => {
-			const roll = rollFromUpdate(rollChange, rollData);
+		rollChange.rolls.forEach((rollData, index) => {
+			const roll = rollFromUpdate(rollChange, rollData, index);
 			if (roll === undefined) {
 				return;
 			}

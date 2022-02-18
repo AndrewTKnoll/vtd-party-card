@@ -34,7 +34,7 @@ export interface SaveRoll {
 }
 
 
-export function rollFromUpdate(rollChange: RollChangeData, roll: RollChangeDataRoll): Roll | undefined {
+export function rollFromUpdate(rollChange: RollChangeData, roll: RollChangeDataRoll, rollIndex: number): Roll | undefined {
 	const rollClass = classFromId(rollChange.classId);
 	if (!rollClass) {
 		return undefined;
@@ -50,6 +50,18 @@ export function rollFromUpdate(rollChange: RollChangeData, roll: RollChangeDataR
 				effect: roll.effect
 			};
 		case "attack_roll":
+			if (roll.type === "range_main") {
+				roll.type = (roll.effect === "(null)") ? "spell" : "ranged_main";
+			}
+			if (rollIndex === 1) {
+				if (roll.type === "melee_main") {
+					roll.type = "melee_off";
+				}
+				if (roll.type === "ranged_main") {
+					roll.type = "ranged_off";
+				}
+			}
+
 			if (
 				roll.type === "melee_main" ||
 				roll.type === "melee_off" ||
@@ -62,7 +74,7 @@ export function rollFromUpdate(rollChange: RollChangeData, roll: RollChangeDataR
 					class: rollClass,
 					dieResult: roll.dieResult,
 					modifiedResult: roll.modifiedResult,
-				effect: roll.effect,
+					effect: roll.effect,
 					attackType: roll.type,
 					success: roll.isSuccess || false,
 					damage: roll.damage || 0
