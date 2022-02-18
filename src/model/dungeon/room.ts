@@ -60,6 +60,16 @@ export class Room {
 		return [];
 	}
 
+	defaultTargetForPlayer(player: Player): Monster {
+		let targets = this.monsters.filter((monster) => {
+			return monster.isAlive;
+		});
+		if (targets.length === 0) {
+			targets = this.monsters;
+		}
+		return targets[0];
+	}
+
 	get infoColumnNotes(): ReactNode {
 		return false;
 	}

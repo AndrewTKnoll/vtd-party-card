@@ -167,8 +167,8 @@ export class RoomComponent extends Component<RoomComponentProps, RoomComponentSt
 		this.setState({
 			playerAttacks: this.props.data.partyCard.activePlayers.map((player) => {
 				const attack = new PlayerAttack(player, this.props.data.currentRoom);
-				attack.primaryTarget = this.props.data.currentRoom.monsters[0];
-				attack.secondaryTarget = this.props.data.currentRoom.monsters[0];
+				attack.primaryTarget = this.props.data.currentRoom.defaultTargetForPlayer(player);
+				attack.secondaryTarget = attack.primaryTarget;
 
 				return attack;
 			}),
