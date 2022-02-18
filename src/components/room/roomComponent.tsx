@@ -102,7 +102,13 @@ export class RoomComponent extends Component<RoomComponentProps, RoomComponentSt
 					return;
 				}
 
-				attack.result = (roll.success ? MonsterSaveAttackResult.success : MonsterSaveAttackResult.failure);
+				if (attack.dc) {
+					attack.result = (roll.modifiedResult >= attack.dc) ? MonsterSaveAttackResult.success : MonsterSaveAttackResult.failure;
+				}
+				else {
+					attack.result = (roll.success ? MonsterSaveAttackResult.success : MonsterSaveAttackResult.failure);
+				}
+
 
 				this.forceUpdate();
 			})

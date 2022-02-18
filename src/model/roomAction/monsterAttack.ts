@@ -120,6 +120,7 @@ export function nameForMonsterSaveAttackResult(result: MonsterSaveAttackResult) 
 export interface MonsterSaveAttackParams {
 	target: Player;
 	save: SaveType;
+	dc?: number | undefined;
 	successMessage: string;
 	failureMessage: string;
 	completionHandler?: ((attack: MonsterSaveAttack) => void) | undefined;
@@ -131,6 +132,8 @@ export class MonsterSaveAttack {
 	readonly target: Player;
 	readonly save: SaveType;
 
+	readonly dc: number | undefined;
+
 	result: MonsterSaveAttackResult | undefined = undefined;
 
 	readonly successMessage: string;
@@ -141,6 +144,7 @@ export class MonsterSaveAttack {
 	constructor(params: MonsterSaveAttackParams) {
 		this.target = params.target;
 		this.save = params.save;
+		this.dc = params.dc;
 		this.successMessage = params.successMessage;
 		this.failureMessage = params.failureMessage;
 		this.completionHandler = params.completionHandler;
