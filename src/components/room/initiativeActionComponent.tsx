@@ -14,13 +14,13 @@ export class InitiativeActionComponent extends Component<InitiativeActionCompone
 			return "Waiting";
 		}
 
-		const { monsterTotal, playerTotal } = this.props.action;
+		const { monsterTotal, playerTotal, playerRoll } = this.props.action;
 
 		if (monsterTotal === playerTotal) {
 			return "Tie - Roll Off";
 		}
 
-		return (monsterTotal > playerTotal) ? "Monster Wins" : `Players Win${playerTotal >= 15 ? " (Quick Strike)" : ""}`;
+		return (monsterTotal > playerTotal) ? "Monster Wins" : `Players Win${playerRoll >= 15 ? " (Quick Strike)" : ""}`;
 	}
 
 	override render(): ReactNode {
