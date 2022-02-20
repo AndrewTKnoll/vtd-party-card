@@ -14,6 +14,15 @@ import { DefaultMap } from "utilities/defaultMap";
 
 export const roomTimeDuration = 12 * 60 * 1000;
 
+export enum InitiativeWinner {
+	players = "players",
+	monster = "monster"
+}
+
+export function nameForInitiativeWinner(winner: InitiativeWinner): string {
+	return winner.charAt(0).toUpperCase() + winner.slice(1);
+}
+
 export interface ItemOfInterest {
 	readonly name: string;
 	readonly description: ReactNode;
@@ -40,6 +49,7 @@ export class Room {
 	get initiativeBonus(): number {
 		return this.initiativeValues.get(this.difficulty);
 	}
+	initiativeWinner: InitiativeWinner | undefined = undefined;
 
 	constructor(name: string, id: string, initiativeBonus?: { [key: string]: number }) {
 		this.name = name;
@@ -52,10 +62,14 @@ export class Room {
 		});
 	}
 
-	restoreFromArchive(archive: any) {}
+	restoreFromArchive(archive: any) {
+		this.initiativeWinner = archive.initiativeWinner;
+	}
 
 	toJSON(): any {
-		return {};
+		return {
+			initiativeWinner: this.initiativeWinner
+		};
 	}
 
 	get actions(): RoomAction[] {
@@ -106,7 +120,13 @@ export class Room {
 	reset(level: ResetLevel, party: PartyCard) {
 		this.monsters.forEach((monster) => {
 			monster.reset(level);
-		})
+		});
+
+		if (level !== ResetLevel.full) {
+			return;
+		}
+
+		this.initiativeWinner = undefined;
 	}
 
 	prepareForParty(partyCard: PartyCard) {}

@@ -1,4 +1,4 @@
-import { Room } from "model/dungeon/room";
+import { Room, InitiativeWinner } from "model/dungeon/room";
 
 export class InitiativeAction {
 	private room: Room;
@@ -11,6 +11,14 @@ export class InitiativeAction {
 	playerRollReceived = false;
 	playerRoll = 0;
 	playerTotal = 0;
+
+	get winner(): InitiativeWinner | undefined {
+		if (!this.playerRollReceived || this.monsterTotal === this.playerTotal) {
+			return undefined;
+		}
+
+		return (this.playerTotal > this.monsterTotal) ? InitiativeWinner.players : InitiativeWinner.monster;
+	}
 
 	constructor(room: Room) {
 		this.room = room;

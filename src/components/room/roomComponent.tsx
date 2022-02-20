@@ -11,7 +11,7 @@ import { TimerComponent } from "components/widgets/timerComponent";
 import { DataManager } from "model/dataManager";
 import { ResetLevel } from "model/attributes/resetLevel";
 import { Roll } from "model/diceRoller/roll";
-import { roomTimeDuration } from "model/dungeon/room";
+import { roomTimeDuration, nameForInitiativeWinner } from "model/dungeon/room";
 import { PlayerAttack } from "model/playerAttack/playerAttack";
 import { PlayerAttackType } from "model/playerAttack/playerAttackType";
 import { InitiativeAction } from "model/roomAction/initiativeAction";
@@ -151,6 +151,11 @@ export class RoomComponent extends Component<RoomComponentProps, RoomComponentSt
 			attack.complete();
 		});
 		this.state.roomActionResult?.complete();
+
+		if (this.state.initiativeAction) {
+			this.props.data.currentRoom.initiativeWinner = this.state.initiativeAction.winner;
+		}
+
 		this.clearAttacks();
 		this.props.onChange();
 	}
@@ -210,6 +215,8 @@ export class RoomComponent extends Component<RoomComponentProps, RoomComponentSt
 			this.state.roomActionResult !== undefined ||
 			this.state.initiativeAction !== undefined;
 
+		const hasInitiative = this.state.initiativeAction !== undefined;
+
 		const hasMonsters = this.props.data.currentRoom.monsters.length > 0;
 
 		return (
@@ -264,15 +271,13 @@ export class RoomComponent extends Component<RoomComponentProps, RoomComponentSt
 								<button type="button"
 									onClick={this.clearAttacks.bind(this)}>
 
-									Clear Attacks
+									{`Cancel ${hasInitiative ? "Initiative" : "Attacks"}`}
 								</button>
-								{this.state.initiativeAction === undefined &&
-									<button type="button"
-										onClick={this.completeAllAttacks.bind(this)}>
+								<button type="button"
+									onClick={this.completeAllAttacks.bind(this)}>
 
-										Complete Attacks
-									</button>
-								}
+									{`Complete ${hasInitiative ? "Initiative" : "Attacks"}`}
+								</button>
 							</div>
 						}
 					</div>
@@ -281,9 +286,15 @@ export class RoomComponent extends Component<RoomComponentProps, RoomComponentSt
 					<h3>Info</h3>
 					{this.renderRoomTimer()}
 					{!this.props.data.currentRoom.hideDefaultPushDamage &&
-						<div className="room-component__push-damage">
+						<div className="room-component__info-line">
 							<span>Push Damage:</span>
 							<span>{this.props.data.currentRoom.pushDamage}</span>
+						</div>
+					}
+					{this.props.data.currentRoom.initiativeWinner !== undefined &&
+						<div className="room-component__info-line">
+							<span>Initiative Winner:</span>
+							<span>{nameForInitiativeWinner(this.props.data.currentRoom.initiativeWinner)}</span>
 						</div>
 					}
 					<ItemsOfInterestComponent tokens={this.props.data.currentRoom.tokensOfInterest}
