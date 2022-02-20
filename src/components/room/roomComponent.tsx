@@ -280,6 +280,12 @@ export class RoomComponent extends Component<RoomComponentProps, RoomComponentSt
 				<div className="room-component__info-col col">
 					<h3>Info</h3>
 					{this.renderRoomTimer()}
+					{!this.props.data.currentRoom.hideDefaultPushDamage &&
+						<div className="room-component__push-damage">
+							<span>Push Damage:</span>
+							<span>{this.props.data.currentRoom.pushDamage}</span>
+						</div>
+					}
 					<ItemsOfInterestComponent tokens={this.props.data.currentRoom.tokensOfInterest}
 						spells={this.props.data.currentRoom.spellsOfInterest}/>
 					{this.props.data.currentRoom.infoColumnNotes}

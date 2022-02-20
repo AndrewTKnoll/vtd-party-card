@@ -19,6 +19,12 @@
 		}
 	}
 
+	.room-component__push-damage {
+		display: flex;
+		justify-content: space-between;
+		margin-bottom: 0.5rem;
+	}
+
 	.room-component__secondary-info-col {
 		width: 100%;
 

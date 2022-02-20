@@ -76,6 +76,13 @@ export class Room {
 		return targets[0];
 	}
 
+	get hideDefaultPushDamage(): boolean {
+		return false;
+	}
+	get pushDamage(): number {
+		return pushDamage.get(this.difficulty);
+	}
+
 	get tokensOfInterest(): ItemOfInterest[] {
 		return [];
 	}
@@ -108,3 +115,10 @@ export class Room {
 		return "";
 	}
 }
+
+const pushDamage = new DefaultMap(0, {
+	[Difficulty.normal]: 6,
+	[Difficulty.hardcore]: 9,
+	[Difficulty.nightmare]: 15,
+	[Difficulty.epic]: 24
+});
