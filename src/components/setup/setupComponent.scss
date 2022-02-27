@@ -47,10 +47,6 @@
 			align-items: baseline;
 			margin-bottom: 1rem;
 
-			span {
-				margin-right: 0.5rem;
-			}
-
 			input {
 				width: 6rem;
 				margin: 0 0.5rem 0 0;
@@ -58,6 +54,10 @@
 
 			button {
 				margin: 0;
+			}
+
+			span {
+				margin-left: 0.5rem;
 			}
 		}
 

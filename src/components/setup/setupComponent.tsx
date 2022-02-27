@@ -140,7 +140,7 @@ export class SetupComponent extends Component<SetupComponentProps, SetupComponen
 								<h3>Run-Specific Settings</h3>
 								<h4>Dice Roller Slot ID:</h4>
 								<ValidatedTextInput value={this.props.data.diceRoller.slotId?.toUpperCase() || ""}
-									validation={/[a-z,A-Z]{6}/}
+									validation={/^[a-z,A-Z]{6}$/}
 									onChange={this.updateSlotId.bind(this)}/>
 								<h4>Ticket Start Time:</h4>
 								<input type="datetime-local"
