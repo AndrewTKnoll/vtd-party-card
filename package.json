@@ -1,7 +1,7 @@
 {
-  "name": "VTD DM Assistant",
-  "version": "0.0.1",
-  "description": "Assistant VTD DMs",
+  "name": "VTD Party Card",
+  "version": "1.0.0",
+  "description": "Helper tool for VTD DMs",
   "private": true,
   "scripts": {
     "dev": "webpack --config webpack.config.js --env dev",
