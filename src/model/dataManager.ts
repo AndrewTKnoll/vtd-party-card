@@ -52,10 +52,10 @@ export class DataManager {
 
 	get skillTestLinks(): string[] {
 		return [
-			"https://truedungeon.com/files/Wizard_Skill_Test.pdf",
-			"https://truedungeon.com/files/Druid_Skill_Test.pdf",
 			"https://truedungeon.com/files/Bard_Skill_Test.pdf",
-			"https://truedungeon.com/files/Cleric_Skill_Test.pdf"
+			"https://truedungeon.com/files/Cleric_Skill_Test.pdf",
+			"https://truedungeon.com/files/Druid_Skill_Test.pdf",
+			"https://truedungeon.com/files/Wizard_Skill_Test.pdf"
 		];
 	}
 
