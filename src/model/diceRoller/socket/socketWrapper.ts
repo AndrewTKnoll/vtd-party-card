@@ -1,8 +1,6 @@
 import { SocketRequestMessage } from "model/diceRoller/socket/socketRequestMessage";
 import { SocketResponseMessage, parseResponse } from "model/diceRoller/socket/socketResponseMessage";
 
-const socketURL = "wss://s-usc1c-nss-337.firebaseio.com/.ws?v=5&ns=tdroller-1ac5a-default-rtdb";
-
 export class SocketWrapper {
 	private socket: WebSocket;
 	private pingIntervalId?: number;
@@ -14,7 +12,7 @@ export class SocketWrapper {
 	private errorCallback: (error: string, notifiy: boolean) => void;
 
 	constructor(url: string, messageCallback: (message: SocketResponseMessage) => void, errorCallback: (error: string, notify: boolean) => void) {
-		this.socket = new WebSocket(socketURL);
+		this.socket = new WebSocket(url);
 
 		this.socket.addEventListener("open", this.socketOpened.bind(this));
 		this.socket.addEventListener("message", this.receiveMessage.bind(this));
