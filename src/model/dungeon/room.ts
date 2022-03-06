@@ -1,6 +1,7 @@
 import { ReactNode } from "react";
 
 import { Monster } from "model/dungeon/monster";
+import { StatBlock } from "model/dungeon/statBlock";
 
 import { PartyCard } from "model/partyCard/partyCard";
 import { Player } from "model/partyCard/player";
@@ -43,6 +44,10 @@ export class Room {
 		this.monsters.forEach((monster) => {
 			monster.difficulty = newValue
 		});
+
+		this.statBlocks.forEach((statBlock) => {
+			statBlock.difficulty = newValue;
+		});
 	}
 
 	private initiativeValues: DefaultMap<Difficulty, number>;
@@ -77,6 +82,10 @@ export class Room {
 	}
 
 	get monsters(): Monster[] {
+		return [];
+	}
+
+	get statBlocks(): StatBlock[] {
 		return [];
 	}
 
