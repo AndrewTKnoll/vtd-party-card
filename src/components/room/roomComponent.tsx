@@ -225,12 +225,29 @@ export class RoomComponent extends Component<RoomComponentProps, RoomComponentSt
 				<h2 className="room-component__title col">
 					{this.props.data.currentRoom.name}
 				</h2>
+				<div className="room-component__info-col col">
+					<h3>Info</h3>
+					{this.renderRoomTimer()}
+					{!this.props.data.currentRoom.hideDefaultPushDamage &&
+						<div className="room-component__info-line">
+							<span>Push Damage:</span>
+							<span>{this.props.data.currentRoom.pushDamage}</span>
+						</div>
+					}
+					{this.props.data.currentRoom.initiativeWinner !== undefined &&
+						<div className="room-component__info-line">
+							<span>Initiative Winner:</span>
+							<span>{nameForInitiativeWinner(this.props.data.currentRoom.initiativeWinner)}</span>
+						</div>
+					}
+					{this.props.data.currentRoom.statBlocks.length > 0 &&
+						<StatBlockComponent statBlocks={this.props.data.currentRoom.statBlocks}/>
+					}
+					<ItemsOfInterestComponent tokens={this.props.data.currentRoom.tokensOfInterest}
+						spells={this.props.data.currentRoom.spellsOfInterest}/>
+					{this.props.data.currentRoom.infoColumnNotes}
+				</div>
 				{hasMonsters && <>
-					<div className="room-component__monster-col col">
-						<h3>Monsters</h3>
-						<MonsterListComponent room={this.props.data.currentRoom}
-							onChange={this.props.onChange}/>
-					</div>
 					<div className="room-component__control-col col">
 						<h3>Dice Roller</h3>
 						<DiceRollerControlComponent diceRoller={this.props.data.diceRoller}/>
@@ -283,29 +300,12 @@ export class RoomComponent extends Component<RoomComponentProps, RoomComponentSt
 							</div>
 						}
 					</div>
+					<div className="room-component__monster-col col">
+						<h3>Monsters</h3>
+						<MonsterListComponent room={this.props.data.currentRoom}
+							onChange={this.props.onChange}/>
+					</div>
 				</>}
-				<div className="room-component__info-col col">
-					<h3>Info</h3>
-					{this.renderRoomTimer()}
-					{!this.props.data.currentRoom.hideDefaultPushDamage &&
-						<div className="room-component__info-line">
-							<span>Push Damage:</span>
-							<span>{this.props.data.currentRoom.pushDamage}</span>
-						</div>
-					}
-					{this.props.data.currentRoom.initiativeWinner !== undefined &&
-						<div className="room-component__info-line">
-							<span>Initiative Winner:</span>
-							<span>{nameForInitiativeWinner(this.props.data.currentRoom.initiativeWinner)}</span>
-						</div>
-					}
-					{this.props.data.currentRoom.statBlocks.length > 0 &&
-						<StatBlockComponent statBlocks={this.props.data.currentRoom.statBlocks}/>
-					}
-					<ItemsOfInterestComponent tokens={this.props.data.currentRoom.tokensOfInterest}
-						spells={this.props.data.currentRoom.spellsOfInterest}/>
-					{this.props.data.currentRoom.infoColumnNotes}
-				</div>
 				{this.props.data.currentRoom.secondaryColumnNotes &&
 					<div className="room-component__secondary-info-col col">
 						{this.props.data.currentRoom.secondaryColumnNotes}
