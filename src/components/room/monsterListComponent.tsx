@@ -17,8 +17,7 @@ export class MonsterListComponent extends Component<MonsterListComponentProps, M
 	}
 
 	override render() {
-		return (<>
-			<h3>Monsters</h3>
+		return (
 			<ul className="monster-list-component">
 				{this.props.room.monsters.map((monster) => {
 					return (
@@ -44,6 +43,6 @@ export class MonsterListComponent extends Component<MonsterListComponentProps, M
 					);
 				})}
 			</ul>
-		</>);
+		);
 	}
 }

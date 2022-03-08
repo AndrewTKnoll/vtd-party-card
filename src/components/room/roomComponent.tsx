@@ -227,6 +227,7 @@ export class RoomComponent extends Component<RoomComponentProps, RoomComponentSt
 				</h2>
 				{hasMonsters && <>
 					<div className="room-component__monster-col col">
+						<h3>Monsters</h3>
 						<MonsterListComponent room={this.props.data.currentRoom}
 							onChange={this.props.onChange}/>
 					</div>
