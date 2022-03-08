@@ -153,17 +153,11 @@ export class PlayerComponent extends Component<PlayerComponentProps, PlayerCompo
 
 								Has Free Movement
 							</label>
-							<label className="player-misc-settings__ac-adjust">
-								Temporary AC Adjust
-								<input type="number"
-									value={this.props.player.acAdjust}
-									onChange={this.setNumberValue.bind(this, "acAdjust")}/>
-							</label>
 						</div>
 						{this.renderStatList()}
 					</ModalComponent>
 				</div>
-				<div className="player-component__checkbox-wrapper">
+				<div className="player-component__checkbox-row">
 					<label className="player-component__is-dead">
 						<input type="checkbox"
 							checked={this.props.player.isDead}
@@ -176,20 +170,28 @@ export class PlayerComponent extends Component<PlayerComponentProps, PlayerCompo
 							onChange={this.setBooleanValue.bind(this, "isGuarded")}/>
 						Guarded
 					</label>
-					{statusNote !== "" && this.props.player.isActive && <>
-						<h4>Status:</h4>
-						<span>{statusNote}</span>
-					</>}
 				</div>
-				<div className="player-component__ac-wrapper">
+				<div className="player-component__ac-row">
 					<h4>AC</h4>
-					<span className={this.props.player.currentWeapon === WeaponType.melee ? "active" : ""}>
-						{`M: ${this.props.player.meleeAC}`}
+					<span className={`player-component__ac-value${this.props.player.currentWeapon === WeaponType.melee ? " player-component__ac-value--active" : ""}`}>
+						{`M: ${this.props.player.meleeAC + this.props.player.acAdjust}`}
 					</span>
-					<span className={this.props.player.currentWeapon === WeaponType.ranged ? "active" : ""}>
-						{`R: ${this.props.player.rangedAC}`}
+					<span className={`player-component__ac-value${this.props.player.currentWeapon === WeaponType.ranged ? " player-component__ac-value--active" : ""}`}>
+						{`R: ${this.props.player.rangedAC + this.props.player.acAdjust}`}
 					</span>
 				</div>
+				<label className="player-component__ac-adjust-row">
+					Temp AC +/-
+					<input type="number"
+						value={this.props.player.acAdjust}
+						onChange={this.setNumberValue.bind(this, "acAdjust")}/>
+				</label>
+				{statusNote !== "" && this.props.player.isActive &&
+					<div className="player-component__status-row">
+						<h4>Status:</h4>
+						{statusNote}
+					</div>
+				}
 			</div>
 		);
 	}
