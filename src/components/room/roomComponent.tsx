@@ -6,6 +6,7 @@ import { ItemsOfInterestComponent } from "components/room/itemsOfInterestCompone
 import { MonsterListComponent } from "components/room/monsterListComponent";
 import { PlayerAttackListComponent } from "components/room/playerAttackListComponent";
 import { RoomActionComponent } from "components/room/roomActionComponent";
+import { StatBlockComponent } from "components/room/statBlockComponent";
 import { TimerComponent } from "components/widgets/timerComponent";
 
 import { DataManager } from "model/dataManager";
@@ -296,6 +297,9 @@ export class RoomComponent extends Component<RoomComponentProps, RoomComponentSt
 							<span>Initiative Winner:</span>
 							<span>{nameForInitiativeWinner(this.props.data.currentRoom.initiativeWinner)}</span>
 						</div>
+					}
+					{this.props.data.currentRoom.statBlocks.length > 0 &&
+						<StatBlockComponent statBlocks={this.props.data.currentRoom.statBlocks}/>
 					}
 					<ItemsOfInterestComponent tokens={this.props.data.currentRoom.tokensOfInterest}
 						spells={this.props.data.currentRoom.spellsOfInterest}/>
