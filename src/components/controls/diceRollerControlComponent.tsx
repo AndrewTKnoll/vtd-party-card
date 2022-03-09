@@ -7,9 +7,6 @@ import { RollState } from "model/diceRoller/rollState";
 interface DiceRollerControlComponentProps {
 	diceRoller: DiceRoller;
 }
-// interface DiceRollerControlComponentState {
-// 	rollState: RollState;
-// }
 
 export class DiceRollerControlComponent extends Component<DiceRollerControlComponentProps, RollState> {
 
