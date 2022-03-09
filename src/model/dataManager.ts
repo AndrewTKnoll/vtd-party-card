@@ -10,7 +10,7 @@ const storageKey = "data";
 export class DataManager {
 	readonly dungeon: Dungeon = new Dungeon();
 	readonly partyCard = new PartyCard();
-	readonly diceRoller: DiceRoller;
+	readonly diceRoller = new DiceRoller();
 
 	private currentRoomIndex: [number, number] = [0, 0];
 	get currentRoom(): Room {
@@ -74,7 +74,7 @@ export class DataManager {
 	}
 
 	constructor() {
-		this.diceRoller = new DiceRoller((error) => {
+		this.diceRoller.errorCallbacks.register((error) => {
 			alert(error);
 		});
 

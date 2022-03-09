@@ -5,6 +5,8 @@ import { Roll, rollFromUpdate } from "model/diceRoller/roll";
 import { RollState, RawRollState } from "model/diceRoller/rollState";
 import { RollType } from "model/diceRoller/rollType";
 
+import { CallbackRegistry } from "utilities/callbackRegistry";
+
 const endpointUrl = "https://us-central1-tdroller-1ac5a.cloudfunctions.net/gm";
 const socketUrl = "wss://s-usc1c-nss-336.firebaseio.com/.ws?v=5&ns=tdroller-1ac5a-default-rtdb";
 const socketSdk = "sdk.js.9-4-1";
@@ -33,13 +35,11 @@ export class DiceRoller {
 		return this._rollState;
 	}
 
-	stateCallback?: (() => void) | undefined;
-	rollCallback?: ((roll: Roll) => void) | undefined;
-	private errorCallback: (error: string) => void;
+	readonly stateCallbacks = new CallbackRegistry<() => void>();
+	readonly rollCallbacks = new CallbackRegistry<(roll: Roll) => void>();
+	readonly errorCallbacks = new CallbackRegistry<(error: string) => void>();
 
-	constructor(errorCallback: (error: string) => void) {
-		this.errorCallback = errorCallback;
-
+	constructor() {
 		this.reconnect();
 	}
 
@@ -63,7 +63,7 @@ export class DiceRoller {
 
 	private socketError(error: string, notify: boolean) {
 		if (notify) {
-			this.errorCallback(error);
+			this.errorCallbacks.trigger(error);
 		}
 		this.reconnect();
 	}
@@ -74,10 +74,10 @@ export class DiceRoller {
 				this.rawRollState.updateWith(message);
 				if (this.rawRollState.state) {
 					this._rollState = this.rawRollState.state;
-					this.stateCallback?.();
+					this.stateCallbacks.trigger();
 				}
 				else {
-					this.errorCallback(`Inconsistent state update\n\nCurrent:\n${JSON.stringify(this.rollState)}\n\nUpdate:\n${JSON.stringify(message)}`)
+					this.errorCallbacks.trigger(`Inconsistent state update\n\nCurrent:\n${JSON.stringify(this.rollState)}\n\nUpdate:\n${JSON.stringify(message)}`)
 				}
 				break;
 			case "roll":
@@ -98,7 +98,7 @@ export class DiceRoller {
 				return;
 			}
 			this.rolls.push(roll);
-			this.rollCallback?.(roll);
+			this.rollCallbacks.trigger(roll);
 		});
 	}
 
@@ -106,7 +106,7 @@ export class DiceRoller {
 
 	async logIn(password: string) {
 		if (this.authToken) {
-			this.errorCallback("Already logged in");
+			this.errorCallbacks.trigger("Already logged in");
 			return;
 		}
 
@@ -119,7 +119,7 @@ export class DiceRoller {
 			this.authToken = response.authToken;
 		}
 		else if (response.error) {
-			this.errorCallback(response.error);
+			this.errorCallbacks.trigger(response.error);
 		}
 	}
 
@@ -169,22 +169,22 @@ export class DiceRoller {
 
 	private async sendCommand(generator: (slotId: string, authToken: string) => CommandRequest) {
 		if (!this.slotId) {
-			this.errorCallback("No slot ID");
+			this.errorCallbacks.trigger("No slot ID");
 			return;
 		}
 		if (!this.authToken) {
-			this.errorCallback("Not logged in");
+			this.errorCallbacks.trigger("Not logged in");
 			return;
 		}
 
 		try {
 			const response = await this.makeRequest(generator(this.slotId, this.authToken));
 			if (response.error) {
-				this.errorCallback(response.error);
+				this.errorCallbacks.trigger(response.error);
 			}
 		}
 		catch (error) {
-			this.errorCallback(`${error}`);
+			this.errorCallbacks.trigger(`${error}`);
 		}
 	}
 

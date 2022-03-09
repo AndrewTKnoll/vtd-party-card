@@ -33,10 +33,10 @@ interface RoomComponentState {
 }
 
 export class RoomComponent extends Component<RoomComponentProps, RoomComponentState> {
+	private rollCallbackId!: number;
+
 	constructor(props: RoomComponentProps) {
 		super(props);
-
-		props.data.diceRoller.rollCallback = this.handlePlayerRoll.bind(this);
 
 		this.state = {
 			playerAttacks: [],
@@ -45,11 +45,19 @@ export class RoomComponent extends Component<RoomComponentProps, RoomComponentSt
 		};
 	}
 
+	override componentDidMount() {
+		this.rollCallbackId = this.props.data.diceRoller.rollCallbacks.register(this.handlePlayerRoll.bind(this));
+	}
+
 	override componentDidUpdate(prevProps: RoomComponentProps) {
 		if (prevProps.data.diceRoller !== this.props.data.diceRoller) {
-			prevProps.data.diceRoller.rollCallback = undefined;
-			this.props.data.diceRoller.rollCallback = this.handlePlayerRoll.bind(this);
+			prevProps.data.diceRoller.rollCallbacks.unregister(this.rollCallbackId);
+			this.rollCallbackId = this.props.data.diceRoller.rollCallbacks.register(this.handlePlayerRoll.bind(this));
 		}
+	}
+
+	override componentWillUnmount() {
+		this.props.data.diceRoller.rollCallbacks.unregister(this.rollCallbackId);
 	}
 
 	private handleAllPlayerRolls() {

@@ -9,21 +9,28 @@ interface DiceRollerControlComponentProps {
 }
 
 export class DiceRollerControlComponent extends Component<DiceRollerControlComponentProps, RollState> {
+	private stateCallbackId!: number;
 
 	constructor(props: DiceRollerControlComponentProps) {
 		super(props);
 
 		this.state = props.diceRoller.rollState;
+	}
 
-		props.diceRoller.stateCallback = this.updateRollState.bind(this);
+	override componentDidMount() {
+		this.stateCallbackId = this.props.diceRoller.stateCallbacks.register(this.updateRollState.bind(this));
 	}
 
 	override componentDidUpdate(prevProps: DiceRollerControlComponentProps) {
 		if (prevProps.diceRoller !== this.props.diceRoller) {
-			prevProps.diceRoller.stateCallback = undefined;
-			this.props.diceRoller.rollCallback = this.updateRollState.bind(this);
+			prevProps.diceRoller.stateCallbacks.unregister(this.stateCallbackId);
+			this.stateCallbackId = this.props.diceRoller.stateCallbacks.register(this.updateRollState.bind(this));
 			this.updateRollState();
 		}
+	}
+
+	override componentWillUnmount() {
+		this.props.diceRoller.stateCallbacks.unregister(this.stateCallbackId);
 	}
 
 	private updateRollState() {
