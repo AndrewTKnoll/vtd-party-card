@@ -74,10 +74,6 @@ export class DataManager {
 	}
 
 	constructor() {
-		this.diceRoller.errorCallbacks.register((error) => {
-			alert(error);
-		});
-
 		try {
 			const archiveString = localStorage.getItem(storageKey);
 			if (!archiveString) {

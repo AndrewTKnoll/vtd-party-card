@@ -37,7 +37,7 @@ export class DiceRoller {
 
 	readonly stateCallbacks = new CallbackRegistry<() => void>();
 	readonly rollCallbacks = new CallbackRegistry<(roll: Roll) => void>();
-	readonly errorCallbacks = new CallbackRegistry<(error: string) => void>();
+	readonly errorCallbacks = new CallbackRegistry<(error: string, auth: boolean) => void>();
 
 	constructor() {
 		this.reconnect();
@@ -63,7 +63,7 @@ export class DiceRoller {
 
 	private socketError(error: string, notify: boolean) {
 		if (notify) {
-			this.errorCallbacks.trigger(error);
+			this.errorCallbacks.trigger(error, false);
 		}
 		this.reconnect();
 	}
@@ -77,7 +77,7 @@ export class DiceRoller {
 					this.stateCallbacks.trigger();
 				}
 				else {
-					this.errorCallbacks.trigger(`Inconsistent state update\n\nCurrent:\n${JSON.stringify(this.rollState)}\n\nUpdate:\n${JSON.stringify(message)}`)
+					this.errorCallbacks.trigger(`Inconsistent state update\n\nCurrent:\n${JSON.stringify(this.rollState)}\n\nUpdate:\n${JSON.stringify(message)}`, false);
 				}
 				break;
 			case "roll":
@@ -106,7 +106,7 @@ export class DiceRoller {
 
 	async logIn(password: string) {
 		if (this.authToken) {
-			this.errorCallbacks.trigger("Already logged in");
+			this.errorCallbacks.trigger("Already logged in", false);
 			return;
 		}
 
@@ -119,7 +119,7 @@ export class DiceRoller {
 			this.authToken = response.authToken;
 		}
 		else if (response.error) {
-			this.errorCallbacks.trigger(response.error);
+			this.errorCallbacks.trigger(response.error, false);
 		}
 	}
 
@@ -169,22 +169,22 @@ export class DiceRoller {
 
 	private async sendCommand(generator: (slotId: string, authToken: string) => CommandRequest) {
 		if (!this.slotId) {
-			this.errorCallbacks.trigger("No slot ID");
+			this.errorCallbacks.trigger("No slot ID", false);
 			return;
 		}
 		if (!this.authToken) {
-			this.errorCallbacks.trigger("Not logged in");
+			this.errorCallbacks.trigger("Not logged in", true);
 			return;
 		}
 
 		try {
 			const response = await this.makeRequest(generator(this.slotId, this.authToken));
 			if (response.error) {
-				this.errorCallbacks.trigger(response.error);
+				this.errorCallbacks.trigger("Error with the dice roller - try logging in again", true);
 			}
 		}
 		catch (error) {
-			this.errorCallbacks.trigger(`${error}`);
+			this.errorCallbacks.trigger("Error with the dice roller - try logging in again", true);
 		}
 	}
 

@@ -15,6 +15,7 @@ interface VTDPartyCardComponentState {}
 
 export class VTDPartyCardComponent extends Component<VTDPartyCardComponentProps, VTDPartyCardComponentState> {
 	private roomComponentRef: RefObject<RoomComponent>;
+	private errorCallbackId!: number;
 
 	constructor(props: VTDPartyCardComponentProps) {
 		super(props);
@@ -22,13 +23,35 @@ export class VTDPartyCardComponent extends Component<VTDPartyCardComponentProps,
 		this.roomComponentRef = React.createRef();
 	}
 
+	override componentDidMount() {
+		this.errorCallbackId = this.props.data.diceRoller.errorCallbacks.register(this.handleDiceRollerError.bind(this));
+	}
+
+	override componentDidUpdate(prevProps: VTDPartyCardComponentProps) {
+		this.props.data.save();
+
+		if (prevProps.data.diceRoller !== this.props.data.diceRoller) {
+			prevProps.data.diceRoller.errorCallbacks.unregister(this.errorCallbackId);
+			this.errorCallbackId = this.props.data.diceRoller.errorCallbacks.register(this.handleDiceRollerError.bind(this));
+		}
+	}
+
+	override componentWillUnmount() {
+		this.props.data.diceRoller.errorCallbacks.unregister(this.errorCallbackId);
+	}
+
+	private handleDiceRollerError(error: string, auth: boolean) {
+		alert(error);
+
+		if (auth) {
+			this.props.data.diceRoller.authToken = undefined;
+			this.forceUpdate();
+		}
+	}
+
 	private clearAttackLists() {
 		this.roomComponentRef.current?.clearAttacks();
 		this.forceUpdate();
-	}
-
-	override componentDidUpdate() {
-		this.props.data.save();
 	}
 
 	override render() {
