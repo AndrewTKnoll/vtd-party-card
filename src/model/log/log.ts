@@ -42,4 +42,13 @@ export class Log {
 	private save() {
 		localStorage.setItem(storageKey, JSON.stringify(this.items));
 	}
+
+	exportLog() {
+		const element = document.createElement("a");
+
+		element.setAttribute("href", `data:application/json;charset=utf-8,${JSON.stringify(this.items)}`);
+		element.setAttribute("download", "log.json");
+
+		element.click();
+	}
 }
