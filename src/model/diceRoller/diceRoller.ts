@@ -1,5 +1,5 @@
 import { SocketRequestMessage } from "model/diceRoller/socket/socketRequestMessage";
-import { SocketResponseMessage, RollChangeData } from "model/diceRoller/socket/socketResponseMessage";
+import { SocketResponseMessage, SettingsChangeSocketResponse, RollChangeData } from "model/diceRoller/socket/socketResponseMessage";
 import { SocketWrapper } from "model/diceRoller/socket/socketWrapper";
 import { Roll, rollFromUpdate } from "model/diceRoller/roll";
 import { RollState, RawRollState } from "model/diceRoller/rollState";
@@ -23,6 +23,10 @@ export class DiceRoller {
 		this.listenToSlot(false);
 		this._slotId = newValue;
 		this.listenToSlot(true);
+
+		if (!this._slotId) {
+			this.handleStateMessage();
+		}
 	}
 
 	rolls: Roll[] = [];
@@ -71,14 +75,7 @@ export class DiceRoller {
 	private socketMessage(message: SocketResponseMessage) {
 		switch (message.type) {
 			case "settings":
-				this.rawRollState.updateWith(message);
-				if (this.rawRollState.state) {
-					this._rollState = this.rawRollState.state;
-					this.stateCallbacks.trigger();
-				}
-				else {
-					this.errorCallbacks.trigger(`Inconsistent state update\n\nCurrent:\n${JSON.stringify(this.rollState)}\n\nUpdate:\n${JSON.stringify(message)}`, false);
-				}
+				this.handleStateMessage(message);
 				break;
 			case "roll":
 				if (message.clear) {
@@ -86,6 +83,23 @@ export class DiceRoller {
 				}
 				message.rolls.forEach(this.handleRollMessage.bind(this));
 		}
+	}
+
+	private handleStateMessage(update?: SettingsChangeSocketResponse) {
+		if (update) {
+			this.rawRollState.updateWith(update);
+		}
+		else {
+			this.rawRollState = new RawRollState();
+		}
+
+		if (this.rawRollState.state) {
+			this._rollState = this.rawRollState.state;
+			this.stateCallbacks.trigger();
+			return;
+		}
+
+		this.errorCallbacks.trigger(`Inconsistent state update\n\nCurrent:\n${JSON.stringify(this.rollState)}\n\nUpdate:\n${JSON.stringify(update)}`, false);
 	}
 
 	private handleRollMessage(rollChange: RollChangeData) {
