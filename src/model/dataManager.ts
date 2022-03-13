@@ -2,12 +2,15 @@ import { Difficulty } from "model/attributes/difficulty";
 import { ResetLevel } from "model/attributes/resetLevel";
 import { DiceRoller } from "model/diceRoller/diceRoller";
 import { Dungeon } from "model/dungeon/dungeon";
+import { Log } from "model/log/log";
 import { Room } from "model/dungeon/room";
 import { PartyCard } from "model/partyCard/partyCard";
 
 const storageKey = "data";
 
 export class DataManager {
+	readonly log = new Log();
+
 	readonly dungeon: Dungeon = new Dungeon();
 	readonly partyCard = new PartyCard();
 	readonly diceRoller = new DiceRoller();
@@ -129,6 +132,8 @@ export class DataManager {
 		this.difficulty = Difficulty.normal;
 		this.startTime = undefined;
 		this.diceRoller.slotId = undefined;
+
+		this.log.clearLog();
 	}
 
 	prepareForParty() {
