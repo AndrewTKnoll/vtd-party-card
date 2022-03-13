@@ -228,6 +228,10 @@ export class RoomComponent extends Component<RoomComponentProps, RoomComponentSt
 
 		const hasMonsters = this.props.data.currentRoom.monsters.length > 0;
 
+		const infoColumnNotes = this.props.data.currentRoom.infoColumnNotes(this.props.onChange);
+		const secondaryColumnNotes = this.props.data.currentRoom.secondaryColumnNotes(this.props.onChange);
+		const mainSectionNotes = this.props.data.currentRoom.mainSectionNotes(this.props.onChange);
+
 		return (
 			<div className={`room-component room-${this.props.data.currentRoom.id} row`}>
 				<h2 className="room-component__title col">
@@ -253,7 +257,7 @@ export class RoomComponent extends Component<RoomComponentProps, RoomComponentSt
 					}
 					<ItemsOfInterestComponent tokens={this.props.data.currentRoom.tokensOfInterest}
 						spells={this.props.data.currentRoom.spellsOfInterest}/>
-					{this.props.data.currentRoom.infoColumnNotes}
+					{infoColumnNotes}
 				</div>
 				{hasMonsters && <>
 					<div className="room-component__control-col col">
@@ -314,9 +318,9 @@ export class RoomComponent extends Component<RoomComponentProps, RoomComponentSt
 							onChange={this.props.onChange}/>
 					</div>
 				</>}
-				{this.props.data.currentRoom.secondaryColumnNotes &&
+				{secondaryColumnNotes &&
 					<div className="room-component__secondary-info-col col">
-						{this.props.data.currentRoom.secondaryColumnNotes}
+						{secondaryColumnNotes}
 					</div>
 				}
 				<div className="room-component__action-col col">
@@ -335,9 +339,9 @@ export class RoomComponent extends Component<RoomComponentProps, RoomComponentSt
 						<InitiativeActionComponent action={this.state.initiativeAction}/>
 					}
 				</div>
-				{this.props.data.currentRoom.mainSectionNotes &&
+				{mainSectionNotes &&
 					<div className="room-component__main-info-col col">
-						{this.props.data.currentRoom.mainSectionNotes}
+						{mainSectionNotes}
 					</div>
 				}
 			</div>

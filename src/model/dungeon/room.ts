@@ -124,15 +124,15 @@ export class Room {
 		return [];
 	}
 
-	get infoColumnNotes(): ReactNode {
+	infoColumnNotes(update: () => void): ReactNode {
 		return false;
 	}
 
-	get secondaryColumnNotes(): ReactNode {
+	secondaryColumnNotes(update: () => void): ReactNode {
 		return false;
 	}
 
-	get mainSectionNotes(): ReactNode {
+	mainSectionNotes(update: () => void): ReactNode {
 		return false;
 	}
 
