@@ -13,7 +13,7 @@ export class DataManager {
 
 	readonly dungeon: Dungeon = new Dungeon();
 	readonly partyCard = new PartyCard();
-	readonly diceRoller = new DiceRoller();
+	readonly diceRoller = new DiceRoller(this.log);
 
 	private currentRoomIndex: [number, number] = [0, 0];
 	get currentRoom(): Room {
