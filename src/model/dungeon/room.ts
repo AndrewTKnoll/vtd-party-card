@@ -6,6 +6,8 @@ import { StatBlock } from "model/dungeon/statBlock";
 import { PartyCard } from "model/partyCard/partyCard";
 import { Player } from "model/partyCard/player";
 
+import { PlayerAttack } from "model/playerAttack/playerAttack";
+
 import { Difficulty } from "model/attributes/difficulty";
 import { ResetLevel } from "model/attributes/resetLevel";
 
@@ -31,6 +33,9 @@ export interface ItemOfInterest {
 }
 
 export class Room {
+
+	/* basic data */
+
 	readonly name: string;
 	readonly id: string;
 
@@ -56,6 +61,12 @@ export class Room {
 	}
 	initiativeWinner: InitiativeWinner | undefined = undefined;
 
+	get pushDamage(): number {
+		return pushDamage.get(this.difficulty);
+	}
+
+	/* lifecycle */
+
 	constructor(name: string, id: string, initiativeBonus?: { [key: string]: number }) {
 		this.name = name;
 		this.id = id;
@@ -76,6 +87,8 @@ export class Room {
 			initiativeWinner: this.initiativeWinner
 		};
 	}
+
+	/* data override points */
 
 	get actions(): RoomAction[] {
 		return [];
@@ -102,9 +115,6 @@ export class Room {
 	get hideDefaultPushDamage(): boolean {
 		return false;
 	}
-	get pushDamage(): number {
-		return pushDamage.get(this.difficulty);
-	}
 
 	get tokensOfInterest(): ItemOfInterest[] {
 		return [];
@@ -126,6 +136,12 @@ export class Room {
 		return false;
 	}
 
+	statusForPlayer(player: Player): string {
+		return "";
+	}
+
+	/* event hooks */
+
 	reset(level: ResetLevel, party: PartyCard) {
 		this.monsters.forEach((monster) => {
 			monster.reset(level);
@@ -140,9 +156,7 @@ export class Room {
 
 	prepareForParty(partyCard: PartyCard) {}
 
-	statusForPlayer(player: Player): string {
-		return "";
-	}
+	beforePlayerAttackCompletes(attack: PlayerAttack) {}
 }
 
 const pushDamage = new DefaultMap(0, {

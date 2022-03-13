@@ -29,6 +29,8 @@ export class PlayerAttack {
 	}
 
 	complete() {
+		this.room.beforePlayerAttackCompletes(this);
+
 		if (!this.attackType) {
 			return;
 		}
