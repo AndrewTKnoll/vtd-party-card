@@ -53,6 +53,10 @@ export class SetupComponent extends Component<SetupComponentProps, SetupComponen
 		navigator.clipboard.writeText(this.props.data.skillTestLinks.join("\n"));
 	}
 
+	private downloadLogFile() {
+		this.props.data.log.exportLog();
+	}
+
 	private updateSlotId(newValue: string) {
 		this.props.data.diceRoller.slotId = newValue.toLowerCase();
 		this.props.onChange();
@@ -134,6 +138,20 @@ export class SetupComponent extends Component<SetupComponentProps, SetupComponen
 									</button>
 								</div>
 							</section>
+							<CollapseComponent headerText="Log File"
+								headerLevel="h3"
+								contentClass="setup__box">
+
+								<p>If something weird happens with the dice roller, this file could help figure it out.</p>
+								<div className="setup__settings-row">
+									<button type="button"
+										className="setup__log-download-button"
+										onClick={this.downloadLogFile.bind(this)}>
+
+										Download Log File
+									</button>
+								</div>
+							</CollapseComponent>
 						</div>
 						<div className="setup__time-col col">
 							<section className="setup__box">

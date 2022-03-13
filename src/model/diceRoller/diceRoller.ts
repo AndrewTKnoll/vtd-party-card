@@ -4,6 +4,7 @@ import { SocketWrapper } from "model/diceRoller/socket/socketWrapper";
 import { Roll, rollFromUpdate } from "model/diceRoller/roll";
 import { RollState, RawRollState } from "model/diceRoller/rollState";
 import { RollType } from "model/diceRoller/rollType";
+import { Log } from "model/log/log";
 
 import { CallbackRegistry } from "utilities/callbackRegistry";
 
@@ -12,6 +13,8 @@ const socketUrl = "wss://s-usc1c-nss-336.firebaseio.com/.ws?v=5&ns=tdroller-1ac5
 const socketSdk = "sdk.js.9-4-1";
 
 export class DiceRoller {
+	private log: Log;
+
 	private socket!: SocketWrapper;
 
 	authToken: string | undefined = undefined;
@@ -43,7 +46,9 @@ export class DiceRoller {
 	readonly rollCallbacks = new CallbackRegistry<(roll: Roll) => void>();
 	readonly errorCallbacks = new CallbackRegistry<(error: string, auth: boolean) => void>();
 
-	constructor() {
+	constructor(log: Log) {
+		this.log = log;
+
 		this.reconnect();
 	}
 
@@ -86,6 +91,10 @@ export class DiceRoller {
 	}
 
 	private handleStateMessage(update?: SettingsChangeSocketResponse) {
+		const oldState = {
+			...this.rawRollState
+		};
+
 		if (update) {
 			this.rawRollState.updateWith(update);
 		}
@@ -96,23 +105,38 @@ export class DiceRoller {
 		if (this.rawRollState.state) {
 			this._rollState = this.rawRollState.state;
 			this.stateCallbacks.trigger();
-			return;
+		}
+		else {
+			this.errorCallbacks.trigger("Dice roller is in an unexpected state - suggest reloading the page", false);
 		}
 
-		this.errorCallbacks.trigger(`Inconsistent state update\n\nCurrent:\n${JSON.stringify(this.rollState)}\n\nUpdate:\n${JSON.stringify(update)}`, false);
+		this.log.log("dice roller state change", {
+			old: oldState,
+			update: update,
+			new: this.rawRollState.state
+		});
 	}
 
 	private handleRollMessage(rollChange: RollChangeData) {
 		if (rollChange.slotId !== this.slotId) {
 			return;
 		}
+
+		const newRolls: Roll[] = [];
+
 		rollChange.rolls.forEach((rollData, index) => {
 			const roll = rollFromUpdate(rollChange, rollData, index);
 			if (roll === undefined) {
 				return;
 			}
+			newRolls.push(roll);
 			this.rolls.push(roll);
 			this.rollCallbacks.trigger(roll);
+		});
+
+		this.log.log("dice roller roll message", {
+			raw: rollChange,
+			parsed: newRolls
 		});
 	}
 
