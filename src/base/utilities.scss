@@ -36,3 +36,32 @@
 		padding: 0.125rem 1rem;
 	}
 }
+
+.source-label {
+	padding: 0 0.25rem;
+	color: #fff;
+
+	&.source-label--cyan {
+		background: #5ab6b8;
+	}
+
+	&.source-label--gray {
+		background: #7f7f7f;
+	}
+
+	&.source-label--green {
+		background: #4ead5b;
+	}
+
+	&.source-label--dark-green {
+		background: #264c40;
+	}
+
+	&.source-label--red {
+		background: #b02418;
+	}
+
+	&.source-label--purple {
+		background: #4a3167;
+	}
+}
