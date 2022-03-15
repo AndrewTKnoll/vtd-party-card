@@ -1,11 +1,16 @@
+import { ReactNode } from "react";
+
 import { SaveType } from "model/attributes/saveType";
 import { Player, WeaponType } from "model/partyCard/player";
 
-export type MonsterAttack = MonsterWeaponAttack | MonsterSaveAttack;
+export type MonsterAttack = MonsterWeaponAttack | MonsterSaveAttack | MonsterSpecialAttack;
 export enum MonsterAttackType {
 	weapon = "weapon",
-	save = "save"
+	save = "save",
+	special = "special"
 }
+
+/* weapon attacks */
 
 interface AutoHit {
 	auto: true;
@@ -103,6 +108,8 @@ export class MonsterWeaponAttack {
 	}
 }
 
+/* save attacks */
+
 export enum MonsterSaveAttackResult {
 	success = "success",
 	failure = "failure"
@@ -147,6 +154,33 @@ export class MonsterSaveAttack {
 		this.dc = params.dc;
 		this.successMessage = params.successMessage;
 		this.failureMessage = params.failureMessage;
+		this.completionHandler = params.completionHandler;
+	}
+
+	complete() {
+		this.completionHandler?.(this);
+	}
+}
+
+/* special attacks */
+
+export interface MonsterSpecialAttackParams {
+	target: Player;
+	description: (complete: () => void) => ReactNode;
+	completionHandler?: ((attack: MonsterSpecialAttack) => void) | undefined;
+}
+
+export class MonsterSpecialAttack {
+	readonly type = MonsterAttackType.special;
+
+	readonly target: Player;
+	readonly description: (complete: () => void) => ReactNode;
+
+	private completionHandler: ((attack: MonsterSpecialAttack) => void) | undefined;
+
+	constructor(params: MonsterSpecialAttackParams) {
+		this.target = params.target;
+		this.description = params.description;
 		this.completionHandler = params.completionHandler;
 	}
 

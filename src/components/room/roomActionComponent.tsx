@@ -4,20 +4,24 @@ import { ItemListSelectComponent } from "components/controls/itemListSelectCompo
 
 import { shortNameForSaveType } from "model/attributes/saveType";
 
-import { Room } from "model/dungeon/room";
-
 import { nameForClass } from "model/partyCard/class";
-import { PartyCard } from "model/partyCard/partyCard";
 import { WeaponType } from "model/partyCard/player";
 
-import { MonsterAttack, MonsterSaveAttack, MonsterAttackType, MonsterSaveAttackResult, allMonsterSaveAttackResults, nameForMonsterSaveAttackResult } from "model/roomAction/monsterAttack";
+import {
+	MonsterAttack,
+	MonsterAttackType,
+	MonsterWeaponAttack,
+	MonsterSaveAttack,
+	MonsterSaveAttackResult,
+	allMonsterSaveAttackResults,
+	nameForMonsterSaveAttackResult,
+	MonsterSpecialAttack
+} from "model/roomAction/monsterAttack";
 import { RoomActionResult } from "model/roomAction/roomActionResult";
 
 interface RoomActionComponentProps {
-	currentRoom: Room;
-	partyCard: PartyCard;
 	result: RoomActionResult;
-	actionCompleted: () => void;
+	onChange: () => void;
 }
 interface RoomActionComponentState {}
 
@@ -28,51 +32,78 @@ export class RoomActionComponent extends Component<RoomActionComponentProps, Roo
 		this.forceUpdate();
 	}
 
-	private renderAttack(attack: MonsterAttack): ReactNode {
-		let resultText = "";
+	private renderWeaponAttack(attack: MonsterWeaponAttack): ReactNode {
+		const guard = (attack.paladin ? "(guard) " : "");
+		const autoHit = !attack.hit.auto && (attack.hit.roll >= attack.autoHitThreshold) && (attack.hit.total < attack.effectiveAC) ? ` (nat ${attack.hit.roll})` : "";
+		const autoMiss = !attack.hit.auto && (attack.hit.roll === 1) && (attack.hit.total >= attack.effectiveAC) ? ` (nat 1)` : "";
+		const result = (attack.isHit ? `Hit${autoHit}: ${attack.damageAmount} ${attack.damageType}` : `Miss ${autoMiss}`);
 
-		if (attack.type === MonsterAttackType.weapon) {
-			const guard = (attack.paladin ? "(guard) " : "");
-			const autoHit = !attack.hit.auto && (attack.hit.roll >= attack.autoHitThreshold) && (attack.hit.total < attack.effectiveAC) ? ` (nat ${attack.hit.roll})` : "";
-			const autoMiss = !attack.hit.auto && (attack.hit.roll === 1) && (attack.hit.total >= attack.effectiveAC) ? ` (nat 1)` : "";
-			const result = (attack.isHit ? `Hit${autoHit}: ${attack.damageAmount} ${attack.damageType}` : `Miss ${autoMiss}`);
-			resultText = `${guard}${result}${attack.note ? ` (${attack.note})` : ""}`;
-		}
-		else {
-			if (attack.result === MonsterSaveAttackResult.success) {
-				resultText = attack.successMessage;
-			}
-			if (attack.result === MonsterSaveAttackResult.failure) {
-				resultText = attack.failureMessage;
-			}
-		}
-
-		return (<>
+		return <>
 			<span className="room-action-result-list__title col">
 				{nameForClass(attack.target.class)}
 			</span>
 			<span className="room-action-result-list__target col">
-				{attack.type === MonsterAttackType.weapon ?
-					`${attack.effectiveAC} ${attack.effectiveWeapon === WeaponType.ranged ? "R" : "M"}` :
-					shortNameForSaveType(attack.save)
-				}
+				{`${attack.effectiveAC} ${attack.effectiveWeapon === WeaponType.ranged ? "R" : "M"}`}
 			</span>
 			<span className="room-action-result-list__roll col">
-				{(attack.type === MonsterAttackType.weapon) &&
-					`${attack.hit.auto ? "Auto" : `${attack.hit.total} (${attack.hit.roll})`}`
-				}
-				{(attack.type === MonsterAttackType.save) &&
-					<ItemListSelectComponent<MonsterSaveAttackResult> isOptional={true}
-						items={allMonsterSaveAttackResults}
-						labelForItem={nameForMonsterSaveAttackResult}
-						selectedItem={attack.result}
-						onChange={this.saveAttackResultChanged.bind(this, attack)}/>
-				}
+				{`${attack.hit.auto ? "Auto" : `${attack.hit.total} (${attack.hit.roll})`}`}
+			</span>
+			<span className="room-action-result-list__result col">
+				{`${guard}${result}${attack.note ? ` (${attack.note})` : ""}`}
+			</span>
+		</>;
+	}
+
+	private renderSaveAttack(attack: MonsterSaveAttack): ReactNode {
+		let resultText = "";
+
+		if (attack.result === MonsterSaveAttackResult.success) {
+			resultText = attack.successMessage;
+		}
+		if (attack.result === MonsterSaveAttackResult.failure) {
+			resultText = attack.failureMessage;
+		}
+
+		return <>
+			<span className="room-action-result-list__title col">
+				{nameForClass(attack.target.class)}
+			</span>
+			<span className="room-action-result-list__target col">
+				{shortNameForSaveType(attack.save)}
+			</span>
+			<span className="room-action-result-list__roll col">
+				<ItemListSelectComponent<MonsterSaveAttackResult> isOptional={true}
+					items={allMonsterSaveAttackResults}
+					labelForItem={nameForMonsterSaveAttackResult}
+					selectedItem={attack.result}
+					onChange={this.saveAttackResultChanged.bind(this, attack)}/>
 			</span>
 			<span className="room-action-result-list__result col">
 				{resultText}
 			</span>
-		</>);
+		</>;
+	}
+
+	private renderSpecialAttack(attack: MonsterSpecialAttack): ReactNode {
+		return <>
+			<span className="room-action-result-list__title col">
+				{nameForClass(attack.target.class)}
+			</span>
+			<div className="room-action-result-list__special-result col">
+				{attack.description(this.props.onChange)}
+			</div>
+		</>;
+	}
+
+	private renderAttack(attack: MonsterAttack): ReactNode {
+		switch (attack.type) {
+			case MonsterAttackType.weapon:
+				return this.renderWeaponAttack(attack);
+			case MonsterAttackType.save:
+				return this.renderSaveAttack(attack);
+			case MonsterAttackType.special:
+				return this.renderSpecialAttack(attack);
+		}
 	}
 
 	override render() {

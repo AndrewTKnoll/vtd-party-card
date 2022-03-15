@@ -331,9 +331,7 @@ export class RoomComponent extends Component<RoomComponentProps, RoomComponentSt
 					}
 					{this.state.roomActionResult !== undefined &&
 						<RoomActionComponent result={this.state.roomActionResult}
-							partyCard={this.props.data.partyCard}
-							currentRoom={this.props.data.currentRoom}
-							actionCompleted={this.props.onChange}/>
+							onChange={this.props.onChange}/>
 					}
 					{this.state.initiativeAction !== undefined &&
 						<InitiativeActionComponent action={this.state.initiativeAction}/>
