@@ -32,6 +32,13 @@ export interface ItemOfInterest {
 	readonly tokenDBLink?: string | undefined;
 }
 
+interface RoomConstructorParams {
+	name: string;
+	id: string;
+	initiativeBonus?: { [key: string]: number};
+	pushDamageType?: string;
+}
+
 export class Room {
 
 	/* basic data */
@@ -61,21 +68,27 @@ export class Room {
 	}
 	initiativeWinner: InitiativeWinner | undefined = undefined;
 
-	get pushDamage(): number {
-		return pushDamage.get(this.difficulty);
+	private pushDamageType: string;
+	get pushDamage(): string {
+		if (this.pushDamageType) {
+			return `${pushDamage.get(this.difficulty)} ${this.pushDamageType}`;
+		}
+		return `${pushDamage.get(this.difficulty)}`;
 	}
 
 	/* lifecycle */
 
-	constructor(name: string, id: string, initiativeBonus?: { [key: string]: number }) {
-		this.name = name;
-		this.id = id;
+	constructor(params: RoomConstructorParams) {
+		this.name = params.name;
+		this.id = params.id;
 
-		this.initiativeValues = new DefaultMap(0, initiativeBonus || {
+		this.initiativeValues = new DefaultMap(0, params.initiativeBonus || {
 			[Difficulty.hardcore]: 5,
 			[Difficulty.nightmare]: 10,
 			[Difficulty.epic]: 15
 		});
+
+		this.pushDamageType = params.pushDamageType || "";
 	}
 
 	restoreFromArchive(archive: any) {
