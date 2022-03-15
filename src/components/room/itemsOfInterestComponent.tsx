@@ -26,7 +26,9 @@ export class ItemsOfInterestComponent extends Component<ItemsOfInterestComponent
 					{`${item.name}:`}
 				</span>
 			}
-			<p>{item.description}</p>
+			<div className="items-of-interest-component__item-description">
+				{item.description}
+			</div>
 		</li>;
 	}
 
@@ -38,7 +40,7 @@ export class ItemsOfInterestComponent extends Component<ItemsOfInterestComponent
 		return (
 			<CollapseComponent headerText="Tokens/Spells of Interest"
 				headerLevel="h4"
-				contentClass="items-of-interest">
+				contentClass="items-of-interest-component">
 
 				{this.props.tokens.length > 0 &&
 					<div className="info-box">
