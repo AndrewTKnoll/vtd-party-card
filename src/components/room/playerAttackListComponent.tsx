@@ -54,6 +54,15 @@ export class PlayerAttackListComponent extends Component<PlayerAttackListCompone
 	}
 
 	private critMultiplierChange(attack: PlayerAttack, multiplierKey: `${"primary" | "secondary"}CritMultiplier`, newMultiplier: PlayerAttackCritMultiplier) {
+		const oldMultiplier = attack[multiplierKey];
+
+		if (multiplierKey === "primaryCritMultiplier") {
+			attack.primaryDamageAmount = Math.round(attack.primaryDamageAmount * newMultiplier / oldMultiplier);
+		}
+		else {
+			attack.secondaryDamageAmount = Math.round(attack.secondaryDamageAmount * newMultiplier / oldMultiplier);
+		}
+
 		attack[multiplierKey] = newMultiplier;
 		this.forceUpdate();
 	}
