@@ -65,7 +65,7 @@ export class PlayerAttackListComponent extends Component<PlayerAttackListCompone
 				{this.props.attacks.map((attack, index) => {
 					return (
 						<li key={attack.player.class}
-							className="player-attack-list__attack row">
+							className={`player-attack-list__attack${attack.attackType === undefined ? " player-attack-list__attack--none" : ""} row`}>
 
 							<div className="player-attack-list__name-col col">
 								<span className="player-attack-list__class-name">
@@ -110,7 +110,7 @@ export class PlayerAttackListComponent extends Component<PlayerAttackListCompone
 									</div>
 								</>}
 							</div>
-							<div className={`player-attack-list__target${attack.attackType === undefined ? " player-attack-list__target--none" : ""} col`}>
+							<div className="player-attack-list__target col">
 								<span className="player-attack-list__target-name">
 									First:
 								</span>
@@ -131,7 +131,7 @@ export class PlayerAttackListComponent extends Component<PlayerAttackListCompone
 									selectedItem={attack.primaryCritMultiplier}
 									onChange={this.critMultiplierChange.bind(this, attack, "primaryCritMultiplier")}/>
 							</div>
-							<div className={`player-attack-list__target${attack.attackType === undefined ? " player-attack-list__target--none" : ""} col`}>
+							<div className="player-attack-list__target col">
 								<span className="player-attack-list__target-name">
 									Second:
 								</span>

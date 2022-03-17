@@ -1,14 +1,25 @@
 .player-attack-list {
 
 	.player-attack-list__attack {
-		margin-bottom: 0.5rem;
+		margin-bottom: 1rem;
+
+		&.player-attack-list__attack--none {
+
+			.player-attack-list__target {
+				color: #ccc;
+
+				input {
+					background: #ccc;
+				}
+			}
+		}
 	}
 
 	.player-attack-list__name-col {
 		display: flex;
 		justify-content: space-between;
 		width: 100%;
-		margin-bottom: 0.25rem;
+		margin-bottom: 0.5rem;
 
 		@include breakpoint-sm() {
 			width: 50%;
@@ -26,7 +37,7 @@
 	.player-attack-list__type {
 		display: flex;
 		width: 100%;
-		margin-bottom: 0.25rem;
+		margin-bottom: 0.5rem;
 		padding-left: calc($grid-gutter-width / 2 + 1rem);
 
 		@include breakpoint-sm() {
@@ -52,7 +63,7 @@
 
 	.player-attack-list__target {
 		width: 100%;
-		margin-bottom: 0.25rem;
+		margin-bottom: 0.5rem;
 		padding-left: calc($grid-gutter-width / 2 + 1rem);
 
 		@include breakpoint-sm() {
@@ -64,16 +75,12 @@
 			padding-left: calc($grid-gutter-width / 2);
 		}
 
-		&.player-attack-list__target--none {
-			color: #ccc;
-		}
-
 		select {
 			max-width: 8rem;
 		}
 
 		input {
-			width: 4rem;
+			width: 6rem;
 		}
 	}
 
