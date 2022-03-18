@@ -34,11 +34,11 @@ function unregisterTimer(oldTimer: TimerComponent) {
 interface TimerComponentProps {
 	targetDate: Date;
 	countdownStartDate?: Date;
-	hours?: boolean;
-	beforeTimeText?: string
-	afterTimeText?: string;
-	prefixText?: string;
-	suffixText?: string;
+	hours?: boolean | undefined;
+	beforeTimeText?: string | undefined;
+	afterTimeText?: string | undefined;
+	prefixText?: string | undefined;
+	suffixText?: string | undefined;
 }
 interface TimerComponentState {
 	now: Date;

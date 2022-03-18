@@ -32,6 +32,12 @@ export interface ItemOfInterest {
 	readonly tokenDBLink?: string | undefined;
 }
 
+export interface RoomTimer {
+	readonly label: string;
+	readonly timeOffset: number;
+	readonly completeText: string;
+}
+
 interface RoomConstructorParams {
 	name: string;
 	id: string;
@@ -102,6 +108,10 @@ export class Room {
 	}
 
 	/* data override points */
+
+	get roomTimers(): RoomTimer[] {
+		return [];
+	}
 
 	get actions(): RoomAction[] {
 		return [];

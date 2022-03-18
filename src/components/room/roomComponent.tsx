@@ -200,7 +200,7 @@ export class RoomComponent extends Component<RoomComponentProps, RoomComponentSt
 		}, this.handleAllPlayerRolls.bind(this));
 	}
 
-	private renderRoomTimer(): ReactNode {
+	private renderRoomTimers(): ReactNode {
 		if (!this.props.data.startTime) {
 			return false;
 		}
@@ -210,13 +210,22 @@ export class RoomComponent extends Component<RoomComponentProps, RoomComponentSt
 			);
 		const roomEndTime = new Date(roomStartTime.getTime() + roomTimeDuration);
 
-		return (
+		return <>
 			<TimerComponent targetDate={roomEndTime}
 				countdownStartDate={roomStartTime}
 				prefixText="Time until room end:"
 				beforeTimeText="Room hasn't started yet"
 				afterTimeText="Room is complete"/>
-		);
+			{this.props.data.currentRoom.roomTimers.map((timer, index) => {
+				return <TimerComponent key={index}
+					targetDate={new Date(roomEndTime.getTime() - timer.timeOffset)}
+					countdownStartDate={roomStartTime}
+					prefixText={timer.label}
+					beforeTimeText="Room hasn't started yet"
+					afterTimeText={timer.completeText}
+				/>;
+			})}
+		</>;
 	}
 
 	override render(): ReactNode {
@@ -239,7 +248,7 @@ export class RoomComponent extends Component<RoomComponentProps, RoomComponentSt
 				</h2>
 				<div className="room-component__info-col col">
 					<h3>Info</h3>
-					{this.renderRoomTimer()}
+					{this.renderRoomTimers()}
 					{!this.props.data.currentRoom.hideDefaultPushDamage &&
 						<div className="room-component__info-line">
 							<span>Push Damage:</span>
