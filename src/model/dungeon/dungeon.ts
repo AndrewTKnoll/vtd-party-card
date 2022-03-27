@@ -4,7 +4,9 @@ import { Room } from "model/dungeon/room";
 import { PartyCard } from "model/partyCard/partyCard";
 
 export class Dungeon {
-	readonly rooms: Room[][] = [];
+	readonly rooms: Room[][] = [
+		[new Room({ name: "Room 1: The Placeholder", id: "1" })]
+	];
 
 	restoreFromArchive(archive: any) {
 		this.rooms.forEach((position, positionIndex) => {
