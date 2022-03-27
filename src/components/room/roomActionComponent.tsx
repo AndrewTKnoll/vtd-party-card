@@ -7,17 +7,11 @@ import { shortNameForSaveType } from "model/attributes/saveType";
 import { nameForClass } from "model/partyCard/class";
 import { WeaponType } from "model/partyCard/player";
 
-import {
-	MonsterAttack,
-	MonsterAttackType,
-	MonsterWeaponAttack,
-	MonsterSaveAttack,
-	MonsterSaveAttackResult,
-	allMonsterSaveAttackResults,
-	nameForMonsterSaveAttackResult,
-	MonsterSpecialAttack
-} from "model/roomAction/monsterAttack";
-import { RoomActionResult } from "model/roomAction/roomActionResult";
+import { MonsterSaveAttack, MonsterSaveAttackResult, allMonsterSaveAttackResults, nameForMonsterSaveAttackResult } from "model/monsterAttack/monsterSaveAttack";
+import { MonsterSpecialAttack } from "model/monsterAttack/monsterSpecialAttack";
+import { MonsterWeaponAttack } from "model/monsterAttack/monsterWeaponAttack";
+
+import { RoomActionResult, MonsterAttack, MonsterAttackType } from "model/roomAction/roomActionResult";
 
 interface RoomActionComponentProps {
 	result: RoomActionResult;

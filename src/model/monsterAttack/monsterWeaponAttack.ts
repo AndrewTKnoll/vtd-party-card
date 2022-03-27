@@ -1,16 +1,5 @@
-import { ReactNode } from "react";
-
-import { SaveType } from "model/attributes/saveType";
 import { Player, WeaponType } from "model/partyCard/player";
-
-export type MonsterAttack = MonsterWeaponAttack | MonsterSaveAttack | MonsterSpecialAttack;
-export enum MonsterAttackType {
-	weapon = "weapon",
-	save = "save",
-	special = "special"
-}
-
-/* weapon attacks */
+import { MonsterAttackType } from "model/roomAction/roomActionResult";
 
 interface AutoHit {
 	auto: true;
@@ -22,7 +11,7 @@ interface RollHit {
 }
 type HitType = AutoHit | RollHit;
 
-export interface MonsterWeaponAttackParams {
+interface MonsterWeaponAttackParams {
 	target: Player;
 	paladin?: Player | undefined;
 	weaponOverride?: WeaponType | "naked" | undefined;
@@ -100,87 +89,6 @@ export class MonsterWeaponAttack {
 
 		this.note = (typeof(params.note) === "function") ? params.note(this) : (params.note || "");
 
-		this.completionHandler = params.completionHandler;
-	}
-
-	complete() {
-		this.completionHandler?.(this);
-	}
-}
-
-/* save attacks */
-
-export enum MonsterSaveAttackResult {
-	success = "success",
-	failure = "failure"
-}
-
-export const allMonsterSaveAttackResults : MonsterSaveAttackResult[] = [
-	MonsterSaveAttackResult.success,
-	MonsterSaveAttackResult.failure
-];
-
-export function nameForMonsterSaveAttackResult(result: MonsterSaveAttackResult) {
-	return result.charAt(0).toUpperCase() + result.slice(1);
-}
-
-export interface MonsterSaveAttackParams {
-	target: Player;
-	save: SaveType;
-	dc?: number | undefined;
-	successMessage: string;
-	failureMessage: string;
-	completionHandler?: ((attack: MonsterSaveAttack) => void) | undefined;
-}
-
-export class MonsterSaveAttack {
-	readonly type = MonsterAttackType.save;
-
-	readonly target: Player;
-	readonly save: SaveType;
-
-	readonly dc: number | undefined;
-
-	result: MonsterSaveAttackResult | undefined = undefined;
-
-	readonly successMessage: string;
-	readonly failureMessage: string;
-
-	private completionHandler: ((attack: MonsterSaveAttack) => void) | undefined;
-
-	constructor(params: MonsterSaveAttackParams) {
-		this.target = params.target;
-		this.save = params.save;
-		this.dc = params.dc;
-		this.successMessage = params.successMessage;
-		this.failureMessage = params.failureMessage;
-		this.completionHandler = params.completionHandler;
-	}
-
-	complete() {
-		this.completionHandler?.(this);
-	}
-}
-
-/* special attacks */
-
-export interface MonsterSpecialAttackParams {
-	target: Player;
-	description: (complete: () => void) => ReactNode;
-	completionHandler?: ((attack: MonsterSpecialAttack) => void) | undefined;
-}
-
-export class MonsterSpecialAttack {
-	readonly type = MonsterAttackType.special;
-
-	readonly target: Player;
-	readonly description: (complete: () => void) => ReactNode;
-
-	private completionHandler: ((attack: MonsterSpecialAttack) => void) | undefined;
-
-	constructor(params: MonsterSpecialAttackParams) {
-		this.target = params.target;
-		this.description = params.description;
 		this.completionHandler = params.completionHandler;
 	}
 

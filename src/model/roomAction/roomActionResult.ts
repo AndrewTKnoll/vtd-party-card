@@ -1,6 +1,15 @@
 import { PartyCard } from "model/partyCard/partyCard";
 import { RoomAction } from "model/roomAction/roomAction";
-import { MonsterAttack } from "model/roomAction/monsterAttack";
+import { MonsterSaveAttack } from "model/monsterAttack/monsterSaveAttack";
+import { MonsterSpecialAttack } from "model/monsterAttack/monsterSpecialAttack";
+import { MonsterWeaponAttack } from "model/monsterAttack/MonsterWeaponAttack";
+
+export type MonsterAttack = MonsterWeaponAttack | MonsterSaveAttack | MonsterSpecialAttack;
+export enum MonsterAttackType {
+	weapon = "weapon",
+	save = "save",
+	special = "special"
+}
 
 export class RoomActionResult {
 	readonly action: RoomAction;

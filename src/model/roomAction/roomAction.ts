@@ -1,7 +1,6 @@
 import { allClasses } from "model/partyCard/class";
 import { PartyCard } from "model/partyCard/partyCard";
-import { MonsterAttack } from "model/roomAction/monsterAttack";
-import { RoomActionResult } from "model/roomAction/roomActionResult";
+import { RoomActionResult, MonsterAttack } from "model/roomAction/roomActionResult";
 
 type AttackGenerator = (party: PartyCard) => MonsterAttack[];
 type CompletionEventHandler = (party: PartyCard) => void;

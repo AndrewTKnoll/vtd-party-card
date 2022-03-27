@@ -13,10 +13,10 @@ import { DataManager } from "model/dataManager";
 import { ResetLevel } from "model/attributes/resetLevel";
 import { Roll } from "model/diceRoller/roll";
 import { roomTimeDuration, nameForInitiativeWinner } from "model/dungeon/room";
+import { MonsterSaveAttackResult } from "model/monsterAttack/monsterSaveAttack";
 import { PlayerAttack } from "model/playerAttack/playerAttack";
 import { PlayerAttackType } from "model/playerAttack/playerAttackType";
 import { InitiativeAction } from "model/roomAction/initiativeAction";
-import { MonsterSaveAttackResult } from "model/roomAction/monsterAttack";
 import { RoomAction } from "model/roomAction/roomAction";
 import { RoomActionResult } from "model/roomAction/roomActionResult";
 
