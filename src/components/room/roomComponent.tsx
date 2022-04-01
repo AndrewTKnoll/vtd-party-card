@@ -11,11 +11,8 @@ import { TimerComponent } from "components/widgets/timerComponent";
 
 import { DataManager } from "model/dataManager";
 import { ResetLevel } from "model/attributes/resetLevel";
-import { Roll } from "model/diceRoller/roll";
 import { roomTimeDuration, nameForInitiativeWinner } from "model/dungeon/room";
-import { MonsterSaveAttackResult } from "model/monsterAttack/monsterSaveAttack";
 import { PlayerAttack } from "model/playerAttack/playerAttack";
-import { PlayerAttackType } from "model/playerAttack/playerAttackType";
 import { InitiativeAction } from "model/roomAction/initiativeAction";
 import { RoomAction } from "model/roomAction/roomAction";
 import { RoomActionResult } from "model/roomAction/roomActionResult";
@@ -33,7 +30,6 @@ interface RoomComponentState {
 }
 
 export class RoomComponent extends Component<RoomComponentProps, RoomComponentState> {
-	private rollCallbackId!: number;
 
 	constructor(props: RoomComponentProps) {
 		super(props);
@@ -43,94 +39,6 @@ export class RoomComponent extends Component<RoomComponentProps, RoomComponentSt
 			roomActionResult: undefined,
 			initiativeAction: undefined
 		};
-	}
-
-	override componentDidMount() {
-		this.rollCallbackId = this.props.data.diceRoller.rollCallbacks.register(this.handlePlayerRoll.bind(this));
-	}
-
-	override componentDidUpdate(prevProps: RoomComponentProps) {
-		if (prevProps.data.diceRoller !== this.props.data.diceRoller) {
-			prevProps.data.diceRoller.rollCallbacks.unregister(this.rollCallbackId);
-			this.rollCallbackId = this.props.data.diceRoller.rollCallbacks.register(this.handlePlayerRoll.bind(this));
-		}
-	}
-
-	override componentWillUnmount() {
-		this.props.data.diceRoller.rollCallbacks.unregister(this.rollCallbackId);
-	}
-
-	private handleAllPlayerRolls() {
-		this.props.data.diceRoller.rolls.forEach(this.handlePlayerRoll.bind(this));
-	}
-
-	private handlePlayerRoll(roll: Roll) {
-		if (roll.type === "attack") {
-			this.state.playerAttacks.forEach((attack) => {
-				if (roll.class !== attack.player.class) {
-					return;
-				}
-
-				switch (roll.attackType) {
-					case "melee_main":
-						attack.attackType = PlayerAttackType.melee;
-						attack.primaryDamageAmount = roll.success ? roll.damage : 0;
-						attack.primaryCritMultiplier = roll.dieResult === 20 ? 2 : 1;
-						break;
-					case "melee_off":
-						attack.attackType = PlayerAttackType.melee;
-						attack.secondaryDamageAmount = roll.success ? roll.damage : 0;
-						attack.secondaryCritMultiplier = roll.dieResult === 20 ? 2 : 1;
-						break;
-					case "ranged_main":
-						attack.attackType = PlayerAttackType.ranged;
-						attack.primaryDamageAmount = roll.success ? roll.damage : 0;
-						attack.primaryCritMultiplier = roll.dieResult === 20 ? 2 : 1;
-						break;
-					case "ranged_off":
-						attack.attackType = PlayerAttackType.ranged;
-						attack.secondaryDamageAmount = roll.success ? roll.damage : 0;
-						attack.secondaryCritMultiplier = roll.dieResult === 20 ? 2 : 1;
-						break;
-					case "spell":
-						attack.attackType = PlayerAttackType.spell;
-						attack.primaryDamageAmount = roll.success ? roll.damage : 0;
-						break;
-				}
-
-				this.forceUpdate();
-			});
-		}
-
-		if (roll.type === "save") {
-			this.state.roomActionResult?.attacks.forEach((attack) => {
-				if (
-					attack.type !== "save" ||
-					attack.save !== roll.saveType ||
-					roll.class !== attack.target.class
-				) {
-					return;
-				}
-
-				if (attack.dc) {
-					attack.result = (roll.modifiedResult >= attack.dc) ? MonsterSaveAttackResult.success : MonsterSaveAttackResult.failure;
-				}
-				else {
-					attack.result = (roll.success ? MonsterSaveAttackResult.success : MonsterSaveAttackResult.failure);
-				}
-
-
-				this.forceUpdate();
-			})
-		}
-
-		if (roll.type === "initiative" && this.state.initiativeAction) {
-			this.state.initiativeAction.playerRollReceived = true;
-			this.state.initiativeAction.playerRoll = roll.dieResult;
-			this.state.initiativeAction.playerTotal = roll.modifiedResult;
-
-			this.forceUpdate();
-		}
 	}
 
 	private roundReset() {
@@ -144,7 +52,7 @@ export class RoomComponent extends Component<RoomComponentProps, RoomComponentSt
 			playerAttacks: [],
 			roomActionResult: undefined,
 			initiativeAction: new InitiativeAction(this.props.data.currentRoom)
-		}, this.handleAllPlayerRolls.bind(this));
+		});
 	}
 
 	clearAttacks() {
@@ -189,7 +97,7 @@ export class RoomComponent extends Component<RoomComponentProps, RoomComponentSt
 			}),
 			roomActionResult: undefined,
 			initiativeAction: undefined
-		}, this.handleAllPlayerRolls.bind(this));
+		});
 	}
 
 	private performRoomAction(action: RoomAction) {
@@ -197,7 +105,7 @@ export class RoomComponent extends Component<RoomComponentProps, RoomComponentSt
 			playerAttacks: [],
 			roomActionResult: action.perform(this.props.data.partyCard),
 			initiativeAction: undefined
-		}, this.handleAllPlayerRolls.bind(this));
+		});
 	}
 
 	private renderRoomTimers(): ReactNode {
@@ -335,15 +243,18 @@ export class RoomComponent extends Component<RoomComponentProps, RoomComponentSt
 				<div className="room-component__action-col col">
 					{this.state.playerAttacks.length > 0 &&
 						<PlayerAttackListComponent attacks={this.state.playerAttacks}
+							diceRoller={this.props.data.diceRoller}
 							currentRoom={this.props.data.currentRoom}
 							attackCompleted={this.completePlayerAttack.bind(this)}/>
 					}
 					{this.state.roomActionResult !== undefined &&
 						<RoomActionComponent result={this.state.roomActionResult}
+							diceRoller={this.props.data.diceRoller}
 							onChange={this.props.onChange}/>
 					}
 					{this.state.initiativeAction !== undefined &&
-						<InitiativeActionComponent action={this.state.initiativeAction}/>
+						<InitiativeActionComponent action={this.state.initiativeAction}
+							diceRoller={this.props.data.diceRoller}/>
 					}
 				</div>
 				{mainSectionNotes &&

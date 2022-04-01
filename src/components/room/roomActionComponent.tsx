@@ -4,6 +4,9 @@ import { ItemListSelectComponent } from "components/controls/itemListSelectCompo
 
 import { shortNameForSaveType } from "model/attributes/saveType";
 
+import { DiceRoller } from "model/diceRoller/diceRoller";
+import { Roll } from "model/diceRoller/roll";
+
 import { nameForClass } from "model/partyCard/class";
 import { WeaponType } from "model/partyCard/player";
 
@@ -15,11 +18,55 @@ import { RoomActionResult, MonsterAttack, MonsterAttackType } from "model/roomAc
 
 interface RoomActionComponentProps {
 	result: RoomActionResult;
+	diceRoller: DiceRoller;
 	onChange: () => void;
 }
 interface RoomActionComponentState {}
 
 export class RoomActionComponent extends Component<RoomActionComponentProps, RoomActionComponentState> {
+	private rollCallbackId!: number;
+
+	override componentDidMount() {
+		this.rollCallbackId = this.props.diceRoller.rollCallbacks.register(this.handlePlayerRoll.bind(this));
+
+		this.props.diceRoller.rolls.forEach(this.handlePlayerRoll.bind(this));
+	}
+
+	override componentDidUpdate(prevProps: RoomActionComponentProps) {
+		if (prevProps.diceRoller !== this.props.diceRoller) {
+			prevProps.diceRoller.rollCallbacks.unregister(this.rollCallbackId);
+			this.rollCallbackId = this.props.diceRoller.rollCallbacks.register(this.handlePlayerRoll.bind(this));
+		}
+	}
+
+	override componentWillUnmount() {
+		this.props.diceRoller.rollCallbacks.unregister(this.rollCallbackId);
+	}
+
+	private handlePlayerRoll(roll: Roll) {
+		if (roll.type !== "save") {
+			return;
+		}
+
+		this.props.result.attacks.forEach((attack) => {
+			if (
+				attack.type !== "save" ||
+				attack.save !== roll.saveType ||
+				roll.class !== attack.target.class
+			) {
+				return;
+			}
+
+			if (attack.dc) {
+				attack.result = (roll.modifiedResult >= attack.dc) ? MonsterSaveAttackResult.success : MonsterSaveAttackResult.failure;
+			}
+			else {
+				attack.result = (roll.success ? MonsterSaveAttackResult.success : MonsterSaveAttackResult.failure);
+			}
+
+			this.forceUpdate();
+		});
+	}
 
 	private saveAttackResultChanged(attack: MonsterSaveAttack, newResult: MonsterSaveAttackResult | undefined) {
 		attack.result = newResult;

@@ -3,6 +3,8 @@ import React, { Component, ReactNode, ChangeEvent } from "react";
 import { ItemListSelectComponent } from "components/controls/itemListSelectComponent";
 
 import { DamageType, allDamageTypes, nameForDamageType } from "model/attributes/damageType";
+import { DiceRoller } from "model/diceRoller/diceRoller";
+import { Roll } from "model/diceRoller/roll";
 import { Monster } from "model/dungeon/monster";
 import { Room } from "model/dungeon/room";
 import { nameForClass } from "model/partyCard/class";
@@ -14,6 +16,7 @@ import { PlayerAttackCritMultiplier, allPlayerAttackCritMultipliers, nameForPlay
 interface PlayerAttackListComponentProps {
 	currentRoom: Room;
 	attacks: PlayerAttack[];
+	diceRoller: DiceRoller;
 	attackCompleted: (attack: PlayerAttack) => void;
 }
 interface PlayerAttackListComponentState {}
@@ -23,6 +26,65 @@ function targetLabelForMonster(monster: Monster): string {
 }
 
 export class PlayerAttackListComponent extends Component<PlayerAttackListComponentProps, PlayerAttackListComponentState> {
+	private rollCallbackId!: number;
+
+	override componentDidMount() {
+		this.rollCallbackId = this.props.diceRoller.rollCallbacks.register(this.handlePlayerRoll.bind(this));
+
+		this.props.diceRoller.rolls.forEach(this.handlePlayerRoll.bind(this));
+	}
+
+	override componentDidUpdate(prevProps: PlayerAttackListComponentProps) {
+		if (prevProps.diceRoller !== this.props.diceRoller) {
+			prevProps.diceRoller.rollCallbacks.unregister(this.rollCallbackId);
+			this.rollCallbackId = this.props.diceRoller.rollCallbacks.register(this.handlePlayerRoll.bind(this));
+		}
+	}
+
+	override componentWillUnmount() {
+		this.props.diceRoller.rollCallbacks.unregister(this.rollCallbackId);
+	}
+
+	private handlePlayerRoll(roll: Roll) {
+		if (roll.type !== "attack") {
+			return;
+		}
+
+		this.props.attacks.forEach((attack) => {
+			if (roll.class !== attack.player.class) {
+				return;
+			}
+
+			switch (roll.attackType) {
+				case "melee_main":
+					attack.attackType = PlayerAttackType.melee;
+					attack.primaryDamageAmount = roll.success ? roll.damage : 0;
+					attack.primaryCritMultiplier = roll.dieResult === 20 ? 2 : 1;
+					break;
+				case "melee_off":
+					attack.attackType = PlayerAttackType.melee;
+					attack.secondaryDamageAmount = roll.success ? roll.damage : 0;
+					attack.secondaryCritMultiplier = roll.dieResult === 20 ? 2 : 1;
+					break;
+				case "ranged_main":
+					attack.attackType = PlayerAttackType.ranged;
+					attack.primaryDamageAmount = roll.success ? roll.damage : 0;
+					attack.primaryCritMultiplier = roll.dieResult === 20 ? 2 : 1;
+					break;
+				case "ranged_off":
+					attack.attackType = PlayerAttackType.ranged;
+					attack.secondaryDamageAmount = roll.success ? roll.damage : 0;
+					attack.secondaryCritMultiplier = roll.dieResult === 20 ? 2 : 1;
+					break;
+				case "spell":
+					attack.attackType = PlayerAttackType.spell;
+					attack.primaryDamageAmount = roll.success ? roll.damage : 0;
+					break;
+			}
+
+			this.forceUpdate();
+		});
+	}
 
 	private attackTypeChanged(attack: PlayerAttack, newAttackType: PlayerAttackType | undefined) {
 		attack.attackType = newAttackType;

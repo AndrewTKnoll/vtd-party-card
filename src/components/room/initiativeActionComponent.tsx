@@ -1,13 +1,46 @@
 import React, { Component, ReactNode } from "react";
 
+import { DiceRoller } from "model/diceRoller/diceRoller";
+import { Roll } from "model/diceRoller/roll";
 import { InitiativeAction } from "model/roomAction/initiativeAction";
 
 interface InitiativeActionComponentProps {
 	action: InitiativeAction;
+	diceRoller: DiceRoller;
 }
 interface InitiativeActionComponentState {}
 
 export class InitiativeActionComponent extends Component<InitiativeActionComponentProps, InitiativeActionComponentState> {
+	private rollCallbackId!: number;
+
+	override componentDidMount() {
+		this.rollCallbackId = this.props.diceRoller.rollCallbacks.register(this.handlePlayerRoll.bind(this));
+
+		this.props.diceRoller.rolls.forEach(this.handlePlayerRoll.bind(this));
+	}
+
+	override componentDidUpdate(prevProps: InitiativeActionComponentProps) {
+		if (prevProps.diceRoller !== this.props.diceRoller) {
+			prevProps.diceRoller.rollCallbacks.unregister(this.rollCallbackId);
+			this.rollCallbackId = this.props.diceRoller.rollCallbacks.register(this.handlePlayerRoll.bind(this));
+		}
+	}
+
+	override componentWillUnmount() {
+		this.props.diceRoller.rollCallbacks.unregister(this.rollCallbackId);
+	}
+
+	private handlePlayerRoll(roll: Roll) {
+		if (roll.type !== "initiative") {
+			return;
+		}
+
+		this.props.action.playerRollReceived = true;
+		this.props.action.playerRoll = roll.dieResult;
+		this.props.action.playerTotal = roll.modifiedResult;
+
+		this.forceUpdate();
+	}
 
 	private resultText(): string {
 		if (!this.props.action.playerRollReceived) {
