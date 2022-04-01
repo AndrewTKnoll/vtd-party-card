@@ -4,7 +4,7 @@ import { ModalComponent } from "components/structure/modalComponent";
 
 import { DamageType, allDamageTypes, nameForDamageType } from "model/attributes/damageType";
 import { Room } from "model/dungeon/room";
-import { Player, WeaponType } from "model/partyCard/player";
+import { Player, WeaponType, ACType } from "model/partyCard/player";
 import { nameForClass } from "model/partyCard/class";
 
 interface PlayerComponentProps {
@@ -174,10 +174,10 @@ export class PlayerComponent extends Component<PlayerComponentProps, PlayerCompo
 				<div className="player-component__ac-row">
 					<h4>AC</h4>
 					<span className={`player-component__ac-value${this.props.player.currentWeapon === WeaponType.melee ? " player-component__ac-value--active" : ""}`}>
-						{`M: ${this.props.player.meleeAC + this.props.player.acAdjust}`}
+						{`M: ${this.props.player.effectiveAC(ACType.melee)}`}
 					</span>
 					<span className={`player-component__ac-value${this.props.player.currentWeapon === WeaponType.ranged ? " player-component__ac-value--active" : ""}`}>
-						{`R: ${this.props.player.rangedAC + this.props.player.acAdjust}`}
+						{`R: ${this.props.player.effectiveAC(ACType.ranged)}`}
 					</span>
 				</div>
 				<label className="player-component__ac-adjust-row">

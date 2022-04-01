@@ -1,4 +1,4 @@
-import { Player, WeaponType } from "model/partyCard/player";
+import { Player, WeaponType, ACType } from "model/partyCard/player";
 import { MonsterAttackType } from "model/roomAction/roomActionResult";
 
 interface AutoHit {
@@ -14,7 +14,7 @@ type HitType = AutoHit | RollHit;
 interface MonsterWeaponAttackParams {
 	target: Player;
 	paladin?: Player | undefined;
-	weaponOverride?: WeaponType | "naked" | undefined;
+	acOverride?: ACType | undefined;
 	hitBonus?: number | undefined;
 	autoHitThreshold?: number | undefined;
 	damageAmount: number;
@@ -28,25 +28,23 @@ export class MonsterWeaponAttack {
 
 	readonly target: Player;
 	readonly paladin: Player | undefined;
+	private get effectiveTarget(): Player {
+		return this.paladin || this.target;
+	}
 
-	private weaponOverride: WeaponType | "naked" | undefined;
-	get effectiveWeapon(): WeaponType | "naked" {
-		return this.weaponOverride || (this.paladin || this.target).currentWeapon;
+	private acOverride: ACType | undefined;
+	get effectiveACType(): ACType {
+		if (this.acOverride) {
+			return this.acOverride;
+		}
+		return (this.effectiveTarget.currentWeapon === WeaponType.ranged ? ACType.ranged : ACType.melee);
 	}
 
 	readonly autoHitThreshold: number;
 	readonly hit: HitType;
 
 	get effectiveAC(): number {
-		const target = this.paladin || this.target;
-		switch (this.effectiveWeapon) {
-			case WeaponType.melee:
-				return target.meleeAC + target.acAdjust;
-			case WeaponType.ranged:
-				return target.rangedAC + target.acAdjust;
-			case "naked":
-				return target.nakedAC + target.acAdjust;
-		}
+		return this.effectiveTarget.effectiveAC(this.effectiveACType);
 	}
 
 	get isHit(): boolean {
@@ -60,7 +58,7 @@ export class MonsterWeaponAttack {
 			return false;
 		}
 
-		return this.hit.total >= this.effectiveAC;
+		return this.hit.total >= this.effectiveTarget.effectiveAC(this.effectiveACType);
 	}
 
 	readonly damageAmount: number;
@@ -83,7 +81,7 @@ export class MonsterWeaponAttack {
 
 		this.target = params.target;
 		this.paladin = (params.paladin?.canGuard(params.target) ? params.paladin : undefined);
-		this.weaponOverride = params.weaponOverride;
+		this.acOverride = params.acOverride;
 		this.damageAmount = params.damageAmount;
 		this.damageType = params.damageType;
 

@@ -8,6 +8,12 @@ export enum WeaponType {
 	ranged = "ranged"
 }
 
+export enum ACType {
+	melee = "melee",
+	ranged = "ranged",
+	naked = "naked"
+}
+
 export class Player {
 	readonly class: Class;
 
@@ -35,6 +41,17 @@ export class Player {
 	}
 
 	acAdjust: number = 0;
+
+	effectiveAC(type: ACType): number {
+		switch (type) {
+			case ACType.melee:
+				return this.meleeAC + this.acAdjust;
+			case ACType.ranged:
+				return this.rangedAC + this.acAdjust;
+			case ACType.naked:
+				return this.nakedAC + this.acAdjust;
+		}
+	}
 
 	hasFreeMovement: boolean = false;
 

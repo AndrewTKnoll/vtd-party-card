@@ -8,7 +8,6 @@ import { DiceRoller } from "model/diceRoller/diceRoller";
 import { Roll } from "model/diceRoller/roll";
 
 import { nameForClass } from "model/partyCard/class";
-import { WeaponType } from "model/partyCard/player";
 
 import { MonsterSaveAttack, MonsterSaveAttackResult, allMonsterSaveAttackResults, nameForMonsterSaveAttackResult } from "model/monsterAttack/monsterSaveAttack";
 import { MonsterSpecialAttack } from "model/monsterAttack/monsterSpecialAttack";
@@ -84,7 +83,7 @@ export class RoomActionComponent extends Component<RoomActionComponentProps, Roo
 				{nameForClass(attack.target.class)}
 			</span>
 			<span className="room-action-result-list__target col">
-				{`${attack.effectiveAC} ${attack.effectiveWeapon === WeaponType.ranged ? "R" : "M"}`}
+				{`${attack.effectiveAC} ${attack.effectiveACType.charAt(0).toUpperCase()}`}
 			</span>
 			<span className="room-action-result-list__roll col">
 				{`${attack.hit.auto ? "Auto" : `${attack.hit.total} (${attack.hit.roll})`}`}
