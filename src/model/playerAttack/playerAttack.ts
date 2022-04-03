@@ -45,26 +45,26 @@ export class PlayerAttack {
 				this.player.currentWeapon = WeaponType.ranged;
 		}
 
-		if (this.primaryDamageAmount > 0) {
-			this.primaryTarget?.takeDamage(
-				this.primaryDamageAmount,
-				this.primaryCritMultiplier,
-				this.player,
-				this.attackType,
-				this.damageType,
-				this.aoeDamageAmount > 0
-			);
+		if (this.primaryDamageAmount > 0 && this.primaryTarget) {
+			this.primaryTarget.takeDamage({
+				type: this.attackType,
+				player: this.player,
+				amount: this.primaryDamageAmount,
+				multiplier: this.primaryCritMultiplier,
+				damageType: this.damageType,
+				aoe: this.aoeDamageAmount > 0
+			});
 		}
 
-		if (this.secondaryDamageAmount > 0) {
-			this.secondaryTarget?.takeDamage(
-				this.secondaryDamageAmount,
-				this.secondaryCritMultiplier,
-				this.player,
-				this.attackType,
-				this.damageType,
-				this.aoeDamageAmount > 0
-			);
+		if (this.secondaryDamageAmount > 0 && this.secondaryTarget) {
+			this.secondaryTarget.takeDamage({
+				type: this.attackType,
+				player: this.player,
+				amount: this.secondaryDamageAmount,
+				multiplier: this.secondaryCritMultiplier,
+				damageType: this.damageType,
+				aoe: this.aoeDamageAmount > 0
+			});
 		}
 
 		if (this.aoeDamageAmount === 0) {
@@ -78,14 +78,14 @@ export class PlayerAttack {
 			if (monster === this.secondaryTarget && this.secondaryDamageAmount > 0) {
 				return;
 			}
-			monster.takeDamage(
-				this.aoeDamageAmount,
-				1,
-				this.player,
-				this.attackType!,
-				this.damageType,
-				true
-			);
-		})
+			monster.takeDamage({
+				type: this.attackType!,
+				player: this.player,
+				amount: this.aoeDamageAmount,
+				multiplier: 1,
+				damageType: this.damageType,
+				aoe: true
+			});
+		});
 	}
 }

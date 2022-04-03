@@ -9,6 +9,15 @@ import { PlayerAttackCritMultiplier } from "model/playerAttack/playerAttackCritM
 
 import { DefaultMap } from "utilities/defaultMap";
 
+interface DamageDescription {
+	readonly type: PlayerAttackType;
+	readonly player: Player;
+	readonly amount: number;
+	readonly multiplier: PlayerAttackCritMultiplier;
+	readonly damageType: DamageType | undefined;
+	readonly aoe: boolean;
+}
+
 export class Monster {
 	readonly name: string;
 
@@ -77,10 +86,10 @@ export class Monster {
 		return "";
 	}
 
-	takeDamage(amount: number, multiplier: PlayerAttackCritMultiplier, player: Player, attackType: PlayerAttackType, damageType: DamageType | undefined, aoe: boolean) {
-		this.currentDamage += amount;
-		this.roundDamageFromPlayers.set(player.class, this.roundDamageFromPlayers.get(player.class) + amount);
-		this.totalDamageFromPlayers.set(player.class, this.totalDamageFromPlayers.get(player.class) + amount);
+	takeDamage(damage: DamageDescription) {
+		this.currentDamage += damage.amount;
+		this.roundDamageFromPlayers.set(damage.player.class, this.roundDamageFromPlayers.get(damage.player.class) + damage.amount);
+		this.totalDamageFromPlayers.set(damage.player.class, this.totalDamageFromPlayers.get(damage.player.class) + damage.amount);
 	}
 
 	damageFromPlayer(player: Player, roundOnly: boolean): number {
