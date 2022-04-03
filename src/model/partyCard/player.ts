@@ -36,6 +36,9 @@ export class Player {
 	rangedDamageBonus: number = 0;
 	rangedDamageTypes: DefaultMap<string, number> = new DefaultMap(0);
 
+	retributionDamageTotal: number = 0;
+	retributionDamageTypes: DefaultMap<string, number> = new DefaultMap(0);
+
 	get nakedAC(): number {
 		return nakedACForClass(this.class);
 	}
@@ -79,6 +82,9 @@ export class Player {
 		this.rangedDamageBonus = archive.rangedDamageBonus;
 		this.rangedDamageTypes = new DefaultMap(0, archive.rangedDamageTypes.values);
 
+		this.retributionDamageTotal = archive.retributionDamageTotal;
+		this.retributionDamageTypes = new DefaultMap(0, archive.retributionDamageTypes.values);
+
 		this.acAdjust = archive.acAdjust;
 
 		this.hasFreeMovement = archive.hasFreeMovement;
@@ -113,6 +119,9 @@ export class Player {
 		this.rangedWeapon = "";
 		this.rangedDamageBonus = 0;
 		this.rangedDamageTypes = new DefaultMap(0);
+
+		this.retributionDamageTotal = 0;
+		this.retributionDamageTypes = new DefaultMap(0);
 
 		this.hasFreeMovement = false;
 
