@@ -21,7 +21,7 @@ export class PlayerComponent extends Component<PlayerComponentProps, PlayerCompo
 		this.props.onChange();
 	}
 
-	private setNumberValue(key: "meleeAC" | "rangedAC" | "acAdjust" | "meleeDamageBonus" | "rangedDamageBonus", event: ChangeEvent<HTMLInputElement>) {
+	private setNumberValue(key: "meleeAC" | "rangedAC" | "acAdjust" | "meleeDamageBonus" | "rangedDamageBonus" | "retributionDamageTotal", event: ChangeEvent<HTMLInputElement>) {
 		this.props.player[key] = this.getNumberFrom(event);
 		this.props.onChange();
 	}
@@ -31,7 +31,7 @@ export class PlayerComponent extends Component<PlayerComponentProps, PlayerCompo
 		this.props.onChange();
 	}
 
-	private setDamageType(key: "meleeDamageTypes" | "rangedDamageTypes", type: DamageType, event: ChangeEvent<HTMLInputElement>) {
+	private setDamageType(key: "meleeDamageTypes" | "rangedDamageTypes" | "retributionDamageTypes", type: DamageType, event: ChangeEvent<HTMLInputElement>) {
 		this.props.player[key].set(type, this.getNumberFrom(event));
 		this.props.onChange();
 	}
@@ -52,6 +52,9 @@ export class PlayerComponent extends Component<PlayerComponentProps, PlayerCompo
 					</label>
 					<label className="col">
 						Ranged
+					</label>
+					<label className="col">
+						Retribution
 					</label>
 				</li>
 				<li className="player-stat-list__row row">
@@ -86,7 +89,7 @@ export class PlayerComponent extends Component<PlayerComponentProps, PlayerCompo
 				</li>
 				<li className="player-stat-list__row row">
 					<label className="player-stat-list__label col">
-						Damage Bonus
+						Total Damage
 					</label>
 					<div className="player-stat-list__input col">
 						<input type="number"
@@ -97,6 +100,11 @@ export class PlayerComponent extends Component<PlayerComponentProps, PlayerCompo
 						<input type="number"
 							value={this.props.player.rangedDamageBonus}
 							onChange={this.setNumberValue.bind(this, "rangedDamageBonus")}/>
+					</div>
+					<div className="player-stat-list__input col">
+						<input type="number"
+							value={this.props.player.retributionDamageTotal}
+							onChange={this.setNumberValue.bind(this, "retributionDamageTotal")}/>
 					</div>
 				</li>
 				{allDamageTypes.map((damageType: DamageType) => {
@@ -116,6 +124,11 @@ export class PlayerComponent extends Component<PlayerComponentProps, PlayerCompo
 								<input type="number"
 									value={this.props.player.rangedDamageTypes.get(damageType)}
 									onChange={this.setDamageType.bind(this, "rangedDamageTypes", damageType)}/>
+							</div>
+							<div className="player-stat-list__input col">
+								<input type="number"
+									value={this.props.player.retributionDamageTypes.get(damageType)}
+									onChange={this.setDamageType.bind(this, "retributionDamageTypes", damageType)}/>
 							</div>
 						</li>
 					);

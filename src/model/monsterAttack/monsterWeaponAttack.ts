@@ -1,3 +1,4 @@
+import { Monster } from "model/dungeon/monster";
 import { Player, WeaponType, ACType } from "model/partyCard/player";
 import { MonsterAttackType } from "model/roomAction/roomActionResult";
 
@@ -15,6 +16,7 @@ interface MonsterWeaponAttackParams {
 	target: Player;
 	paladin?: Player | undefined;
 	acOverride?: ACType | undefined;
+	retributionTarget?: Monster | undefined;
 	hitBonus?: number | undefined;
 	autoHitThreshold?: number | undefined;
 	damageAmount: number;
@@ -26,9 +28,14 @@ interface MonsterWeaponAttackParams {
 export class MonsterWeaponAttack {
 	readonly type = MonsterAttackType.weapon;
 
+	private readonly retributionTarget: Monster | undefined;
+	get triggersRetributionDamage(): boolean {
+		return this.isHit && (this.retributionTarget !== undefined) && (this.effectiveTarget.retributionDamageTotal > 0);
+	}
+
 	readonly target: Player;
 	readonly paladin: Player | undefined;
-	private get effectiveTarget(): Player {
+	get effectiveTarget(): Player {
 		return this.paladin || this.target;
 	}
 
@@ -80,6 +87,7 @@ export class MonsterWeaponAttack {
 		this.autoHitThreshold = params.autoHitThreshold || 20;
 
 		this.target = params.target;
+		this.retributionTarget = params.retributionTarget;
 		this.paladin = (params.paladin?.canGuard(params.target) ? params.paladin : undefined);
 		this.acOverride = params.acOverride;
 		this.damageAmount = params.damageAmount;
@@ -91,6 +99,13 @@ export class MonsterWeaponAttack {
 	}
 
 	complete() {
+		if (this.triggersRetributionDamage) {
+			this.retributionTarget?.takeDamage({
+				type: "retribution",
+				player: this.effectiveTarget,
+				amount: this.effectiveTarget.retributionDamageTotal
+			});
+		}
 		this.completionHandler?.(this);
 	}
 }

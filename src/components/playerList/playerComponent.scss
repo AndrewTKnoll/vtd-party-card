@@ -124,7 +124,7 @@
 			margin-bottom: 0.5rem;
 
 			.col {
-				width: 40%;
+				width: calc(80% / 3);
 				margin-left: 20%;
 
 				+ .col {
@@ -142,7 +142,7 @@
 		}
 
 		.player-stat-list__input {
-			width: 40%;
+			width: calc(80% / 3);
 
 			&.player-stat-list__input--full-width {
 
