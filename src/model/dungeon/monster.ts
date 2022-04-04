@@ -18,6 +18,12 @@ interface DamageDescription {
 	readonly aoe: boolean;
 }
 
+interface RetributionDamageDescription {
+	readonly type: "retribution";
+	readonly player: Player;
+	readonly amount: number;
+}
+
 export class Monster {
 	readonly name: string;
 
@@ -86,7 +92,7 @@ export class Monster {
 		return "";
 	}
 
-	takeDamage(damage: DamageDescription) {
+	takeDamage(damage: DamageDescription | RetributionDamageDescription) {
 		this.currentDamage += damage.amount;
 		this.roundDamageFromPlayers.set(damage.player.class, this.roundDamageFromPlayers.get(damage.player.class) + damage.amount);
 		this.totalDamageFromPlayers.set(damage.player.class, this.totalDamageFromPlayers.get(damage.player.class) + damage.amount);

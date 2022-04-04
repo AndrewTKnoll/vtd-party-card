@@ -77,6 +77,7 @@ export class RoomActionComponent extends Component<RoomActionComponentProps, Roo
 		const autoHit = !attack.hit.auto && (attack.hit.roll >= attack.autoHitThreshold) && (attack.hit.total < attack.effectiveAC) ? ` (nat ${attack.hit.roll})` : "";
 		const autoMiss = !attack.hit.auto && (attack.hit.roll === 1) && (attack.hit.total >= attack.effectiveAC) ? ` (nat 1)` : "";
 		const result = (attack.isHit ? `Hit${autoHit}: ${attack.damageAmount} ${attack.damageType}` : `Miss ${autoMiss}`);
+		const retribution = (attack.triggersRetributionDamage ? ` - ${attack.effectiveTarget.retributionDamageTotal} Retribution` : "");
 
 		return <>
 			<span className="room-action-result-list__title col">
@@ -89,7 +90,7 @@ export class RoomActionComponent extends Component<RoomActionComponentProps, Roo
 				{`${attack.hit.auto ? "Auto" : `${attack.hit.total} (${attack.hit.roll})`}`}
 			</span>
 			<span className="room-action-result-list__result col">
-				{`${guard}${result}${attack.note ? ` (${attack.note})` : ""}`}
+				{`${guard}${result}${attack.note ? ` (${attack.note})` : ""}${retribution}`}
 			</span>
 		</>;
 	}
