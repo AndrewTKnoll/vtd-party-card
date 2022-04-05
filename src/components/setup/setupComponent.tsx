@@ -53,6 +53,12 @@ export class SetupComponent extends Component<SetupComponentProps, SetupComponen
 		navigator.clipboard.writeText(this.props.data.skillTestLinks.join("\n"));
 	}
 
+	private copySlotIDToClipboard() {
+		if (this.props.data.diceRoller.slotId) {
+			navigator.clipboard.writeText(this.props.data.diceRoller.slotId.toUpperCase());
+		}
+	}
+
 	private downloadLogFile() {
 		this.props.data.log.exportLog();
 	}
@@ -160,6 +166,13 @@ export class SetupComponent extends Component<SetupComponentProps, SetupComponen
 								<ValidatedTextInput value={this.props.data.diceRoller.slotId?.toUpperCase() || ""}
 									validation={/^[a-z,A-Z]{6}$/}
 									onChange={this.updateSlotId.bind(this)}/>
+								{this.props.data.diceRoller.slotId !== undefined &&
+									<button type="button"
+										onClick={this.copySlotIDToClipboard.bind(this)}>
+
+										Copy to Clipboard
+									</button>
+								}
 								<h4>Ticket Start Time:</h4>
 								<input type="datetime-local"
 									value={dateString}
