@@ -7,6 +7,7 @@ import { Room } from "model/dungeon/room";
 import { PartyCard } from "model/partyCard/partyCard";
 
 const storageKey = "data";
+const timezoneOffsetScale = 60 * 1000;
 
 export class DataManager {
 	readonly log = new Log();
@@ -51,7 +52,36 @@ export class DataManager {
 		});
 	}
 
-	startTime: Date | undefined = undefined;
+	private _startTime: Date | undefined = undefined;
+	get startTime(): Date | undefined {
+		return this._startTime;
+	}
+
+	get utcOffsetStartTime(): Date | undefined {
+		if (!this.startTime) {
+			return undefined;
+		}
+		return new Date(this.startTime.getTime() - this.dungeon.timezoneOffset * timezoneOffsetScale);
+	}
+
+	get localOffsetStartTime(): Date | undefined {
+		if (!this.startTime) {
+			return undefined;
+		}
+
+		const offset = this.dungeon.timezoneOffset - this.startTime.getTimezoneOffset();
+		return new Date(this.startTime.getTime() - (offset * timezoneOffsetScale));
+	}
+
+	set localOffsetStartTime(newValue: Date | undefined) {
+		if (!newValue) {
+			this._startTime = undefined;
+			return;
+		}
+
+		const offset = this.dungeon.timezoneOffset - newValue.getTimezoneOffset();
+		this._startTime = new Date(newValue.getTime() + (offset * timezoneOffsetScale));
+	}
 
 	get skillTestLinks(): string[] {
 		return [
@@ -89,7 +119,7 @@ export class DataManager {
 
 			this.currentRoomIndex = archive.currentRoom;
 			this.difficulty = archive.difficulty;
-			this.startTime = archive.startTime ? new Date(archive.startTime) : undefined;
+			this._startTime = archive.startTime ? new Date(archive.startTime) : undefined;
 			this.diceRoller.slotId = archive.slotId;
 
 			const sessionArchiveString = sessionStorage.getItem(storageKey);
@@ -130,7 +160,7 @@ export class DataManager {
 
 		this.currentRoomIndex = [0, 0];
 		this.difficulty = Difficulty.normal;
-		this.startTime = undefined;
+		this._startTime = undefined;
 		this.diceRoller.slotId = undefined;
 
 		this.log.clearLog();

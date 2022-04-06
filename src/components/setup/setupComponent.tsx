@@ -10,8 +10,6 @@ import { ResetLevel } from "model/attributes/resetLevel";
 import { roomTimeDuration } from "model/dungeon/room";
 import { DataManager } from "model/dataManager";
 
-const timezoneOffsetScale = 60 * 1000;
-
 interface SetupComponentProps {
 	data: DataManager;
 	onChange: () => void;
@@ -26,10 +24,7 @@ export class SetupComponent extends Component<SetupComponentProps, SetupComponen
 	}
 
 	private startTimeChanged(event: ChangeEvent<HTMLInputElement>) {
-		const rawDate = new Date(event.target.value);
-		const offset = this.props.data.dungeon.timezoneOffset - rawDate.getTimezoneOffset();
-
-		this.props.data.startTime = new Date(rawDate.getTime() + (offset * timezoneOffsetScale));
+		this.props.data.localOffsetStartTime = new Date(event.target.value);
 		this.props.onChange();
 	}
 
@@ -75,10 +70,7 @@ export class SetupComponent extends Component<SetupComponentProps, SetupComponen
 		let recapVideoStartTime;
 
 		if (this.props.data.startTime) {
-			dateString = (new Date(
-				this.props.data.startTime.getTime() - this.props.data.dungeon.timezoneOffset * timezoneOffsetScale
-			)).toISOString().substring(0, 16);
-
+			dateString = this.props.data.utcOffsetStartTime!.toISOString().substring(0, 16);
 			room1StartTime = new Date(this.props.data.startTime.getTime() + roomTimeDuration * 3);
 		}
 
