@@ -2,6 +2,7 @@ import { DataManager } from "model/dataManager";
 
 interface LogItem {
 	message: string;
+	timestamp: Date;
 	data?: any;
 }
 
@@ -35,6 +36,7 @@ export class Log {
 	log(message: string, data?: any) {
 		this.items.push({
 			message: message,
+			timestamp: new Date(),
 			data: data
 		});
 		this.save();
