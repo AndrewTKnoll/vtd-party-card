@@ -63,7 +63,7 @@ export class Log {
 	exportLog() {
 		const element = document.createElement("a");
 
-		element.setAttribute("href", `data:application/json;charset=utf-8,${JSON.stringify(this.items)}`);
+		element.setAttribute("href", `data:application/json;charset=utf-8,${encodeURIComponent(JSON.stringify(this.items))}`);
 		element.setAttribute("download", `${this.fileName}.json`);
 
 		element.click();
