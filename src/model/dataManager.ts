@@ -12,7 +12,7 @@ const timezoneOffsetScale = 60 * 1000;
 export class DataManager {
 	readonly log: Log;
 
-	readonly dungeon: Dungeon = new Dungeon();
+	readonly dungeon: Dungeon;
 	readonly partyCard = new PartyCard();
 	readonly diceRoller: DiceRoller;
 
@@ -38,19 +38,7 @@ export class DataManager {
 		return this.currentRoomIndex[0];
 	}
 
-	private _difficulty = Difficulty.normal;
-	get difficulty(): Difficulty {
-		return this._difficulty;
-	}
-	set difficulty(newValue: Difficulty) {
-		this._difficulty = newValue;
-
-		this.dungeon.rooms.forEach((position) => {
-			position.forEach((option) => {
-				option.difficulty = newValue;
-			});
-		});
-	}
+	difficulty = Difficulty.normal;
 
 	private _startTime: Date | undefined = undefined;
 	get startTime(): Date | undefined {
@@ -108,6 +96,8 @@ export class DataManager {
 
 	constructor() {
 		this.log = new Log(this);
+
+		this.dungeon = new Dungeon(this);
 		this.diceRoller = new DiceRoller(this.log);
 
 		try {
@@ -143,7 +133,7 @@ export class DataManager {
 			dungeon: this.dungeon,
 			partyCard: this.partyCard,
 			currentRoom: this.currentRoomIndex,
-			difficulty: this._difficulty,
+			difficulty: this.difficulty,
 			startTime: this.startTime?.getTime(),
 			slotId: this.diceRoller.slotId
 		}));

@@ -1,3 +1,5 @@
+import { DataManager } from "model/dataManager";
+
 import { DamageType } from "model/attributes/damageType";
 import { Difficulty } from "model/attributes/difficulty";
 import { ResetLevel } from "model/attributes/resetLevel";
@@ -25,9 +27,9 @@ interface RetributionDamageDescription {
 }
 
 export class Monster {
-	readonly name: string;
+	private readonly dataManager: DataManager;
 
-	difficulty = Difficulty.normal;
+	readonly name: string;
 
 	private roundDamageFromPlayers = new DefaultMap<Class, number>(0);
 	private totalDamageFromPlayers = new DefaultMap<Class, number>(0);
@@ -42,7 +44,7 @@ export class Monster {
 
 	private maxHPValues: DefaultMap<Difficulty, number>;
 	get maxHP(): number {
-		return this.maxHPValues.get(this.difficulty);
+		return this.maxHPValues.get(this.dataManager.difficulty);
 	}
 
 	get isAlive(): boolean {
@@ -54,9 +56,10 @@ export class Monster {
 		return true;
 	}
 
-	constructor(name: string, maxHP: { [key: string]: number }) {
-		this.name = name;
+	constructor(dataManager: DataManager, name: string, maxHP: { [key: string]: number }) {
+		this.dataManager = dataManager;
 
+		this.name = name;
 		this.maxHPValues = new DefaultMap(0, maxHP);
 	}
 

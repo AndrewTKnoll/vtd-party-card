@@ -1,5 +1,7 @@
 import { ReactNode } from "react";
 
+import { DataManager } from "model/dataManager";
+
 import { Monster } from "model/dungeon/monster";
 import { StatBlock } from "model/dungeon/statBlock";
 
@@ -39,6 +41,7 @@ export interface RoomTimer {
 }
 
 interface RoomConstructorParams {
+	dataManager: DataManager;
 	name: string;
 	id: string;
 	initiativeBonus?: { [key: string]: number};
@@ -49,23 +52,13 @@ export class Room {
 
 	/* basic data */
 
+	private readonly dataManager: DataManager;
+
 	readonly name: string;
 	readonly id: string;
 
-	private _difficulty = Difficulty.normal;
 	get difficulty(): Difficulty {
-		return this._difficulty;
-	}
-	set difficulty(newValue: Difficulty) {
-		this._difficulty = newValue;
-
-		this.monsters.forEach((monster) => {
-			monster.difficulty = newValue
-		});
-
-		this.statBlocks.forEach((statBlock) => {
-			statBlock.difficulty = newValue;
-		});
+		return this.dataManager.difficulty;
 	}
 
 	private initiativeValues: DefaultMap<Difficulty, number>;
@@ -85,6 +78,8 @@ export class Room {
 	/* lifecycle */
 
 	constructor(params: RoomConstructorParams) {
+		this.dataManager = params.dataManager;
+
 		this.name = params.name;
 		this.id = params.id;
 
