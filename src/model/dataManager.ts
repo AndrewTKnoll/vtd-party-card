@@ -10,11 +10,11 @@ const storageKey = "data";
 const timezoneOffsetScale = 60 * 1000;
 
 export class DataManager {
-	readonly log = new Log();
+	readonly log: Log;
 
 	readonly dungeon: Dungeon = new Dungeon();
 	readonly partyCard = new PartyCard();
-	readonly diceRoller = new DiceRoller(this.log);
+	readonly diceRoller: DiceRoller;
 
 	private currentRoomIndex: [number, number] = [0, 0];
 	get currentRoom(): Room {
@@ -107,6 +107,9 @@ export class DataManager {
 	}
 
 	constructor() {
+		this.log = new Log(this);
+		this.diceRoller = new DiceRoller(this.log);
+
 		try {
 			const archiveString = localStorage.getItem(storageKey);
 			if (!archiveString) {

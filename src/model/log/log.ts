@@ -1,3 +1,5 @@
+import { DataManager } from "model/dataManager";
+
 interface LogItem {
 	message: string;
 	data?: any;
@@ -6,9 +8,13 @@ interface LogItem {
 const storageKey = "log";
 
 export class Log {
+	private dataManager: DataManager;
+
 	private items: LogItem[] = [];
 
-	constructor() {
+	constructor(dataManager: DataManager) {
+		this.dataManager = dataManager;
+
 		try {
 			const archiveString = localStorage.getItem(storageKey);
 			if (!archiveString) {
@@ -43,11 +49,20 @@ export class Log {
 		localStorage.setItem(storageKey, JSON.stringify(this.items));
 	}
 
+	private get fileName(): string {
+		const date = this.dataManager.localOffsetStartTime;
+
+		if (!date) {
+			return "log";
+		}
+		return `${date.getMonth() + 1}-${date.getDate()} ${date.getHours()}_${new String(date.getMinutes()).padStart(2, "0")} log`;
+	}
+
 	exportLog() {
 		const element = document.createElement("a");
 
 		element.setAttribute("href", `data:application/json;charset=utf-8,${JSON.stringify(this.items)}`);
-		element.setAttribute("download", "log.json");
+		element.setAttribute("download", `${this.fileName}.json`);
 
 		element.click();
 	}
