@@ -6,10 +6,10 @@
 		&.player-attack-list__attack--none {
 
 			.player-attack-list__target {
-				color: #ccc;
+				color: var(--accent-color);
 
 				input {
-					background: #ccc;
+					background: var(--accent-color);
 				}
 			}
 		}

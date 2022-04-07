@@ -25,7 +25,7 @@
 	height: 100%;
 	border: 1px solid;
 	padding: 0.5rem 0.5rem 0;
-	background: #fff;
+	background: var(--background-color);
 
 	&.player-component--dead {
 
@@ -39,7 +39,7 @@
 	&.player-component--not-present {
 
 		.player-component__title {
-			color: #ccc;
+			color: var(--accent-color);
 		}
 
 		.player-component__checkbox-row,
@@ -94,7 +94,7 @@
 		text-align: center;
 
 		&--active {
-			background: #ccc;
+			background: var(--accent-color);
 		}
 	}
 

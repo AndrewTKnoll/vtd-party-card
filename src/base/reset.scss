@@ -1,3 +1,16 @@
+:root {
+	color-scheme: light dark;
+	--accent-color: #ccc;
+	--background-color: #fff;
+	--text-color: #000;
+
+	@include dark-mode() {
+		--accent-color: #555;
+		--background-color: #000;
+		--text-color: #fff;
+	}
+}
+
 *, :before, :after {
 	box-sizing: border-box;
 }
@@ -14,6 +27,8 @@ body {
 	max-width: 75rem;
 	margin: 0 auto 25vh;
 	padding: 0 0.5rem;
+	background: var(--background-color);
+	color: color(--text-color);
 }
 
 ul {

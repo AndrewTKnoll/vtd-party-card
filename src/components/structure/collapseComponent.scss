@@ -3,7 +3,21 @@
 	flex-direction: column;
 	margin-bottom: 1rem;
 	padding: 0.5rem 0.5rem 0;
-	background: rgba(0, 0, 0, 0.1);
+
+	@mixin collapse-bg($depth) {
+		background: darken(#fff, $depth * 10%);
+
+		@include dark-mode() {
+			background: lighten(#000, $depth * 10%);
+		}
+
+		@if $depth < 2 {
+			.collapse-component {
+				@include collapse-bg($depth + 1);
+			}
+		}
+	}
+	@include collapse-bg(1);
 
 	&.collapse-component--collapsed {
 
