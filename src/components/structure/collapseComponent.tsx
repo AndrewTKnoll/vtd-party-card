@@ -1,4 +1,4 @@
-import React, { Component } from "react";
+import React, { Component, ReactNode } from "react";
 
 import { HeaderLevel } from "base/utilities";
 
@@ -6,6 +6,7 @@ interface CollapseComponentProps {
 	headerText: string;
 	headerLevel: HeaderLevel;
 	contentClass?: string;
+	children: ReactNode;
 }
 
 interface CollapseComponentState {

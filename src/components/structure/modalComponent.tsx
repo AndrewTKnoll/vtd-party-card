@@ -1,4 +1,4 @@
-import React, { Component, MouseEvent } from "react";
+import React, { Component, ReactNode, MouseEvent } from "react";
 
 import { HeaderLevel } from "base/utilities";
 
@@ -8,6 +8,7 @@ interface ModalComponentProps {
 	title: string;
 	titleHeaderLevel: HeaderLevel;
 	contentClass?: string;
+	children: ReactNode;
 }
 
 interface ModalComponentState {
