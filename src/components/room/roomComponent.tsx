@@ -86,9 +86,15 @@ export class RoomComponent extends Component<RoomComponentProps, RoomComponentSt
 		});
 	}
 
-	private createPlayerAttacks() {
+	private createPlayerAttacks(quickStrikeRound: boolean) {
+		if (quickStrikeRound && this.state.initiativeAction) {
+			this.completeAllAttacks();
+		}
+
 		this.setState({
-			playerAttacks: this.props.data.partyCard.activePlayers.map((player) => {
+			playerAttacks: this.props.data.partyCard.activePlayers.filter((player) => {
+				return !quickStrikeRound || player.hasQuickStrike;
+			}).map((player) => {
 				const attack = new PlayerAttack(player, this.props.data.currentRoom);
 				attack.primaryTarget = this.props.data.currentRoom.defaultTargetForPlayer(player);
 				attack.secondaryTarget = attack.primaryTarget;
@@ -149,6 +155,10 @@ export class RoomComponent extends Component<RoomComponentProps, RoomComponentSt
 		const secondaryColumnNotes = this.props.data.currentRoom.secondaryColumnNotes(this.props.onChange);
 		const mainSectionNotes = this.props.data.currentRoom.mainSectionNotes(this.props.onChange);
 
+		const playersHaveQuickStrike = this.props.data.partyCard.activePlayers.reduce((found, player) => {
+			return found || player.hasQuickStrike;
+		}, false);
+
 		return (
 			<div className={`room-component room-${this.props.data.currentRoom.id} row`}>
 				<h2 className="room-component__title col">
@@ -194,7 +204,7 @@ export class RoomComponent extends Component<RoomComponentProps, RoomComponentSt
 									Roll Initiative
 								</button>
 								<button type="button"
-									onClick={this.createPlayerAttacks.bind(this)}>
+									onClick={this.createPlayerAttacks.bind(this, false)}>
 
 									Player Attack
 								</button>
@@ -254,6 +264,7 @@ export class RoomComponent extends Component<RoomComponentProps, RoomComponentSt
 					}
 					{this.state.initiativeAction !== undefined &&
 						<InitiativeActionComponent action={this.state.initiativeAction}
+							triggerQuickStrike={playersHaveQuickStrike ? this.createPlayerAttacks.bind(this, true) : undefined}
 							diceRoller={this.props.data.diceRoller}/>
 					}
 				</div>

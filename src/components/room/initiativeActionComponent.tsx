@@ -2,11 +2,13 @@ import React, { Component, ReactNode } from "react";
 
 import { DiceRoller } from "model/diceRoller/diceRoller";
 import { Roll } from "model/diceRoller/roll";
+import { InitiativeWinner } from "model/dungeon/room";
 import { InitiativeAction } from "model/roomAction/initiativeAction";
 
 interface InitiativeActionComponentProps {
 	action: InitiativeAction;
 	diceRoller: DiceRoller;
+	triggerQuickStrike: (() => void) | undefined;
 }
 interface InitiativeActionComponentState {}
 
@@ -56,6 +58,12 @@ export class InitiativeActionComponent extends Component<InitiativeActionCompone
 		return (monsterTotal > playerTotal) ? "Monster Wins" : `Players Win${playerRoll >= 15 ? " (Quick Strike)" : ""}`;
 	}
 
+	private quickStrikeAllowed(): boolean {
+		return this.props.triggerQuickStrike !== undefined &&
+			this.props.action.winner === InitiativeWinner.players &&
+			this.props.action.playerRoll >= 15;
+	}
+
 	override render(): ReactNode {
 		return (<>
 			<h3>Initiative</h3>
@@ -71,6 +79,14 @@ export class InitiativeActionComponent extends Component<InitiativeActionCompone
 				<div className="initiative-action-component__result">
 					{this.resultText()}
 				</div>
+				{this.quickStrikeAllowed() &&
+					<button type="button"
+						className="initiative-action-component__quick-strike-button"
+						onClick={this.props.triggerQuickStrike}>
+
+						Start Quick Strike Round
+					</button>
+				}
 			</div>
 		</>);
 	}
