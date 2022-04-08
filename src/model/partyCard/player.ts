@@ -57,6 +57,7 @@ export class Player {
 	}
 
 	hasFreeMovement: boolean = false;
+	hasQuickStrike: boolean = false;
 
 	flags: DefaultMap<string, boolean> = new DefaultMap(false);
 	countFlags: DefaultMap<string, number> = new DefaultMap(0);
@@ -88,6 +89,7 @@ export class Player {
 		this.acAdjust = archive.acAdjust;
 
 		this.hasFreeMovement = archive.hasFreeMovement;
+		this.hasQuickStrike = archive.hasQuickStrike;
 
 		this.flags = new DefaultMap(false, archive.flags.values);
 		this.countFlags = new DefaultMap(0, archive.countFlags.values);
@@ -124,6 +126,7 @@ export class Player {
 		this.retributionDamageTypes = new DefaultMap(0);
 
 		this.hasFreeMovement = false;
+		this.hasQuickStrike = false;
 
 		this.flags = new DefaultMap(false);
 		this.countFlags = new DefaultMap(0);

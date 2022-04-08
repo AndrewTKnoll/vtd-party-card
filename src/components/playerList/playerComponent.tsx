@@ -16,7 +16,7 @@ interface PlayerComponentState {}
 
 export class PlayerComponent extends Component<PlayerComponentProps, PlayerComponentState> {
 
-	private setBooleanValue(key: "isPresent" | "isDead" | "isGuarded" | "hasFreeMovement", event: ChangeEvent<HTMLInputElement>) {
+	private setBooleanValue(key: "isPresent" | "isDead" | "isGuarded" | "hasFreeMovement" | "hasQuickStrike", event: ChangeEvent<HTMLInputElement>) {
 		this.props.player[key] = event.target.checked;
 		this.props.onChange();
 	}
@@ -165,6 +165,13 @@ export class PlayerComponent extends Component<PlayerComponentProps, PlayerCompo
 									onChange={this.setBooleanValue.bind(this, "hasFreeMovement")}/>
 
 								Has Free Movement
+							</label>
+							<label>
+								<input type="checkbox"
+									checked={this.props.player.hasQuickStrike}
+									onChange={this.setBooleanValue.bind(this, "hasQuickStrike")}/>
+
+								Has Quick Strike
 							</label>
 						</div>
 						{this.renderStatList()}
