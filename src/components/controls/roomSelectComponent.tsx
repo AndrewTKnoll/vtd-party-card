@@ -12,9 +12,19 @@ interface RoomSelectComponentState {}
 
 export class RoomSelectComponent extends Component<RoomSelectComponentProps, RoomSelectComponentState> {
 
+	private goToEpilogue() {
+		this.props.data.inEpilogue = true;
+		this.props.onChange();
+	}
+
 	private newRoomSelected(room: Room) {
-		this.props.data.currentRoom = room;
-		this.props.data.reset(ResetLevel.room);
+		this.props.data.inEpilogue = false;
+
+		if (this.props.data.currentRoom !== room) {
+			this.props.data.currentRoom = room;
+			this.props.data.reset(ResetLevel.room);
+		}
+
 		this.props.onChange();
 	}
 
@@ -22,7 +32,7 @@ export class RoomSelectComponent extends Component<RoomSelectComponentProps, Roo
 		return (
 			<button key={optionIndex}
 				type="button"
-				disabled={option === this.props.data.currentRoom}
+				disabled={option === this.props.data.currentRoom && !this.props.data.inEpilogue}
 				onClick={this.newRoomSelected.bind(this, option)}>
 
 				{`Room ${option.id}`}
@@ -48,6 +58,14 @@ export class RoomSelectComponent extends Component<RoomSelectComponentProps, Roo
 				{this.props.data.dungeon.rooms.map((position, positionIndex) => {
 					return this.renderPosition(position, positionIndex);
 				})}
+				<li className="col">
+					<button type="button"
+						disabled={this.props.data.inEpilogue}
+						onClick={this.goToEpilogue.bind(this)}>
+
+						Epilogue
+					</button>
+				</li>
 			</ul>
 		);
 	}

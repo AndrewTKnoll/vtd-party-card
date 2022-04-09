@@ -38,6 +38,8 @@ export class DataManager {
 		return this.currentRoomIndex[0];
 	}
 
+	inEpilogue = false;
+
 	difficulty = Difficulty.normal;
 
 	private _startTime: Date | undefined = undefined;
@@ -111,6 +113,7 @@ export class DataManager {
 			this.partyCard.restoreFromArchive(archive.partyCard);
 
 			this.currentRoomIndex = archive.currentRoom;
+			this.inEpilogue = archive.inEpilogue;
 			this.difficulty = archive.difficulty;
 			this._startTime = archive.startTime ? new Date(archive.startTime) : undefined;
 			this.diceRoller.slotId = archive.slotId;
@@ -133,6 +136,7 @@ export class DataManager {
 			dungeon: this.dungeon,
 			partyCard: this.partyCard,
 			currentRoom: this.currentRoomIndex,
+			inEpilogue: this.inEpilogue,
 			difficulty: this.difficulty,
 			startTime: this.startTime?.getTime(),
 			slotId: this.diceRoller.slotId
@@ -152,6 +156,7 @@ export class DataManager {
 		}
 
 		this.currentRoomIndex = [0, 0];
+		this.inEpilogue = false;
 		this.difficulty = Difficulty.normal;
 		this._startTime = undefined;
 		this.diceRoller.slotId = undefined;
