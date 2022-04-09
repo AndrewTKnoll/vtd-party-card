@@ -3,4 +3,18 @@
 	.epilogue-component__title {
 		text-align: center;
 	}
+
+	.epilogue-component__info-col {
+		width: 100%;
+
+		@include breakpoint-md() {
+			width: calc(100% / 3);
+		}
+	}
+
+	.epilogue-component__info-line {
+		display: flex;
+		justify-content: space-between;
+		margin-bottom: 0.5rem;
+	}
 }
