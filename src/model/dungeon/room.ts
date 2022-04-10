@@ -75,6 +75,8 @@ export class Room {
 		return `${pushDamage.get(this.difficulty)}`;
 	}
 
+	rogueTookTreasure = false;
+
 	/* lifecycle */
 
 	constructor(params: RoomConstructorParams) {
@@ -94,11 +96,13 @@ export class Room {
 
 	restoreFromArchive(archive: any) {
 		this.initiativeWinner = archive.initiativeWinner;
+		this.rogueTookTreasure = archive.rogueTookTreasure;
 	}
 
 	toJSON(): any {
 		return {
-			initiativeWinner: this.initiativeWinner
+			initiativeWinner: this.initiativeWinner,
+			rogueTookTreasure: this.rogueTookTreasure
 		};
 	}
 
@@ -131,6 +135,10 @@ export class Room {
 	}
 
 	get hideDefaultPushDamage(): boolean {
+		return false;
+	}
+
+	get hasRogueTreasure(): boolean {
 		return false;
 	}
 

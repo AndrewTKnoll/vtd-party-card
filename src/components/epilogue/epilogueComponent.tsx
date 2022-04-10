@@ -33,6 +33,30 @@ export class EpilogueComponent extends Component<EpilogueComponentProps, Epilogu
 			return player.isDead;
 		});
 
+		const [totalTreasure, treasureTaken] = this.props.data.dungeon.rooms.reduce((totals, position) => {
+			let hasTreasure = false;
+			let treasureTaken = false;
+
+			position.forEach((room) => {
+				if (room.hasRogueTreasure) {
+					hasTreasure = true;
+
+					if (room.rogueTookTreasure) {
+						treasureTaken = true;
+					}
+				}
+			});
+
+			if (hasTreasure) {
+				totals[0]++;
+			}
+			if (treasureTaken) {
+				totals[1]++;
+			}
+
+			return totals;
+		}, [0, 0]);
+
 		return <div className="epilogue-component">
 			<h2 className="epilogue-component__title">
 				Epilogue
@@ -43,6 +67,10 @@ export class EpilogueComponent extends Component<EpilogueComponentProps, Epilogu
 					<div className="epilogue-component__info-line">
 						<span>Difficulty:</span>
 						<span>{nameForDifficulty(this.props.data.difficulty)}</span>
+					</div>
+					<div className="epilogue-component__info-line">
+						<span>Rogue Treasures Taken:</span>
+						<span>{`${treasureTaken} of ${totalTreasure}`}</span>
 					</div>
 				</div>
 				<div className="epilogue-component__survivors-col col">

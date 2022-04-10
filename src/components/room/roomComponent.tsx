@@ -1,4 +1,4 @@
-import React, { Component, ReactNode } from "react";
+import React, { Component, ReactNode, ChangeEvent } from "react";
 
 import { DiceRollerControlComponent } from "components/controls/diceRollerControlComponent";
 import { InitiativeActionComponent } from "components/room/initiativeActionComponent";
@@ -114,6 +114,11 @@ export class RoomComponent extends Component<RoomComponentProps, RoomComponentSt
 		});
 	}
 
+	private setRogueTreasure(event: ChangeEvent<HTMLInputElement>) {
+		this.props.data.currentRoom.rogueTookTreasure = event.target.checked;
+		this.props.onChange();
+	}
+
 	private renderRoomTimers(): ReactNode {
 		if (!this.props.data.startTime) {
 			return false;
@@ -171,6 +176,14 @@ export class RoomComponent extends Component<RoomComponentProps, RoomComponentSt
 						<div className="room-component__info-line">
 							<span>Push Damage:</span>
 							<span>{this.props.data.currentRoom.pushDamage}</span>
+						</div>
+					}
+					{this.props.data.currentRoom.hasRogueTreasure &&
+						<div className="room-component__info-line">
+							<span>Rogue Took Treasure:</span>
+							<input type="checkbox"
+								checked={this.props.data.currentRoom.rogueTookTreasure}
+								onChange={this.setRogueTreasure.bind(this)}/>
 						</div>
 					}
 					{this.props.data.currentRoom.initiativeWinner !== undefined &&

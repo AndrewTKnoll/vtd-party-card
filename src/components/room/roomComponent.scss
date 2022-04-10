@@ -23,6 +23,10 @@
 		display: flex;
 		justify-content: space-between;
 		margin-bottom: 0.5rem;
+
+		input[type="checkbox"] {
+			margin: 0;
+		}
 	}
 
 	.room-component__secondary-info-col {
