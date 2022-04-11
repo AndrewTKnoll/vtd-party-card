@@ -4,9 +4,9 @@ import { DiceRollerControlComponent } from "components/controls/diceRollerContro
 import { ItemsOfInterestComponent } from "components/room/itemsOfInterestComponent";
 import { MonsterListComponent } from "components/room/monsterListComponent";
 import { PlayerAttackListComponent } from "components/room/playerAttackListComponent";
-import { RoomActionComponent } from "components/room/roomActionComponent";
 import { StatBlockComponent } from "components/room/statBlockComponent";
 import { InitiativeActionComponent } from "components/room/actions/initiativeActionComponent";
+import { RoomActionComponent } from "components/room/actions/roomActionComponent";
 import { TimerComponent } from "components/widgets/timerComponent";
 
 import { DataManager } from "model/dataManager";
@@ -66,7 +66,6 @@ export class RoomComponent extends Component<RoomComponentProps, RoomComponentSt
 		this.state.playerAttacks.forEach((attack) => {
 			attack.complete();
 		});
-		this.state.roomActionResult?.complete();
 
 		this.clearAttacks();
 		this.props.onChange();
@@ -257,6 +256,7 @@ export class RoomComponent extends Component<RoomComponentProps, RoomComponentSt
 					{this.state.roomActionResult !== undefined &&
 						<RoomActionComponent result={this.state.roomActionResult}
 							diceRoller={this.props.data.diceRoller}
+							clearAction={this.clearAttacks.bind(this)}
 							onChange={this.props.onChange}/>
 					}
 					{this.state.initiativeAction &&

@@ -18,12 +18,15 @@ import { RoomActionResult, MonsterAttack, MonsterAttackType } from "model/roomAc
 interface RoomActionComponentProps {
 	result: RoomActionResult;
 	diceRoller: DiceRoller;
+	clearAction: () => void;
 	onChange: () => void;
 }
 interface RoomActionComponentState {}
 
 export class RoomActionComponent extends Component<RoomActionComponentProps, RoomActionComponentState> {
 	private rollCallbackId!: number;
+
+	/* lifecycle */
 
 	override componentDidMount() {
 		this.rollCallbackId = this.props.diceRoller.rollCallbacks.register(this.handlePlayerRoll.bind(this));
@@ -41,6 +44,8 @@ export class RoomActionComponent extends Component<RoomActionComponentProps, Roo
 	override componentWillUnmount() {
 		this.props.diceRoller.rollCallbacks.unregister(this.rollCallbackId);
 	}
+
+	/* events */
 
 	private handlePlayerRoll(roll: Roll) {
 		if (roll.type !== "save") {
@@ -67,10 +72,18 @@ export class RoomActionComponent extends Component<RoomActionComponentProps, Roo
 		});
 	}
 
+	private completeRoomAction() {
+		this.props.result.complete();
+		this.props.clearAction();
+		this.props.onChange();
+	}
+
 	private saveAttackResultChanged(attack: MonsterSaveAttack, newResult: MonsterSaveAttackResult | undefined) {
 		attack.result = newResult;
 		this.forceUpdate();
 	}
+
+	/* rendering */
 
 	private renderWeaponAttack(attack: MonsterWeaponAttack): ReactNode {
 		const guard = (attack.paladin ? "(guard) " : "");
@@ -148,8 +161,20 @@ export class RoomActionComponent extends Component<RoomActionComponentProps, Roo
 	}
 
 	override render() {
-		return (<>
+		return <>
 			<h3>{this.props.result.action.name}</h3>
+			<div className="action-button-list">
+				<button type="button"
+					onClick={this.props.clearAction}>
+
+					Cancel
+				</button>
+				<button type="button"
+					onClick={this.completeRoomAction.bind(this)}>
+
+					Complete
+				</button>
+			</div>
 			<ul className="room-action-result-list">
 				{this.props.result?.attacks.map((attack, index) => {
 					return (
@@ -161,6 +186,6 @@ export class RoomActionComponent extends Component<RoomActionComponentProps, Roo
 					);
 				})}
 			</ul>
-		</>);
+		</>;
 	}
 }

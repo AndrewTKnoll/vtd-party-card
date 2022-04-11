@@ -110,9 +110,9 @@ export class InitiativeActionComponent extends Component<InitiativeActionCompone
 	}
 
 	override render(): ReactNode {
-		return <div className="initiative-action-component">
+		return <>
 			<h3>Initiative</h3>
-			<div className="initiative-action-component__button-wrapper">
+			<div className="action-button-list">
 				<button type="button"
 					onClick={this.props.clearAction}>
 
@@ -124,7 +124,7 @@ export class InitiativeActionComponent extends Component<InitiativeActionCompone
 					Complete
 				</button>
 			</div>
-			<div className="row">
+			<div className="initiative-action-component row">
 				<div className="initiative-action-component__roll col">
 					<h4>Monster Roll</h4>
 					{`${this.state.monsterRoll} (${this.monsterTotal})`}
@@ -145,6 +145,6 @@ export class InitiativeActionComponent extends Component<InitiativeActionCompone
 					</button>
 				}
 			</div>
-		</div>;
+		</>;
 	}
 }
