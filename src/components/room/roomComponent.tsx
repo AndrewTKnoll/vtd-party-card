@@ -141,8 +141,7 @@ export class RoomComponent extends Component<RoomComponentProps, RoomComponentSt
 					countdownStartDate={roomStartTime}
 					prefixText={timer.label}
 					beforeTimeText="Room hasn't started yet"
-					afterTimeText={timer.completeText}
-				/>;
+					afterTimeText={timer.completeText}/>;
 			})}
 		</>;
 	}
