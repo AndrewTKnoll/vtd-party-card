@@ -3,16 +3,15 @@ import React, { Component, ReactNode, ChangeEvent } from "react";
 import { DiceRollerControlComponent } from "components/controls/diceRollerControlComponent";
 import { ItemsOfInterestComponent } from "components/room/itemsOfInterestComponent";
 import { MonsterListComponent } from "components/room/monsterListComponent";
-import { PlayerAttackListComponent } from "components/room/playerAttackListComponent";
 import { StatBlockComponent } from "components/room/statBlockComponent";
 import { InitiativeActionComponent } from "components/room/actions/initiativeActionComponent";
+import { PlayerAttackListComponent } from "components/room/actions/playerAttackListComponent";
 import { RoomActionComponent } from "components/room/actions/roomActionComponent";
 import { TimerComponent } from "components/widgets/timerComponent";
 
 import { DataManager } from "model/dataManager";
 import { ResetLevel } from "model/attributes/resetLevel";
 import { roomTimeDuration, nameForInitiativeWinner } from "model/dungeon/room";
-import { PlayerAttack } from "model/playerAttack/playerAttack";
 import { RoomAction } from "model/roomAction/roomAction";
 import { RoomActionResult } from "model/roomAction/roomActionResult";
 
@@ -23,7 +22,7 @@ interface RoomComponentProps {
 	onChange: () => void;
 }
 interface RoomComponentState {
-	playerAttacks: PlayerAttack[];
+	playerAttacks: "playerAttacks" | "quickStrike" | undefined;
 	roomActionResult: RoomActionResult | undefined;
 	initiativeAction: boolean;
 }
@@ -34,7 +33,7 @@ export class RoomComponent extends Component<RoomComponentProps, RoomComponentSt
 		super(props);
 
 		this.state = {
-			playerAttacks: [],
+			playerAttacks: undefined,
 			roomActionResult: undefined,
 			initiativeAction: false
 		};
@@ -48,7 +47,7 @@ export class RoomComponent extends Component<RoomComponentProps, RoomComponentSt
 
 	private rollInitiative() {
 		this.setState({
-			playerAttacks: [],
+			playerAttacks: undefined,
 			roomActionResult: undefined,
 			initiativeAction: true
 		});
@@ -56,41 +55,15 @@ export class RoomComponent extends Component<RoomComponentProps, RoomComponentSt
 
 	clearAttacks() {
 		this.setState({
-			playerAttacks: [],
+			playerAttacks: undefined,
 			roomActionResult: undefined,
 			initiativeAction: false
 		});
 	}
 
-	private completeAllAttacks() {
-		this.state.playerAttacks.forEach((attack) => {
-			attack.complete();
-		});
-
-		this.clearAttacks();
-		this.props.onChange();
-	}
-
-	private completePlayerAttack(completeAttack: PlayerAttack) {
-		completeAttack.complete();
-		this.setState({
-			playerAttacks: this.state.playerAttacks.filter((attack) => {
-				return completeAttack !== attack;
-			})
-		});
-	}
-
 	private createPlayerAttacks(quickStrikeRound: boolean) {
 		this.setState({
-			playerAttacks: this.props.data.partyCard.activePlayers.filter((player) => {
-				return !quickStrikeRound || player.hasQuickStrike;
-			}).map((player) => {
-				const attack = new PlayerAttack(player, this.props.data.currentRoom);
-				attack.primaryTarget = this.props.data.currentRoom.defaultTargetForPlayer(player);
-				attack.secondaryTarget = attack.primaryTarget;
-
-				return attack;
-			}),
+			playerAttacks: quickStrikeRound ? "quickStrike" : "playerAttacks",
 			roomActionResult: undefined,
 			initiativeAction: false
 		});
@@ -98,7 +71,7 @@ export class RoomComponent extends Component<RoomComponentProps, RoomComponentSt
 
 	private performRoomAction(action: RoomAction) {
 		this.setState({
-			playerAttacks: [],
+			playerAttacks: undefined,
 			roomActionResult: action.perform(this.props.data.partyCard),
 			initiativeAction: false
 		});
@@ -137,7 +110,7 @@ export class RoomComponent extends Component<RoomComponentProps, RoomComponentSt
 	}
 
 	override render(): ReactNode {
-		const hasAttacks = this.state.playerAttacks.length > 0 ||
+		const hasAttacks = this.state.playerAttacks ||
 			this.state.roomActionResult !== undefined ||
 			this.state.initiativeAction;
 
@@ -220,20 +193,6 @@ export class RoomComponent extends Component<RoomComponentProps, RoomComponentSt
 								})}
 							</div>
 						}
-						{hasAttacks &&
-							<div className="room-component__control-row row">
-								<button type="button"
-									onClick={this.clearAttacks.bind(this)}>
-
-									{`Cancel ${this.state.initiativeAction ? "Initiative" : "Attacks"}`}
-								</button>
-								<button type="button"
-									onClick={this.completeAllAttacks.bind(this)}>
-
-									{`Complete ${this.state.initiativeAction ? "Initiative" : "Attacks"}`}
-								</button>
-							</div>
-						}
 					</div>
 					<div className="room-component__monster-col col">
 						<h3>Monsters</h3>
@@ -247,11 +206,11 @@ export class RoomComponent extends Component<RoomComponentProps, RoomComponentSt
 					</div>
 				}
 				<div className="room-component__action-col col">
-					{this.state.playerAttacks.length > 0 &&
-						<PlayerAttackListComponent attacks={this.state.playerAttacks}
-							diceRoller={this.props.data.diceRoller}
-							currentRoom={this.props.data.currentRoom}
-							attackCompleted={this.completePlayerAttack.bind(this)}/>
+					{this.state.playerAttacks !== undefined &&
+						<PlayerAttackListComponent data={this.props.data}
+							clearAction={this.clearAttacks.bind(this)}
+							onChange={this.props.onChange}
+							isQuickStrike={this.state.playerAttacks === "quickStrike"}/>
 					}
 					{this.state.roomActionResult !== undefined &&
 						<RoomActionComponent result={this.state.roomActionResult}

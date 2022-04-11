@@ -2,11 +2,10 @@ import React, { Component, ReactNode, ChangeEvent } from "react";
 
 import { ItemListSelectComponent } from "components/controls/itemListSelectComponent";
 
+import { DataManager } from "model/dataManager";
 import { DamageType, allDamageTypes, nameForDamageType } from "model/attributes/damageType";
-import { DiceRoller } from "model/diceRoller/diceRoller";
 import { Roll } from "model/diceRoller/roll";
 import { Monster } from "model/dungeon/monster";
-import { Room } from "model/dungeon/room";
 import { nameForClass } from "model/partyCard/class";
 
 import { PlayerAttack } from "model/playerAttack/playerAttack";
@@ -14,12 +13,14 @@ import { PlayerAttackType, allPlayerAttackTypes, nameForPlayerAttackType } from 
 import { PlayerAttackCritMultiplier, allPlayerAttackCritMultipliers, nameForPlayerAttackCritMultiplier } from "model/playerAttack/playerAttackCritMultiplier";
 
 interface PlayerAttackListComponentProps {
-	currentRoom: Room;
-	attacks: PlayerAttack[];
-	diceRoller: DiceRoller;
-	attackCompleted: (attack: PlayerAttack) => void;
+	data: DataManager;
+	isQuickStrike: boolean;
+	clearAction: () => void;
+	onChange: () => void;
 }
-interface PlayerAttackListComponentState {}
+interface PlayerAttackListComponentState {
+	attacks: PlayerAttack[];
+}
 
 function targetLabelForMonster(monster: Monster): string {
 	return monster.name;
@@ -28,29 +29,49 @@ function targetLabelForMonster(monster: Monster): string {
 export class PlayerAttackListComponent extends Component<PlayerAttackListComponentProps, PlayerAttackListComponentState> {
 	private rollCallbackId!: number;
 
-	override componentDidMount() {
-		this.rollCallbackId = this.props.diceRoller.rollCallbacks.register(this.handlePlayerRoll.bind(this));
+	/* lifecycle */
 
-		this.props.diceRoller.rolls.forEach(this.handlePlayerRoll.bind(this));
+	constructor(props: PlayerAttackListComponentProps) {
+		super(props);
+
+		this.state = {
+			attacks: props.data.partyCard.activePlayers.filter((player) => {
+				return !props.isQuickStrike || player.hasQuickStrike;
+			}).map((player) => {
+				const attack = new PlayerAttack(player, props.data.currentRoom);
+				attack.primaryTarget = props.data.currentRoom.defaultTargetForPlayer(player);
+				attack.secondaryTarget = attack.primaryTarget;
+
+				return attack;
+			})
+		};
+	}
+
+	override componentDidMount() {
+		this.rollCallbackId = this.props.data.diceRoller.rollCallbacks.register(this.handlePlayerRoll.bind(this));
+
+		this.props.data.diceRoller.rolls.forEach(this.handlePlayerRoll.bind(this));
 	}
 
 	override componentDidUpdate(prevProps: PlayerAttackListComponentProps) {
-		if (prevProps.diceRoller !== this.props.diceRoller) {
-			prevProps.diceRoller.rollCallbacks.unregister(this.rollCallbackId);
-			this.rollCallbackId = this.props.diceRoller.rollCallbacks.register(this.handlePlayerRoll.bind(this));
+		if (prevProps.data.diceRoller !== this.props.data.diceRoller) {
+			prevProps.data.diceRoller.rollCallbacks.unregister(this.rollCallbackId);
+			this.rollCallbackId = this.props.data.diceRoller.rollCallbacks.register(this.handlePlayerRoll.bind(this));
 		}
 	}
 
 	override componentWillUnmount() {
-		this.props.diceRoller.rollCallbacks.unregister(this.rollCallbackId);
+		this.props.data.diceRoller.rollCallbacks.unregister(this.rollCallbackId);
 	}
+
+	/* events */
 
 	private handlePlayerRoll(roll: Roll) {
 		if (roll.type !== "attack") {
 			return;
 		}
 
-		this.props.attacks.forEach((attack) => {
+		this.state.attacks.forEach((attack) => {
 			if (roll.class !== attack.player.class) {
 				return;
 			}
@@ -129,11 +150,46 @@ export class PlayerAttackListComponent extends Component<PlayerAttackListCompone
 		this.forceUpdate();
 	}
 
+	private completeAttack(completeAttack: PlayerAttack) {
+		completeAttack.complete();
+
+		this.setState((state) => {
+			return {
+				attacks: state.attacks.filter((attack) => {
+					return completeAttack !== attack;
+				})
+			};
+		});
+		this.props.onChange();
+	}
+
+	private completeAllAttacks() {
+		this.state.attacks.forEach((attack) => {
+			attack.complete();
+		});
+		this.props.clearAction();
+		this.props.onChange();
+	}
+
+	/* rendering */
+
 	override render(): ReactNode {
-		return (<>
+		return <>
 			<h3>Player Attacks</h3>
+			<div className="action-button-list">
+				<button type="button"
+					onClick={this.props.clearAction}>
+
+					Cancel
+				</button>
+				<button type="button"
+					onClick={this.completeAllAttacks.bind(this)}>
+
+					Complete
+				</button>
+			</div>
 			<ul className="player-attack-list">
-				{this.props.attacks.map((attack, index) => {
+				{this.state.attacks.map((attack, index) => {
 					return (
 						<li key={attack.player.class}
 							className={`player-attack-list__attack${attack.attackType === undefined ? " player-attack-list__attack--none" : ""} row`}>
@@ -145,7 +201,7 @@ export class PlayerAttackListComponent extends Component<PlayerAttackListCompone
 								<button type="button"
 									className="player-attack-list__complete-button"
 									onClick={() => {
-										this.props.attackCompleted(attack);
+										this.completeAttack(attack);
 									}}>
 
 									Complete
@@ -187,7 +243,7 @@ export class PlayerAttackListComponent extends Component<PlayerAttackListCompone
 								</span>
 								<ItemListSelectComponent<Monster> isOptional={true}
 									disabled={attack.attackType === undefined}
-									items={this.props.currentRoom.monsters}
+									items={this.props.data.currentRoom.monsters}
 									labelForItem={targetLabelForMonster}
 									selectedItem={attack.primaryTarget}
 									onChange={this.targetChanged.bind(this, attack, true)}/>
@@ -208,7 +264,7 @@ export class PlayerAttackListComponent extends Component<PlayerAttackListCompone
 								</span>
 								<ItemListSelectComponent<Monster> isOptional={true}
 									disabled={attack.attackType === undefined}
-									items={this.props.currentRoom.monsters}
+									items={this.props.data.currentRoom.monsters}
 									labelForItem={targetLabelForMonster}
 									selectedItem={attack.secondaryTarget}
 									onChange={this.targetChanged.bind(this, attack, false)}/>
@@ -227,6 +283,6 @@ export class PlayerAttackListComponent extends Component<PlayerAttackListCompone
 					);
 				})}
 			</ul>
-		</>);
+		</>;
 	}
 }
