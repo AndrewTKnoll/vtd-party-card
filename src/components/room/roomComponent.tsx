@@ -17,14 +17,14 @@ import { RoomActionResult } from "model/roomAction/roomActionResult";
 
 const prepTimeRoomCount = 3;
 
+type ActionType = "playerAttacks" | "quickStrike" | "initiative" | RoomActionResult;
+
 interface RoomComponentProps {
 	data: DataManager;
 	onChange: () => void;
 }
 interface RoomComponentState {
-	playerAttacks: "playerAttacks" | "quickStrike" | undefined;
-	roomActionResult: RoomActionResult | undefined;
-	initiativeAction: boolean;
+	currentAction: ActionType | undefined;
 }
 
 export class RoomComponent extends Component<RoomComponentProps, RoomComponentState> {
@@ -33,48 +33,24 @@ export class RoomComponent extends Component<RoomComponentProps, RoomComponentSt
 		super(props);
 
 		this.state = {
-			playerAttacks: undefined,
-			roomActionResult: undefined,
-			initiativeAction: false
+			currentAction: undefined
 		};
 	}
 
 	private roundReset() {
 		this.props.data.reset(ResetLevel.round);
-		this.clearAttacks();
+		this.setAction(undefined);
 		this.props.onChange();
 	}
 
-	private rollInitiative() {
+	setAction(action: ActionType | undefined) {
 		this.setState({
-			playerAttacks: undefined,
-			roomActionResult: undefined,
-			initiativeAction: true
-		});
-	}
-
-	clearAttacks() {
-		this.setState({
-			playerAttacks: undefined,
-			roomActionResult: undefined,
-			initiativeAction: false
-		});
-	}
-
-	private createPlayerAttacks(quickStrikeRound: boolean) {
-		this.setState({
-			playerAttacks: quickStrikeRound ? "quickStrike" : "playerAttacks",
-			roomActionResult: undefined,
-			initiativeAction: false
+			currentAction: action
 		});
 	}
 
 	private performRoomAction(action: RoomAction) {
-		this.setState({
-			playerAttacks: undefined,
-			roomActionResult: action.perform(this.props.data.partyCard),
-			initiativeAction: false
-		});
+		this.setAction(action.perform(this.props.data.partyCard));
 	}
 
 	private setRogueTreasure(event: ChangeEvent<HTMLInputElement>) {
@@ -110,13 +86,6 @@ export class RoomComponent extends Component<RoomComponentProps, RoomComponentSt
 	}
 
 	override render(): ReactNode {
-		const hasAttacks = this.state.playerAttacks ||
-			this.state.roomActionResult !== undefined ||
-			this.state.initiativeAction;
-
-		const hasMonsters = this.props.data.currentRoom.monsters.length > 0;
-
-		const infoColumnNotes = this.props.data.currentRoom.infoColumnNotes(this.props.onChange);
 		const secondaryColumnNotes = this.props.data.currentRoom.secondaryColumnNotes(this.props.onChange);
 		const mainSectionNotes = this.props.data.currentRoom.mainSectionNotes(this.props.onChange);
 
@@ -153,9 +122,9 @@ export class RoomComponent extends Component<RoomComponentProps, RoomComponentSt
 					}
 					<ItemsOfInterestComponent tokens={this.props.data.currentRoom.tokensOfInterest}
 						spells={this.props.data.currentRoom.spellsOfInterest}/>
-					{infoColumnNotes}
+					{this.props.data.currentRoom.infoColumnNotes(this.props.onChange)}
 				</div>
-				{hasMonsters && <>
+				{this.props.data.currentRoom.monsters.length > 0 && <>
 					<div className="room-component__control-col col">
 						<h3>Dice Roller</h3>
 						<DiceRollerControlComponent diceRoller={this.props.data.diceRoller}/>
@@ -166,20 +135,20 @@ export class RoomComponent extends Component<RoomComponentProps, RoomComponentSt
 
 								Round Reset
 							</button>
-							{!hasAttacks && <>
+							{this.state.currentAction === undefined && <>
 								<button type="button"
-									onClick={this.rollInitiative.bind(this)}>
+									onClick={this.setAction.bind(this, "initiative")}>
 
 									Roll Initiative
 								</button>
 								<button type="button"
-									onClick={this.createPlayerAttacks.bind(this, false)}>
+									onClick={this.setAction.bind(this, "playerAttacks")}>
 
 									Player Attack
 								</button>
 							</>}
 						</div>
-						{!hasAttacks &&
+						{this.state.currentAction === undefined &&
 							<div className="room-component__control-row row">
 								{this.props.data.currentRoom.actions.map((action) => {
 									return (
@@ -205,26 +174,28 @@ export class RoomComponent extends Component<RoomComponentProps, RoomComponentSt
 						{secondaryColumnNotes}
 					</div>
 				}
-				<div className="room-component__action-col col">
-					{this.state.playerAttacks !== undefined &&
-						<PlayerAttackListComponent data={this.props.data}
-							clearAction={this.clearAttacks.bind(this)}
-							onChange={this.props.onChange}
-							isQuickStrike={this.state.playerAttacks === "quickStrike"}/>
-					}
-					{this.state.roomActionResult !== undefined &&
-						<RoomActionComponent result={this.state.roomActionResult}
-							diceRoller={this.props.data.diceRoller}
-							clearAction={this.clearAttacks.bind(this)}
-							onChange={this.props.onChange}/>
-					}
-					{this.state.initiativeAction &&
-						<InitiativeActionComponent data={this.props.data}
-							clearAction={this.clearAttacks.bind(this)}
-							onChange={this.props.onChange}
-							triggerQuickStrike={this.createPlayerAttacks.bind(this, true)}/>
-					}
-				</div>
+				{this.state.currentAction !== undefined &&
+					<div className="room-component__action-col col">
+						{(this.state.currentAction === "playerAttacks" || this.state.currentAction === "quickStrike") &&
+							<PlayerAttackListComponent data={this.props.data}
+								clearAction={this.setAction.bind(this, undefined)}
+								onChange={this.props.onChange}
+								isQuickStrike={this.state.currentAction === "quickStrike"}/>
+						}
+						{this.state.currentAction instanceof RoomActionResult &&
+							<RoomActionComponent result={this.state.currentAction}
+								diceRoller={this.props.data.diceRoller}
+								clearAction={this.setAction.bind(this, undefined)}
+								onChange={this.props.onChange}/>
+						}
+						{this.state.currentAction === "initiative" &&
+							<InitiativeActionComponent data={this.props.data}
+								clearAction={this.setAction.bind(this, undefined)}
+								onChange={this.props.onChange}
+								triggerQuickStrike={this.setAction.bind(this, "quickStrike")}/>
+						}
+					</div>
+				}
 				{mainSectionNotes &&
 					<div className="room-component__main-info-col col">
 						{mainSectionNotes}

@@ -51,7 +51,7 @@ export class VTDPartyCardComponent extends Component<VTDPartyCardComponentProps,
 	}
 
 	private clearAttackLists() {
-		this.roomComponentRef.current?.clearAttacks();
+		this.roomComponentRef.current?.setAction(undefined);
 		this.forceUpdate();
 	}
 
