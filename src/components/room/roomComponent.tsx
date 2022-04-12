@@ -1,32 +1,30 @@
 import React, { Component, ReactNode, ChangeEvent } from "react";
 
 import { DiceRollerControlComponent } from "components/controls/diceRollerControlComponent";
-import { InitiativeActionComponent } from "components/room/initiativeActionComponent";
 import { ItemsOfInterestComponent } from "components/room/itemsOfInterestComponent";
 import { MonsterListComponent } from "components/room/monsterListComponent";
-import { PlayerAttackListComponent } from "components/room/playerAttackListComponent";
-import { RoomActionComponent } from "components/room/roomActionComponent";
 import { StatBlockComponent } from "components/room/statBlockComponent";
+import { InitiativeActionComponent } from "components/room/actions/initiativeActionComponent";
+import { PlayerAttackListComponent } from "components/room/actions/playerAttackListComponent";
+import { RoomActionComponent } from "components/room/actions/roomActionComponent";
 import { TimerComponent } from "components/widgets/timerComponent";
 
 import { DataManager } from "model/dataManager";
 import { ResetLevel } from "model/attributes/resetLevel";
 import { roomTimeDuration, nameForInitiativeWinner } from "model/dungeon/room";
-import { PlayerAttack } from "model/playerAttack/playerAttack";
-import { InitiativeAction } from "model/roomAction/initiativeAction";
 import { RoomAction } from "model/roomAction/roomAction";
 import { RoomActionResult } from "model/roomAction/roomActionResult";
 
 const prepTimeRoomCount = 3;
+
+type ActionType = "playerAttacks" | "quickStrike" | "initiative" | RoomActionResult;
 
 interface RoomComponentProps {
 	data: DataManager;
 	onChange: () => void;
 }
 interface RoomComponentState {
-	playerAttacks: PlayerAttack[];
-	roomActionResult: RoomActionResult | undefined;
-	initiativeAction: InitiativeAction | undefined;
+	currentAction: ActionType | undefined;
 }
 
 export class RoomComponent extends Component<RoomComponentProps, RoomComponentState> {
@@ -35,83 +33,24 @@ export class RoomComponent extends Component<RoomComponentProps, RoomComponentSt
 		super(props);
 
 		this.state = {
-			playerAttacks: [],
-			roomActionResult: undefined,
-			initiativeAction: undefined
+			currentAction: undefined
 		};
 	}
 
 	private roundReset() {
 		this.props.data.reset(ResetLevel.round);
-		this.clearAttacks();
+		this.setAction(undefined);
 		this.props.onChange();
 	}
 
-	private rollInitiative() {
+	setAction(action: ActionType | undefined) {
 		this.setState({
-			playerAttacks: [],
-			roomActionResult: undefined,
-			initiativeAction: new InitiativeAction(this.props.data.currentRoom)
-		});
-	}
-
-	clearAttacks() {
-		this.setState({
-			playerAttacks: [],
-			roomActionResult: undefined,
-			initiativeAction: undefined
-		});
-	}
-
-	private completeAllAttacks() {
-		this.state.playerAttacks.forEach((attack) => {
-			attack.complete();
-		});
-		this.state.roomActionResult?.complete();
-
-		if (this.state.initiativeAction) {
-			this.props.data.currentRoom.initiativeWinner = this.state.initiativeAction.winner;
-		}
-
-		this.clearAttacks();
-		this.props.onChange();
-	}
-
-	private completePlayerAttack(completeAttack: PlayerAttack) {
-		completeAttack.complete();
-		this.setState({
-			playerAttacks: this.state.playerAttacks.filter((attack) => {
-				return completeAttack !== attack;
-			})
-		});
-	}
-
-	private createPlayerAttacks(quickStrikeRound: boolean) {
-		if (quickStrikeRound && this.state.initiativeAction) {
-			this.completeAllAttacks();
-		}
-
-		this.setState({
-			playerAttacks: this.props.data.partyCard.activePlayers.filter((player) => {
-				return !quickStrikeRound || player.hasQuickStrike;
-			}).map((player) => {
-				const attack = new PlayerAttack(player, this.props.data.currentRoom);
-				attack.primaryTarget = this.props.data.currentRoom.defaultTargetForPlayer(player);
-				attack.secondaryTarget = attack.primaryTarget;
-
-				return attack;
-			}),
-			roomActionResult: undefined,
-			initiativeAction: undefined
+			currentAction: action
 		});
 	}
 
 	private performRoomAction(action: RoomAction) {
-		this.setState({
-			playerAttacks: [],
-			roomActionResult: action.perform(this.props.data.partyCard),
-			initiativeAction: undefined
-		});
+		this.setAction(action.perform(this.props.data.partyCard));
 	}
 
 	private setRogueTreasure(event: ChangeEvent<HTMLInputElement>) {
@@ -147,21 +86,8 @@ export class RoomComponent extends Component<RoomComponentProps, RoomComponentSt
 	}
 
 	override render(): ReactNode {
-		const hasAttacks = this.state.playerAttacks.length > 0 ||
-			this.state.roomActionResult !== undefined ||
-			this.state.initiativeAction !== undefined;
-
-		const hasInitiative = this.state.initiativeAction !== undefined;
-
-		const hasMonsters = this.props.data.currentRoom.monsters.length > 0;
-
-		const infoColumnNotes = this.props.data.currentRoom.infoColumnNotes(this.props.onChange);
 		const secondaryColumnNotes = this.props.data.currentRoom.secondaryColumnNotes(this.props.onChange);
 		const mainSectionNotes = this.props.data.currentRoom.mainSectionNotes(this.props.onChange);
-
-		const playersHaveQuickStrike = this.props.data.partyCard.activePlayers.reduce((found, player) => {
-			return found || player.hasQuickStrike;
-		}, false);
 
 		return (
 			<div className={`room-component room-${this.props.data.currentRoom.id} row`}>
@@ -196,9 +122,9 @@ export class RoomComponent extends Component<RoomComponentProps, RoomComponentSt
 					}
 					<ItemsOfInterestComponent tokens={this.props.data.currentRoom.tokensOfInterest}
 						spells={this.props.data.currentRoom.spellsOfInterest}/>
-					{infoColumnNotes}
+					{this.props.data.currentRoom.infoColumnNotes(this.props.onChange)}
 				</div>
-				{hasMonsters && <>
+				{this.props.data.currentRoom.monsters.length > 0 && <>
 					<div className="room-component__control-col col">
 						<h3>Dice Roller</h3>
 						<DiceRollerControlComponent diceRoller={this.props.data.diceRoller}/>
@@ -209,20 +135,20 @@ export class RoomComponent extends Component<RoomComponentProps, RoomComponentSt
 
 								Round Reset
 							</button>
-							{!hasAttacks && <>
+							{this.state.currentAction === undefined && <>
 								<button type="button"
-									onClick={this.rollInitiative.bind(this)}>
+									onClick={this.setAction.bind(this, "initiative")}>
 
 									Roll Initiative
 								</button>
 								<button type="button"
-									onClick={this.createPlayerAttacks.bind(this, false)}>
+									onClick={this.setAction.bind(this, "playerAttacks")}>
 
 									Player Attack
 								</button>
 							</>}
 						</div>
-						{!hasAttacks &&
+						{this.state.currentAction === undefined &&
 							<div className="room-component__control-row row">
 								{this.props.data.currentRoom.actions.map((action) => {
 									return (
@@ -234,20 +160,6 @@ export class RoomComponent extends Component<RoomComponentProps, RoomComponentSt
 										</button>
 									);
 								})}
-							</div>
-						}
-						{hasAttacks &&
-							<div className="room-component__control-row row">
-								<button type="button"
-									onClick={this.clearAttacks.bind(this)}>
-
-									{`Cancel ${hasInitiative ? "Initiative" : "Attacks"}`}
-								</button>
-								<button type="button"
-									onClick={this.completeAllAttacks.bind(this)}>
-
-									{`Complete ${hasInitiative ? "Initiative" : "Attacks"}`}
-								</button>
 							</div>
 						}
 					</div>
@@ -262,24 +174,28 @@ export class RoomComponent extends Component<RoomComponentProps, RoomComponentSt
 						{secondaryColumnNotes}
 					</div>
 				}
-				<div className="room-component__action-col col">
-					{this.state.playerAttacks.length > 0 &&
-						<PlayerAttackListComponent attacks={this.state.playerAttacks}
-							diceRoller={this.props.data.diceRoller}
-							currentRoom={this.props.data.currentRoom}
-							attackCompleted={this.completePlayerAttack.bind(this)}/>
-					}
-					{this.state.roomActionResult !== undefined &&
-						<RoomActionComponent result={this.state.roomActionResult}
-							diceRoller={this.props.data.diceRoller}
-							onChange={this.props.onChange}/>
-					}
-					{this.state.initiativeAction !== undefined &&
-						<InitiativeActionComponent action={this.state.initiativeAction}
-							triggerQuickStrike={playersHaveQuickStrike ? this.createPlayerAttacks.bind(this, true) : undefined}
-							diceRoller={this.props.data.diceRoller}/>
-					}
-				</div>
+				{this.state.currentAction !== undefined &&
+					<div className="room-component__action-col col">
+						{(this.state.currentAction === "playerAttacks" || this.state.currentAction === "quickStrike") &&
+							<PlayerAttackListComponent data={this.props.data}
+								clearAction={this.setAction.bind(this, undefined)}
+								onChange={this.props.onChange}
+								isQuickStrike={this.state.currentAction === "quickStrike"}/>
+						}
+						{this.state.currentAction instanceof RoomActionResult &&
+							<RoomActionComponent result={this.state.currentAction}
+								diceRoller={this.props.data.diceRoller}
+								clearAction={this.setAction.bind(this, undefined)}
+								onChange={this.props.onChange}/>
+						}
+						{this.state.currentAction === "initiative" &&
+							<InitiativeActionComponent data={this.props.data}
+								clearAction={this.setAction.bind(this, undefined)}
+								onChange={this.props.onChange}
+								triggerQuickStrike={this.setAction.bind(this, "quickStrike")}/>
+						}
+					</div>
+				}
 				{mainSectionNotes &&
 					<div className="room-component__main-info-col col">
 						{mainSectionNotes}
