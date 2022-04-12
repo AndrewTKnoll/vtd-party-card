@@ -24,7 +24,7 @@ export class SetupComponent extends Component<SetupComponentProps, SetupComponen
 	}
 
 	private startTimeChanged(event: ChangeEvent<HTMLInputElement>) {
-		this.props.data.localOffsetStartTime = new Date(event.target.value);
+		this.props.data.localOffsetStartTime = event.target.value ? new Date(event.target.value) : undefined;
 		this.props.onChange();
 	}
 
