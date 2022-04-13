@@ -1,4 +1,4 @@
-import React, { Component, ChangeEvent } from "react";
+import React, { Component, ReactNode, ChangeEvent } from "react";
 
 interface BaseItemListSelectComponentProps<ItemType> {
 	items: ItemType[];
@@ -32,7 +32,7 @@ export class ItemListSelectComponent<ItemType> extends Component<ItemListSelectC
 		this.props.onChange(this.props.items[index]);
 	}
 
-	override render() {
+	override render(): ReactNode {
 		return (
 			<select value={this.props.selectedItem === undefined ? "none" : this.props.items.indexOf(this.props.selectedItem)}
 				disabled={this.props.disabled}

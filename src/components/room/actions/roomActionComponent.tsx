@@ -4,16 +4,12 @@ import { ItemListSelectComponent } from "components/controls/itemListSelectCompo
 import { RollCallbackComponent } from "components/diceRoller/rollCallbackComponent";
 
 import { shortNameForSaveType } from "model/attributes/saveType";
-
 import { DiceRoller } from "model/diceRoller/diceRoller";
 import { Roll } from "model/diceRoller/roll";
-
-import { nameForClass } from "model/partyCard/class";
-
 import { MonsterSaveAttack, MonsterSaveAttackResult, allMonsterSaveAttackResults, nameForMonsterSaveAttackResult } from "model/monsterAttack/monsterSaveAttack";
 import { MonsterSpecialAttack } from "model/monsterAttack/monsterSpecialAttack";
 import { MonsterWeaponAttack } from "model/monsterAttack/monsterWeaponAttack";
-
+import { nameForClass } from "model/partyCard/class";
 import { RoomActionResult, MonsterAttack, MonsterAttackType } from "model/roomAction/roomActionResult";
 
 interface RoomActionComponentProps {
@@ -141,7 +137,7 @@ export class RoomActionComponent extends Component<RoomActionComponentProps, Roo
 		}
 	}
 
-	override render() {
+	override render(): ReactNode {
 		return <>
 			<RollCallbackComponent diceRoller={this.props.diceRoller}
 				handleRoll={this.handlePlayerRoll.bind(this)}/>

@@ -1,5 +1,6 @@
 import { DataManager } from "model/dataManager";
 import { Difficulty } from "model/attributes/difficulty";
+
 import { DefaultMap } from "utilities/defaultMap";
 
 interface StatBlockItemData {

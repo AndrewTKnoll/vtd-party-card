@@ -28,7 +28,7 @@ export class RoomSelectComponent extends Component<RoomSelectComponentProps, Roo
 		this.props.onChange();
 	}
 
-	private renderOption(option: Room, positionIndex: number, optionIndex: number) {
+	private renderOption(option: Room, positionIndex: number, optionIndex: number): ReactNode {
 		return (
 			<button key={optionIndex}
 				type="button"

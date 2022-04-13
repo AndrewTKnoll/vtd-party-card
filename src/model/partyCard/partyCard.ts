@@ -1,7 +1,6 @@
 import { ResetLevel } from "model/attributes/resetLevel";
-
-import { Player } from "model/partyCard/player";
 import { Class, allClasses } from "model/partyCard/class";
+import { Player } from "model/partyCard/player";
 
 export class PartyCard {
 	readonly players: Player[] = allClasses.map((classId: Class) => {

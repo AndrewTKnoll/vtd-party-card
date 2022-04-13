@@ -1,6 +1,6 @@
 import { SaveType } from "model/attributes/saveType";
-import { Class } from "model/partyCard/class";
 import { RollChangeData, RollChangeDataRoll } from "model/diceRoller/socket/socketResponseMessage";
+import { Class } from "model/partyCard/class";
 
 export type Roll = InitiativeRoll | AttackRoll | SaveRoll;
 

@@ -4,8 +4,8 @@ import { ModalComponent } from "components/structure/modalComponent";
 
 import { DamageType, allDamageTypes, nameForDamageType } from "model/attributes/damageType";
 import { Room } from "model/dungeon/room";
-import { Player, WeaponType, ACType } from "model/partyCard/player";
 import { nameForClass } from "model/partyCard/class";
+import { Player, WeaponType, ACType } from "model/partyCard/player";
 
 interface PlayerComponentProps {
 	player: Player;

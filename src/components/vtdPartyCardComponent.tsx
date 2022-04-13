@@ -1,4 +1,4 @@
-import React, { Component, RefObject } from "react";
+import React, { Component, ReactNode, RefObject } from "react";
 
 import { LoginComponent } from "components/loginComponent";
 import { RoomSelectComponent } from "components/controls/roomSelectComponent";
@@ -55,7 +55,7 @@ export class VTDPartyCardComponent extends Component<VTDPartyCardComponentProps,
 		this.forceUpdate();
 	}
 
-	override render() {
+	override render(): ReactNode {
 		if (!this.props.data.diceRoller.authToken) {
 			return (
 				<LoginComponent diceRoller={this.props.data.diceRoller}

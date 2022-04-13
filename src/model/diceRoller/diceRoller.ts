@@ -1,9 +1,9 @@
-import { SocketRequestMessage } from "model/diceRoller/socket/socketRequestMessage";
-import { SocketResponseMessage, SettingsChangeSocketResponse, RollChangeData } from "model/diceRoller/socket/socketResponseMessage";
-import { SocketWrapper } from "model/diceRoller/socket/socketWrapper";
 import { Roll, rollFromUpdate } from "model/diceRoller/roll";
 import { RollState, RawRollState } from "model/diceRoller/rollState";
 import { RollType } from "model/diceRoller/rollType";
+import { SocketRequestMessage } from "model/diceRoller/socket/socketRequestMessage";
+import { SocketResponseMessage, SettingsChangeSocketResponse, RollChangeData } from "model/diceRoller/socket/socketResponseMessage";
+import { SocketWrapper } from "model/diceRoller/socket/socketWrapper";
 import { Log } from "model/log/log";
 
 import { CallbackRegistry } from "utilities/callbackRegistry";

@@ -5,10 +5,10 @@ import { ValidatedTextInput } from "components/controls/validatedTextInput";
 import { CollapseComponent } from "components/structure/collapseComponent";
 import { TimerComponent } from "components/widgets/timerComponent";
 
+import { DataManager } from "model/dataManager";
 import { Difficulty, allDifficulties, nameForDifficulty } from "model/attributes/difficulty";
 import { ResetLevel } from "model/attributes/resetLevel";
 import { roomTimeDuration } from "model/dungeon/room";
-import { DataManager } from "model/dataManager";
 
 interface SetupComponentProps {
 	data: DataManager;

@@ -1,6 +1,6 @@
 import React, { Component, ReactNode } from "react";
 
-import { HeaderLevel } from "base/utilities";
+import { HeaderLevel } from "utilities/headerLevel";
 
 interface CollapseComponentProps {
 	headerText: string;
@@ -29,7 +29,7 @@ export class CollapseComponent extends Component<CollapseComponentProps, Collaps
 		});
 	}
 
-	override render() {
+	override render(): ReactNode {
 		const HeaderType = this.props.headerLevel;
 
 		const sectionClasses = ["collapse-component"];

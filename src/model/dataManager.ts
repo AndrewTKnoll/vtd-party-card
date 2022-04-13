@@ -2,8 +2,8 @@ import { Difficulty } from "model/attributes/difficulty";
 import { ResetLevel } from "model/attributes/resetLevel";
 import { DiceRoller } from "model/diceRoller/diceRoller";
 import { Dungeon } from "model/dungeon/dungeon";
-import { Log } from "model/log/log";
 import { Room } from "model/dungeon/room";
+import { Log } from "model/log/log";
 import { PartyCard } from "model/partyCard/partyCard";
 
 const storageKey = "data";

@@ -1,10 +1,9 @@
 import { DamageType } from "model/attributes/damageType";
-import { Player, WeaponType } from "model/partyCard/player";
 import { Monster } from "model/dungeon/monster";
 import { Room } from "model/dungeon/room";
-
-import { PlayerAttackType } from "model/playerAttack/playerAttackType";
+import { Player, WeaponType } from "model/partyCard/player";
 import { PlayerAttackCritMultiplier } from "model/playerAttack/playerAttackCritMultiplier";
+import { PlayerAttackType } from "model/playerAttack/playerAttackType";
 
 export class PlayerAttack {
 	readonly player: Player;

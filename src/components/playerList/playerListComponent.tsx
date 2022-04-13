@@ -1,4 +1,4 @@
-import React, { Component } from "react";
+import React, { Component, ReactNode } from "react";
 
 import { CollapseComponent } from "components/structure/collapseComponent";
 import { PlayerComponent } from "components/playerList/playerComponent";
@@ -15,7 +15,7 @@ interface PlayerListComponentState {}
 
 export class PlayerListComponent extends Component<PlayerListComponentProps, PlayerListComponentState> {
 
-	override render() {
+	override render(): ReactNode {
 		return (
 			<CollapseComponent headerText="Players"
 				headerLevel="h2">

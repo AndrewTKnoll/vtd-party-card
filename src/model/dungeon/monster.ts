@@ -1,13 +1,11 @@
 import { DataManager } from "model/dataManager";
-
 import { DamageType } from "model/attributes/damageType";
 import { Difficulty } from "model/attributes/difficulty";
 import { ResetLevel } from "model/attributes/resetLevel";
-
 import { Class } from "model/partyCard/class";
 import { Player } from "model/partyCard/player";
-import { PlayerAttackType } from "model/playerAttack/playerAttackType";
 import { PlayerAttackCritMultiplier } from "model/playerAttack/playerAttackCritMultiplier";
+import { PlayerAttackType } from "model/playerAttack/playerAttackType";
 
 import { DefaultMap } from "utilities/defaultMap";
 

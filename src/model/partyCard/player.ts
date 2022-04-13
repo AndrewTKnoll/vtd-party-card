@@ -1,7 +1,7 @@
-import { DefaultMap } from "utilities/defaultMap";
-
 import { ResetLevel } from "model/attributes/resetLevel";
 import { Class, nakedACForClass } from "model/partyCard/class";
+
+import { DefaultMap } from "utilities/defaultMap";
 
 export enum WeaponType {
 	melee = "melee",

@@ -8,10 +8,9 @@ import { DamageType, allDamageTypes, nameForDamageType } from "model/attributes/
 import { Roll } from "model/diceRoller/roll";
 import { Monster } from "model/dungeon/monster";
 import { nameForClass } from "model/partyCard/class";
-
 import { PlayerAttack } from "model/playerAttack/playerAttack";
-import { PlayerAttackType, allPlayerAttackTypes, nameForPlayerAttackType } from "model/playerAttack/playerAttackType";
 import { PlayerAttackCritMultiplier, allPlayerAttackCritMultipliers, nameForPlayerAttackCritMultiplier } from "model/playerAttack/playerAttackCritMultiplier";
+import { PlayerAttackType, allPlayerAttackTypes, nameForPlayerAttackType } from "model/playerAttack/playerAttackType";
 
 interface PlayerAttackListComponentProps {
 	data: DataManager;

@@ -1,4 +1,4 @@
-import React, { Component, ChangeEvent } from "react";
+import React, { Component, ChangeEvent, ReactNode } from "react";
 
 import { Monster } from "model/dungeon/monster";
 import { Room } from "model/dungeon/room";
@@ -16,7 +16,7 @@ export class MonsterListComponent extends Component<MonsterListComponentProps, M
 		this.props.onChange();
 	}
 
-	override render() {
+	override render(): ReactNode {
 		return (
 			<ul className="monster-list-component">
 				{this.props.room.monsters.map((monster) => {

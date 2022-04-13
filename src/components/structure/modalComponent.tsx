@@ -1,6 +1,6 @@
 import React, { Component, ReactNode, MouseEvent } from "react";
 
-import { HeaderLevel } from "base/utilities";
+import { HeaderLevel } from "utilities/headerLevel";
 
 interface ModalComponentProps {
 	openButtonText: string;
@@ -38,7 +38,7 @@ export class ModalComponent extends Component<ModalComponentProps, ModalComponen
 		}
 	}
 
-	override render() {
+	override render(): ReactNode {
 		const HeaderType = this.props.titleHeaderLevel;
 
 		const contentWrapperClasses = ["modal-component__content"];
