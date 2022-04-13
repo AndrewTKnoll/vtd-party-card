@@ -1,0 +1,17 @@
+.death-die-component {
+	text-align: center;
+
+	@include breakpoint-sm() {
+		width: calc(200% / 3);
+		margin: 0 auto;
+	}
+
+	@include breakpoint-md() {
+		width: 50%;
+	}
+
+	.death-die-component__result-range {
+		margin-right: 0.25rem;
+		font-weight: 700;
+	}
+}

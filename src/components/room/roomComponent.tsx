@@ -4,6 +4,7 @@ import { DiceRollerControlComponent } from "components/controls/diceRollerContro
 import { ItemsOfInterestComponent } from "components/room/itemsOfInterestComponent";
 import { MonsterListComponent } from "components/room/monsterListComponent";
 import { StatBlockComponent } from "components/room/statBlockComponent";
+import { DeathDieComponent } from "components/room/actions/deathDieComponent";
 import { DivineInterventionComponent } from "components/room/actions/divineInterventionComponent";
 import { InitiativeActionComponent } from "components/room/actions/initiativeActionComponent";
 import { PlayerAttackListComponent } from "components/room/actions/playerAttackListComponent";
@@ -19,7 +20,7 @@ import { RoomActionResult } from "model/roomAction/roomActionResult";
 
 const prepTimeRoomCount = 3;
 
-type ActionType = "playerAttacks" | "quickStrike" | "initiative" | "divineIntervention" | RoomActionResult;
+type ActionType = "playerAttacks" | "quickStrike" | "initiative" | "divineIntervention" | "deathDie" | RoomActionResult;
 
 interface RoomComponentProps {
 	data: DataManager;
@@ -139,6 +140,11 @@ export class RoomComponent extends Component<RoomComponentProps, RoomComponentSt
 
 								Divine Intervention
 							</button>
+							<button type="button"
+								onClick={this.setAction.bind(this, "deathDie")}>
+
+								Death Die
+							</button>
 						</CollapseComponent>
 						<h3>Room Actions</h3>
 						<div className="room-component__control-row row">
@@ -208,6 +214,11 @@ export class RoomComponent extends Component<RoomComponentProps, RoomComponentSt
 						}
 						{this.state.currentAction === "divineIntervention" &&
 							<DivineInterventionComponent data={this.props.data}
+								clearAction={this.setAction.bind(this, undefined)}
+								onChange={this.props.onChange}/>
+						}
+						{this.state.currentAction === "deathDie" &&
+							<DeathDieComponent data={this.props.data}
 								clearAction={this.setAction.bind(this, undefined)}
 								onChange={this.props.onChange}/>
 						}
