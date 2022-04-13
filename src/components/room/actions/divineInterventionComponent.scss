@@ -1,0 +1,27 @@
+.divine-intervention-component {
+	text-align: center;
+
+	.divine-intervention-component__result {
+		padding-left: 1rem;
+		text-align: left;
+		list-style: initial;
+
+		@include breakpoint-sm() {
+			width: calc(200% / 3);
+			margin: 0 auto;
+		}
+
+		@include breakpoint-md() {
+			width: 50%;
+		}
+
+		li {
+			margin-bottom: 0.5rem;
+		}
+	}
+
+	.divine-intervention-component__result-range {
+		margin-right: 0.25rem;
+		font-weight: 700;
+	}
+}

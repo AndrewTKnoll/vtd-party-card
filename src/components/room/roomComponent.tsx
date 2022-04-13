@@ -4,9 +4,11 @@ import { DiceRollerControlComponent } from "components/controls/diceRollerContro
 import { ItemsOfInterestComponent } from "components/room/itemsOfInterestComponent";
 import { MonsterListComponent } from "components/room/monsterListComponent";
 import { StatBlockComponent } from "components/room/statBlockComponent";
+import { DivineInterventionComponent } from "components/room/actions/divineInterventionComponent";
 import { InitiativeActionComponent } from "components/room/actions/initiativeActionComponent";
 import { PlayerAttackListComponent } from "components/room/actions/playerAttackListComponent";
 import { RoomActionComponent } from "components/room/actions/roomActionComponent";
+import { CollapseComponent } from "components/structure/collapseComponent";
 import { TimerComponent } from "components/widgets/timerComponent";
 
 import { DataManager } from "model/dataManager";
@@ -17,7 +19,7 @@ import { RoomActionResult } from "model/roomAction/roomActionResult";
 
 const prepTimeRoomCount = 3;
 
-type ActionType = "playerAttacks" | "quickStrike" | "initiative" | RoomActionResult;
+type ActionType = "playerAttacks" | "quickStrike" | "initiative" | "divineIntervention" | RoomActionResult;
 
 interface RoomComponentProps {
 	data: DataManager;
@@ -128,6 +130,16 @@ export class RoomComponent extends Component<RoomComponentProps, RoomComponentSt
 					<div className="room-component__control-col col">
 						<h3>Dice Roller</h3>
 						<DiceRollerControlComponent diceRoller={this.props.data.diceRoller}/>
+						<CollapseComponent headerText="Special Actions"
+							headerLevel="h3"
+							contentClass="room-component__control-row row">
+
+							<button type="button"
+								onClick={this.setAction.bind(this, "divineIntervention")}>
+
+								Divine Intervention
+							</button>
+						</CollapseComponent>
 						<h3>Room Actions</h3>
 						<div className="room-component__control-row row">
 							<button type="button"
@@ -193,6 +205,11 @@ export class RoomComponent extends Component<RoomComponentProps, RoomComponentSt
 								clearAction={this.setAction.bind(this, undefined)}
 								onChange={this.props.onChange}
 								triggerQuickStrike={this.setAction.bind(this, "quickStrike")}/>
+						}
+						{this.state.currentAction === "divineIntervention" &&
+							<DivineInterventionComponent data={this.props.data}
+								clearAction={this.setAction.bind(this, undefined)}
+								onChange={this.props.onChange}/>
 						}
 					</div>
 				}
