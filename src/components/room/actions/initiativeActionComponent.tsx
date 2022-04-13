@@ -1,5 +1,7 @@
 import React, { Component, ReactNode } from "react";
 
+import { RollCallbackComponent } from "components/diceRoller/rollCallbackComponent";
+
 import { DataManager } from "model/dataManager";
 import { Roll } from "model/diceRoller/roll";
 import { InitiativeWinner } from "model/dungeon/room";
@@ -16,7 +18,6 @@ interface InitiativeActionComponentState {
 }
 
 export class InitiativeActionComponent extends Component<InitiativeActionComponentProps, InitiativeActionComponentState> {
-	private rollCallbackId!: number;
 
 	/* lifecycle */
 
@@ -27,23 +28,6 @@ export class InitiativeActionComponent extends Component<InitiativeActionCompone
 			monsterRoll: Math.floor(Math.random() * 20) + 1,
 			playerRoll: undefined
 		};
-	}
-
-	override componentDidMount() {
-		this.rollCallbackId = this.props.data.diceRoller.rollCallbacks.register(this.handlePlayerRoll.bind(this));
-
-		this.props.data.diceRoller.rolls.forEach(this.handlePlayerRoll.bind(this));
-	}
-
-	override componentDidUpdate(prevProps: InitiativeActionComponentProps) {
-		if (prevProps.data.diceRoller !== this.props.data.diceRoller) {
-			prevProps.data.diceRoller.rollCallbacks.unregister(this.rollCallbackId);
-			this.rollCallbackId = this.props.data.diceRoller.rollCallbacks.register(this.handlePlayerRoll.bind(this));
-		}
-	}
-
-	override componentWillUnmount() {
-		this.props.data.diceRoller.rollCallbacks.unregister(this.rollCallbackId);
 	}
 
 	/* events */
@@ -111,6 +95,8 @@ export class InitiativeActionComponent extends Component<InitiativeActionCompone
 
 	override render(): ReactNode {
 		return <>
+			<RollCallbackComponent diceRoller={this.props.data.diceRoller}
+				handleRoll={this.handlePlayerRoll.bind(this)}/>
 			<h3>Initiative</h3>
 			<div className="action-button-list">
 				<button type="button"

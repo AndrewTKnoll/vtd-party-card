@@ -1,6 +1,7 @@
 import React, { Component, ReactNode } from "react";
 
 import { ItemListSelectComponent } from "components/controls/itemListSelectComponent";
+import { RollCallbackComponent } from "components/diceRoller/rollCallbackComponent";
 
 import { shortNameForSaveType } from "model/attributes/saveType";
 
@@ -24,26 +25,6 @@ interface RoomActionComponentProps {
 interface RoomActionComponentState {}
 
 export class RoomActionComponent extends Component<RoomActionComponentProps, RoomActionComponentState> {
-	private rollCallbackId!: number;
-
-	/* lifecycle */
-
-	override componentDidMount() {
-		this.rollCallbackId = this.props.diceRoller.rollCallbacks.register(this.handlePlayerRoll.bind(this));
-
-		this.props.diceRoller.rolls.forEach(this.handlePlayerRoll.bind(this));
-	}
-
-	override componentDidUpdate(prevProps: RoomActionComponentProps) {
-		if (prevProps.diceRoller !== this.props.diceRoller) {
-			prevProps.diceRoller.rollCallbacks.unregister(this.rollCallbackId);
-			this.rollCallbackId = this.props.diceRoller.rollCallbacks.register(this.handlePlayerRoll.bind(this));
-		}
-	}
-
-	override componentWillUnmount() {
-		this.props.diceRoller.rollCallbacks.unregister(this.rollCallbackId);
-	}
 
 	/* events */
 
@@ -162,6 +143,8 @@ export class RoomActionComponent extends Component<RoomActionComponentProps, Roo
 
 	override render() {
 		return <>
+			<RollCallbackComponent diceRoller={this.props.diceRoller}
+				handleRoll={this.handlePlayerRoll.bind(this)}/>
 			<h3>{this.props.result.action.name}</h3>
 			<div className="action-button-list">
 				<button type="button"

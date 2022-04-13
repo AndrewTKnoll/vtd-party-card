@@ -1,5 +1,7 @@
 import React, { Component, ReactNode } from "react";
 
+import { StateCallbackComponent } from "components/diceRoller/stateCallbackComponent";
+
 import { SaveType } from "model/attributes/saveType";
 import { DiceRoller } from "model/diceRoller/diceRoller";
 import { RollState } from "model/diceRoller/rollState";
@@ -9,28 +11,11 @@ interface DiceRollerControlComponentProps {
 }
 
 export class DiceRollerControlComponent extends Component<DiceRollerControlComponentProps, RollState> {
-	private stateCallbackId!: number;
 
 	constructor(props: DiceRollerControlComponentProps) {
 		super(props);
 
 		this.state = props.diceRoller.rollState;
-	}
-
-	override componentDidMount() {
-		this.stateCallbackId = this.props.diceRoller.stateCallbacks.register(this.updateRollState.bind(this));
-	}
-
-	override componentDidUpdate(prevProps: DiceRollerControlComponentProps) {
-		if (prevProps.diceRoller !== this.props.diceRoller) {
-			prevProps.diceRoller.stateCallbacks.unregister(this.stateCallbackId);
-			this.stateCallbackId = this.props.diceRoller.stateCallbacks.register(this.updateRollState.bind(this));
-			this.updateRollState();
-		}
-	}
-
-	override componentWillUnmount() {
-		this.props.diceRoller.stateCallbacks.unregister(this.stateCallbackId);
 	}
 
 	private updateRollState() {
@@ -71,7 +56,9 @@ export class DiceRollerControlComponent extends Component<DiceRollerControlCompo
 
 		const isInitiativeRoll = (this.state.type === "accept" || this.state.type === "reveal") && (this.state.rollType.type === "initiative");
 
-		return (
+		return <>
+			<StateCallbackComponent diceRoller={this.props.diceRoller}
+				handleStateChange={this.updateRollState.bind(this)}/>
 			<div className="dice-roller-control-component row">
 				{!rollsRevealed && !acceptingRolls && <>
 					<div className="col">
@@ -133,6 +120,6 @@ export class DiceRollerControlComponent extends Component<DiceRollerControlCompo
 					</div>
 				}
 			</div>
-		);
+		</>;
 	}
 }

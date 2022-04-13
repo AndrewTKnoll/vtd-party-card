@@ -1,6 +1,7 @@
 import React, { Component, ReactNode, ChangeEvent } from "react";
 
 import { ItemListSelectComponent } from "components/controls/itemListSelectComponent";
+import { RollCallbackComponent } from "components/diceRoller/rollCallbackComponent";
 
 import { DataManager } from "model/dataManager";
 import { DamageType, allDamageTypes, nameForDamageType } from "model/attributes/damageType";
@@ -27,7 +28,6 @@ function targetLabelForMonster(monster: Monster): string {
 }
 
 export class PlayerAttackListComponent extends Component<PlayerAttackListComponentProps, PlayerAttackListComponentState> {
-	private rollCallbackId!: number;
 
 	/* lifecycle */
 
@@ -45,23 +45,6 @@ export class PlayerAttackListComponent extends Component<PlayerAttackListCompone
 				return attack;
 			})
 		};
-	}
-
-	override componentDidMount() {
-		this.rollCallbackId = this.props.data.diceRoller.rollCallbacks.register(this.handlePlayerRoll.bind(this));
-
-		this.props.data.diceRoller.rolls.forEach(this.handlePlayerRoll.bind(this));
-	}
-
-	override componentDidUpdate(prevProps: PlayerAttackListComponentProps) {
-		if (prevProps.data.diceRoller !== this.props.data.diceRoller) {
-			prevProps.data.diceRoller.rollCallbacks.unregister(this.rollCallbackId);
-			this.rollCallbackId = this.props.data.diceRoller.rollCallbacks.register(this.handlePlayerRoll.bind(this));
-		}
-	}
-
-	override componentWillUnmount() {
-		this.props.data.diceRoller.rollCallbacks.unregister(this.rollCallbackId);
 	}
 
 	/* events */
@@ -175,6 +158,8 @@ export class PlayerAttackListComponent extends Component<PlayerAttackListCompone
 
 	override render(): ReactNode {
 		return <>
+			<RollCallbackComponent diceRoller={this.props.data.diceRoller}
+				handleRoll={this.handlePlayerRoll.bind(this)}/>
 			<h3>Player Attacks</h3>
 			<div className="action-button-list">
 				<button type="button"
