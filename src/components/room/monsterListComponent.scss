@@ -2,7 +2,6 @@
 	margin-bottom: 1rem;
 
 	.monster-list-component__monster {
-		display: flex;
 		justify-content: space-between;
 		margin-bottom: 0.25rem;
 
@@ -22,5 +21,30 @@
 	.monster-list-component__health {
 		width: 6rem;
 		text-align: right;
+	}
+
+	.modal-component {
+		display: block;
+
+		.modal-component__open-button {
+			display: block;
+			margin-left: auto;
+		}
+	}
+
+	.monster-list-component__adjust-monster {
+		align-items: baseline;
+		margin-bottom: 0.25rem;
+	}
+
+	.monster-list-component__adjust-name {
+		width: 25%;
+	}
+
+	.monster-list-component__adjust-health {
+
+		input {
+			width: 4rem;
+		}
 	}
 }
