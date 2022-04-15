@@ -1,6 +1,6 @@
 import React, { Component, ReactNode, ChangeEvent } from "react";
 
-import { DiceRollerControlComponent } from "components/controls/diceRollerControlComponent";
+import { DiceRollerControlComponent } from "components/diceRoller/diceRollerControlComponent";
 import { ItemsOfInterestComponent } from "components/room/itemsOfInterestComponent";
 import { MonsterListComponent } from "components/room/monsterListComponent";
 import { StatBlockComponent } from "components/room/statBlockComponent";
