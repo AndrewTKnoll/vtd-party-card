@@ -5,6 +5,13 @@ import { RoomActionResult, MonsterAttack } from "model/roomAction/roomActionResu
 type AttackGenerator = (party: PartyCard) => MonsterAttack[];
 type CompletionEventHandler = (party: PartyCard) => void;
 
+interface RoomActionConstructorParams {
+	name: string;
+	attackGenerator: AttackGenerator;
+	beforeCompletion?: CompletionEventHandler | undefined;
+	afterCompletion?: CompletionEventHandler | undefined;
+}
+
 export class RoomAction {
 	readonly name: string;
 
@@ -13,17 +20,11 @@ export class RoomAction {
 	readonly beforeCompletion: CompletionEventHandler | undefined;
 	readonly afterCompletion: CompletionEventHandler | undefined;
 
-	constructor(
-		name: string,
-		attackGenerator: AttackGenerator,
-		beforeCompletion?: CompletionEventHandler | undefined,
-		afterCompletion?: CompletionEventHandler | undefined
-	) {
-		this.name = name;
-		this.attackGenerator = attackGenerator;
-
-		this.beforeCompletion = beforeCompletion;
-		this.afterCompletion = afterCompletion;
+	constructor(params: RoomActionConstructorParams) {
+		this.name = params.name;
+		this.attackGenerator = params.attackGenerator;
+		this.beforeCompletion = params.beforeCompletion;
+		this.afterCompletion = params.afterCompletion;
 	}
 
 	perform(party: PartyCard): RoomActionResult | undefined {
