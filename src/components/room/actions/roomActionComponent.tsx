@@ -2,6 +2,7 @@ import React, { Component, ReactNode } from "react";
 
 import { ItemListSelectComponent } from "components/controls/itemListSelectComponent";
 import { RollCallbackComponent } from "components/diceRoller/rollCallbackComponent";
+import { RoomActionButtonListComponent } from "components/room/roomActionButtonListComponent";
 
 import { shortNameForSaveType } from "model/attributes/saveType";
 import { DiceRoller } from "model/diceRoller/diceRoller";
@@ -142,18 +143,10 @@ export class RoomActionComponent extends Component<RoomActionComponentProps, Roo
 			<RollCallbackComponent diceRoller={this.props.diceRoller}
 				handleRoll={this.handlePlayerRoll.bind(this)}/>
 			<h3>{this.props.result.action.name}</h3>
-			<div className="action-button-list">
-				<button type="button"
-					onClick={this.props.clearAction}>
-
-					Cancel
-				</button>
-				<button type="button"
-					onClick={this.completeRoomAction.bind(this)}>
-
-					Complete
-				</button>
-			</div>
+			<RoomActionButtonListComponent diceRoller={this.props.diceRoller}
+				rollType={this.props.result.action.associatedSave !== undefined ? { type: "save", save: this.props.result.action.associatedSave } : undefined}
+				cancelAction={this.props.clearAction}
+				completeAction={this.completeRoomAction.bind(this)}/>
 			<ul className="room-action-result-list">
 				{this.props.result?.attacks.map((attack, index) => {
 					return (

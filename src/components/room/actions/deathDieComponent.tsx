@@ -1,6 +1,7 @@
 import React, { Component, ReactNode } from "react";
 
 import { RollCallbackComponent } from "components/diceRoller/rollCallbackComponent";
+import { RoomActionButtonListComponent } from "components/room/roomActionButtonListComponent";
 
 import { DataManager } from "model/dataManager";
 import { Roll } from "model/diceRoller/roll";
@@ -84,18 +85,10 @@ export class DeathDieComponent extends Component<DeathDieComponentProps, DeathDi
 			<RollCallbackComponent diceRoller={this.props.data.diceRoller}
 				handleRoll={this.handlePlayerRoll.bind(this)}/>
 			<h3>Druegar's Death Die</h3>
-			<div className="action-button-list">
-				<button type="button"
-					onClick={this.props.clearAction}>
-
-					Cancel
-				</button>
-				<button type="button"
-					onClick={this.completeDeathDie.bind(this)}>
-
-					Complete
-				</button>
-			</div>
+			<RoomActionButtonListComponent diceRoller={this.props.data.diceRoller}
+				rollType={{type: "initiative"}}
+				cancelAction={this.props.clearAction}
+				completeAction={this.completeDeathDie.bind(this)}/>
 			<div className="death-die-component">
 				<h4>Roll</h4>
 				{this.state.playerRoll === undefined && <p>Waiting for Roll</p> }

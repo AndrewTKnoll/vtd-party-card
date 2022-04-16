@@ -1,6 +1,7 @@
 import React, { Component, ReactNode } from "react";
 
 import { RollCallbackComponent } from "components/diceRoller/rollCallbackComponent";
+import { RoomActionButtonListComponent } from "components/room/roomActionButtonListComponent";
 
 import { DataManager } from "model/dataManager";
 import { DamageType } from "model/attributes/damageType";
@@ -66,18 +67,10 @@ export class DivineInterventionComponent extends Component<DivineInterventionCom
 			<RollCallbackComponent diceRoller={this.props.data.diceRoller}
 				handleRoll={this.handlePlayerRoll.bind(this)}/>
 			<h3>Divine Intervention</h3>
-			<div className="action-button-list">
-				<button type="button"
-					onClick={this.props.clearAction}>
-
-					Cancel
-				</button>
-				<button type="button"
-					onClick={this.completeDivineIntervention.bind(this)}>
-
-					Complete
-				</button>
-			</div>
+			<RoomActionButtonListComponent diceRoller={this.props.data.diceRoller}
+				rollType={{type: "initiative"}}
+				cancelAction={this.props.clearAction}
+				completeAction={this.completeDivineIntervention.bind(this)}/>
 			<div className="divine-intervention-component">
 				<h4>Roll</h4>
 				{this.state.playerRoll === undefined && <p>Waiting for Roll</p> }
