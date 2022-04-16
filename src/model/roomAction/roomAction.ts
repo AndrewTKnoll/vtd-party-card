@@ -1,3 +1,4 @@
+import { SaveType } from "model/attributes/saveType";
 import { allClasses } from "model/partyCard/class";
 import { PartyCard } from "model/partyCard/partyCard";
 import { RoomActionResult, MonsterAttack } from "model/roomAction/roomActionResult";
@@ -8,6 +9,7 @@ type CompletionEventHandler = (party: PartyCard) => void;
 interface RoomActionConstructorParams {
 	name: string;
 	attackGenerator: AttackGenerator;
+	associatedSave?: SaveType | undefined;
 	beforeCompletion?: CompletionEventHandler | undefined;
 	afterCompletion?: CompletionEventHandler | undefined;
 }
@@ -17,12 +19,15 @@ export class RoomAction {
 
 	private attackGenerator: AttackGenerator;
 
+	readonly associatedSave: SaveType | undefined;
+
 	readonly beforeCompletion: CompletionEventHandler | undefined;
 	readonly afterCompletion: CompletionEventHandler | undefined;
 
 	constructor(params: RoomActionConstructorParams) {
 		this.name = params.name;
 		this.attackGenerator = params.attackGenerator;
+		this.associatedSave = params.associatedSave;
 		this.beforeCompletion = params.beforeCompletion;
 		this.afterCompletion = params.afterCompletion;
 	}
