@@ -1,6 +1,7 @@
 import React, { Component, ReactNode } from "react";
 
 import { RollCallbackComponent } from "components/diceRoller/rollCallbackComponent";
+import { RoomActionButtonListComponent } from "components/room/roomActionButtonListComponent";
 
 import { DataManager } from "model/dataManager";
 import { Roll } from "model/diceRoller/roll";
@@ -98,18 +99,10 @@ export class InitiativeActionComponent extends Component<InitiativeActionCompone
 			<RollCallbackComponent diceRoller={this.props.data.diceRoller}
 				handleRoll={this.handlePlayerRoll.bind(this)}/>
 			<h3>Initiative</h3>
-			<div className="action-button-list">
-				<button type="button"
-					onClick={this.props.clearAction}>
-
-					Cancel
-				</button>
-				<button type="button"
-					onClick={this.completeInitiative.bind(this, false)}>
-
-					Complete
-				</button>
-			</div>
+			<RoomActionButtonListComponent diceRoller={this.props.data.diceRoller}
+				rollType={{type: "initiative"}}
+				cancelAction={this.props.clearAction}
+				completeAction={this.completeInitiative.bind(this, false)}/>
 			<div className="initiative-action-component row">
 				<div className="initiative-action-component__roll col">
 					<h4>Monster Roll</h4>

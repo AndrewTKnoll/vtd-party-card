@@ -2,6 +2,7 @@ import React, { Component, ReactNode, ChangeEvent } from "react";
 
 import { ItemListSelectComponent } from "components/controls/itemListSelectComponent";
 import { RollCallbackComponent } from "components/diceRoller/rollCallbackComponent";
+import { RoomActionButtonListComponent } from "components/room/roomActionButtonListComponent";
 
 import { DataManager } from "model/dataManager";
 import { DamageType, allDamageTypes, nameForDamageType } from "model/attributes/damageType";
@@ -160,18 +161,10 @@ export class PlayerAttackListComponent extends Component<PlayerAttackListCompone
 			<RollCallbackComponent diceRoller={this.props.data.diceRoller}
 				handleRoll={this.handlePlayerRoll.bind(this)}/>
 			<h3>Player Attacks</h3>
-			<div className="action-button-list">
-				<button type="button"
-					onClick={this.props.clearAction}>
-
-					Cancel
-				</button>
-				<button type="button"
-					onClick={this.completeAllAttacks.bind(this)}>
-
-					Complete
-				</button>
-			</div>
+			<RoomActionButtonListComponent diceRoller={this.props.data.diceRoller}
+				rollType={{type: "attack"}}
+				cancelAction={this.props.clearAction}
+				completeAction={this.completeAllAttacks.bind(this)}/>
 			<ul className="player-attack-list">
 				{this.state.attacks.map((attack, index) => {
 					return (

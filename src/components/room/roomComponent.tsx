@@ -129,8 +129,11 @@ export class RoomComponent extends Component<RoomComponentProps, RoomComponentSt
 				</div>
 				{this.props.data.currentRoom.monsters.length > 0 && <>
 					<div className="room-component__control-col col">
-						<h3>Dice Roller</h3>
-						<DiceRollerControlComponent diceRoller={this.props.data.diceRoller}/>
+						<CollapseComponent headerText="Dice Roller"
+							headerLevel="h3">
+
+							<DiceRollerControlComponent diceRoller={this.props.data.diceRoller}/>
+						</CollapseComponent>
 						<CollapseComponent headerText="Special Actions"
 							headerLevel="h3"
 							contentClass="room-component__control-row row">
