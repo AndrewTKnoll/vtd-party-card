@@ -134,21 +134,6 @@ export class RoomComponent extends Component<RoomComponentProps, RoomComponentSt
 
 							<DiceRollerControlComponent diceRoller={this.props.data.diceRoller}/>
 						</CollapseComponent>
-						<CollapseComponent headerText="Special Actions"
-							headerLevel="h3"
-							contentClass="room-component__control-row row">
-
-							<button type="button"
-								onClick={this.setAction.bind(this, "divineIntervention")}>
-
-								Divine Intervention
-							</button>
-							<button type="button"
-								onClick={this.setAction.bind(this, "deathDie")}>
-
-								Death Die
-							</button>
-						</CollapseComponent>
 						<h3>Room Actions</h3>
 						<div className="room-component__control-row row">
 							<button type="button"
@@ -156,20 +141,32 @@ export class RoomComponent extends Component<RoomComponentProps, RoomComponentSt
 
 								Round Reset
 							</button>
-							{this.state.currentAction === undefined && <>
-								<button type="button"
-									onClick={this.setAction.bind(this, "initiative")}>
-
-									Roll Initiative
-								</button>
+							{this.state.currentAction === undefined &&
 								<button type="button"
 									onClick={this.setAction.bind(this, "playerAttacks")}>
 
 									Player Attack
 								</button>
-							</>}
+							}
 						</div>
-						{this.state.currentAction === undefined &&
+						{this.state.currentAction === undefined && <>
+							<div className="room-component__control-row row">
+								<button type="button"
+									onClick={this.setAction.bind(this, "initiative")}>
+
+									Initiative
+								</button>
+								<button type="button"
+									onClick={this.setAction.bind(this, "divineIntervention")}>
+
+									Divine Intervention
+								</button>
+								<button type="button"
+									onClick={this.setAction.bind(this, "deathDie")}>
+
+									Death Die
+								</button>
+							</div>
 							<div className="room-component__control-row row">
 								{this.props.data.currentRoom.actions.map((action) => {
 									return (
@@ -182,7 +179,7 @@ export class RoomComponent extends Component<RoomComponentProps, RoomComponentSt
 									);
 								})}
 							</div>
-						}
+						</>}
 					</div>
 					<div className="room-component__monster-col col">
 						<h3>Monsters</h3>
