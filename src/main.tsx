@@ -2,6 +2,8 @@
 import "./main.scss";
 
 /**** js imports ****/
+import "utilities/arrayUtils";
+
 import React from "react";
 import ReactDOM from "react-dom";
 
