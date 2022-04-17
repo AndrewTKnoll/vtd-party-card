@@ -3,6 +3,7 @@ import { Difficulty } from "model/attributes/difficulty";
 import { ResetLevel } from "model/attributes/resetLevel";
 import { EpilogueRoom } from "model/dungeon/epilogueRoom";
 import { Room } from "model/dungeon/room";
+import { TrainingRoom } from "model/dungeon/trainingRoom";
 import { PartyCard } from "model/partyCard/partyCard";
 
 export class Dungeon {
@@ -43,6 +44,7 @@ export class Dungeon {
 
 	constructor(dataManager: DataManager, rooms: Room[][] = []) {
 		this.rooms = [
+			[new TrainingRoom(dataManager)],
 			...rooms,
 			[new EpilogueRoom(dataManager)]
 		];

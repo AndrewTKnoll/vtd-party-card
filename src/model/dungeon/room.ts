@@ -149,6 +149,10 @@ export class Room {
 		return [];
 	}
 
+	get hasInfoColumn(): boolean {
+		return true;
+	}
+
 	infoColumnNotes(update: () => void): ReactNode {
 		return false;
 	}

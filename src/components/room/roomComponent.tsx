@@ -97,36 +97,38 @@ export class RoomComponent extends Component<RoomComponentProps, RoomComponentSt
 				<h2 className="room-component__title col">
 					{this.props.data.currentRoom.name}
 				</h2>
-				<div className="room-component__info-col col">
-					<h3>Info</h3>
-					{this.renderRoomTimers()}
-					{!this.props.data.currentRoom.hideDefaultPushDamage &&
-						<div className="room-component__info-line">
-							<span>Push Damage:</span>
-							<span>{this.props.data.currentRoom.pushDamage}</span>
-						</div>
-					}
-					{this.props.data.currentRoom.hasRogueTreasure &&
-						<div className="room-component__info-line">
-							<span>Rogue Took Treasure:</span>
-							<input type="checkbox"
-								checked={this.props.data.currentRoom.rogueTookTreasure}
-								onChange={this.setRogueTreasure.bind(this)}/>
-						</div>
-					}
-					{this.props.data.currentRoom.initiativeWinner !== undefined &&
-						<div className="room-component__info-line">
-							<span>Initiative Winner:</span>
-							<span>{nameForInitiativeWinner(this.props.data.currentRoom.initiativeWinner)}</span>
-						</div>
-					}
-					{this.props.data.currentRoom.statBlocks.length > 0 &&
-						<StatBlockComponent statBlocks={this.props.data.currentRoom.statBlocks}/>
-					}
-					<ItemsOfInterestComponent tokens={this.props.data.currentRoom.tokensOfInterest}
-						spells={this.props.data.currentRoom.spellsOfInterest}/>
-					{this.props.data.currentRoom.infoColumnNotes(this.props.onChange)}
-				</div>
+				{this.props.data.currentRoom.hasInfoColumn &&
+					<div className="room-component__info-col col">
+						<h3>Info</h3>
+						{this.renderRoomTimers()}
+						{!this.props.data.currentRoom.hideDefaultPushDamage &&
+							<div className="room-component__info-line">
+								<span>Push Damage:</span>
+								<span>{this.props.data.currentRoom.pushDamage}</span>
+							</div>
+						}
+						{this.props.data.currentRoom.hasRogueTreasure &&
+							<div className="room-component__info-line">
+								<span>Rogue Took Treasure:</span>
+								<input type="checkbox"
+									checked={this.props.data.currentRoom.rogueTookTreasure}
+									onChange={this.setRogueTreasure.bind(this)}/>
+							</div>
+						}
+						{this.props.data.currentRoom.initiativeWinner !== undefined &&
+							<div className="room-component__info-line">
+								<span>Initiative Winner:</span>
+								<span>{nameForInitiativeWinner(this.props.data.currentRoom.initiativeWinner)}</span>
+							</div>
+						}
+						{this.props.data.currentRoom.statBlocks.length > 0 &&
+							<StatBlockComponent statBlocks={this.props.data.currentRoom.statBlocks}/>
+						}
+						<ItemsOfInterestComponent tokens={this.props.data.currentRoom.tokensOfInterest}
+							spells={this.props.data.currentRoom.spellsOfInterest}/>
+						{this.props.data.currentRoom.infoColumnNotes(this.props.onChange)}
+					</div>
+				}
 				{this.props.data.currentRoom.monsters.length > 0 && <>
 					<div className="room-component__control-col col">
 						<CollapseComponent headerText="Dice Roller"
