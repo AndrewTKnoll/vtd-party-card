@@ -47,7 +47,7 @@ export class Room {
 
 	/* basic data */
 
-	private readonly dataManager: DataManager;
+	readonly dataManager: DataManager;
 
 	readonly name: string;
 	readonly id: string;
@@ -103,6 +103,10 @@ export class Room {
 
 	/* data override points */
 
+	get idIsStandalone(): boolean {
+		return false;
+	}
+
 	get roomTimers(): RoomTimer[] {
 		return [];
 	}
@@ -129,6 +133,10 @@ export class Room {
 		return targets[0];
 	}
 
+	get hideRoomTimer(): boolean {
+		return false;
+	}
+
 	get hideDefaultPushDamage(): boolean {
 		return false;
 	}
@@ -143,6 +151,10 @@ export class Room {
 
 	get spellsOfInterest(): ItemOfInterest[] {
 		return [];
+	}
+
+	get hasInfoColumn(): boolean {
+		return true;
 	}
 
 	infoColumnNotes(update: () => void): ReactNode {

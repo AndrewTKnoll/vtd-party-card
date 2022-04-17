@@ -1,7 +1,9 @@
 import { DataManager } from "model/dataManager";
 import { Difficulty } from "model/attributes/difficulty";
 import { ResetLevel } from "model/attributes/resetLevel";
+import { EpilogueRoom } from "model/dungeon/epilogueRoom";
 import { Room } from "model/dungeon/room";
+import { TrainingRoom } from "model/dungeon/trainingRoom";
 import { PartyCard } from "model/partyCard/partyCard";
 
 export class Dungeon {
@@ -40,13 +42,11 @@ export class Dungeon {
 		return 0;
 	}
 
-	constructor(dataManager: DataManager, rooms?: Room[][] | undefined) {
-		this.rooms = rooms || [
-			[new Room({
-				dataManager: dataManager,
-				name: "Room 1: The Placeholder",
-				id: "1"
-			})]
+	constructor(dataManager: DataManager, rooms: Room[][] = []) {
+		this.rooms = [
+			[new TrainingRoom(dataManager)],
+			...rooms,
+			[new EpilogueRoom(dataManager)]
 		];
 	}
 

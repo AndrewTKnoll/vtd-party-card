@@ -24,6 +24,7 @@
 		justify-content: space-between;
 		margin-bottom: 0.5rem;
 
+		button,
 		input[type="checkbox"] {
 			margin: 0;
 		}
@@ -90,6 +91,20 @@
 		@include breakpoint-lg() {
 			width: 50%;
 			margin-left: 25%
+		}
+	}
+}
+
+.room-epilogue {
+
+	.room-component__secondary-info-col {
+
+		.col {
+			width: 100%;
+
+			@include breakpoint-md() {
+				width: 50%;
+			}
 		}
 	}
 }

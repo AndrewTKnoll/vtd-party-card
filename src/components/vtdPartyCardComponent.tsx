@@ -2,10 +2,8 @@ import React, { Component, ReactNode, RefObject } from "react";
 
 import { LoginComponent } from "components/loginComponent";
 import { RoomSelectComponent } from "components/controls/roomSelectComponent";
-import { EpilogueComponent } from "components/epilogue/epilogueComponent";
 import { PlayerListComponent } from "components/playerList/playerListComponent";
 import { RoomComponent } from "components/room/roomComponent";
-import { SetupComponent } from "components/setup/setupComponent";
 
 import { DataManager } from "model/dataManager";
 
@@ -64,21 +62,14 @@ export class VTDPartyCardComponent extends Component<VTDPartyCardComponentProps,
 		}
 
 		return (<>
-			<SetupComponent data={this.props.data}
-				onChange={this.clearAttackLists.bind(this)}/>
 			<PlayerListComponent partyCard={this.props.data.partyCard}
 				currentRoom={this.props.data.currentRoom}
 				onChange={this.forceUpdate.bind(this)}/>
 			<RoomSelectComponent data={this.props.data}
 				onChange={this.clearAttackLists.bind(this)}/>
-			{this.props.data.inEpilogue &&
-				<EpilogueComponent data={this.props.data}/>
-			}
-			{!this.props.data.inEpilogue &&
-				<RoomComponent ref={this.roomComponentRef}
-					data={this.props.data}
-					onChange={this.forceUpdate.bind(this)}/>
-			}
+			<RoomComponent ref={this.roomComponentRef}
+				data={this.props.data}
+				onChange={this.forceUpdate.bind(this)}/>
 		</>);
 	}
 }

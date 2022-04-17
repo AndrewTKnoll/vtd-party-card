@@ -18,7 +18,7 @@ import { roomTimeDuration, nameForInitiativeWinner } from "model/dungeon/room";
 import { RoomAction } from "model/roomAction/roomAction";
 import { RoomActionResult } from "model/roomAction/roomActionResult";
 
-const prepTimeRoomCount = 3;
+const prepTimeRoomOffsetCount = 2;
 
 type ActionType = "playerAttacks" | "quickStrike" | "initiative" | "divineIntervention" | "deathDie" | RoomActionResult;
 
@@ -67,16 +67,18 @@ export class RoomComponent extends Component<RoomComponentProps, RoomComponentSt
 		}
 
 		const roomStartTime = new Date(
-				this.props.data.startTime.getTime() + ((this.props.data.currentRoomPosition + prepTimeRoomCount) * roomTimeDuration)
+				this.props.data.startTime.getTime() + ((this.props.data.currentRoomPosition + prepTimeRoomOffsetCount) * roomTimeDuration)
 			);
 		const roomEndTime = new Date(roomStartTime.getTime() + roomTimeDuration);
 
 		return <>
-			<TimerComponent targetDate={roomEndTime}
-				countdownStartDate={roomStartTime}
-				prefixText="Time until room end:"
-				beforeTimeText="Room hasn't started yet"
-				afterTimeText="Room is complete"/>
+			{!this.props.data.currentRoom.hideRoomTimer &&
+				<TimerComponent targetDate={roomEndTime}
+					countdownStartDate={roomStartTime}
+					prefixText="Time until room end:"
+					beforeTimeText="Room hasn't started yet"
+					afterTimeText="Room is complete"/>
+			}
 			{this.props.data.currentRoom.roomTimers.map((timer, index) => {
 				return <TimerComponent key={index}
 					targetDate={new Date(roomEndTime.getTime() - timer.timeOffset)}
@@ -93,40 +95,42 @@ export class RoomComponent extends Component<RoomComponentProps, RoomComponentSt
 		const mainSectionNotes = this.props.data.currentRoom.mainSectionNotes(this.props.onChange);
 
 		return (
-			<div className={`room-component room-${this.props.data.currentRoom.id} row`}>
+			<div className={`room-component room-${this.props.data.currentRoom.id.toLowerCase()} row`}>
 				<h2 className="room-component__title col">
 					{this.props.data.currentRoom.name}
 				</h2>
-				<div className="room-component__info-col col">
-					<h3>Info</h3>
-					{this.renderRoomTimers()}
-					{!this.props.data.currentRoom.hideDefaultPushDamage &&
-						<div className="room-component__info-line">
-							<span>Push Damage:</span>
-							<span>{this.props.data.currentRoom.pushDamage}</span>
-						</div>
-					}
-					{this.props.data.currentRoom.hasRogueTreasure &&
-						<div className="room-component__info-line">
-							<span>Rogue Took Treasure:</span>
-							<input type="checkbox"
-								checked={this.props.data.currentRoom.rogueTookTreasure}
-								onChange={this.setRogueTreasure.bind(this)}/>
-						</div>
-					}
-					{this.props.data.currentRoom.initiativeWinner !== undefined &&
-						<div className="room-component__info-line">
-							<span>Initiative Winner:</span>
-							<span>{nameForInitiativeWinner(this.props.data.currentRoom.initiativeWinner)}</span>
-						</div>
-					}
-					{this.props.data.currentRoom.statBlocks.length > 0 &&
-						<StatBlockComponent statBlocks={this.props.data.currentRoom.statBlocks}/>
-					}
-					<ItemsOfInterestComponent tokens={this.props.data.currentRoom.tokensOfInterest}
-						spells={this.props.data.currentRoom.spellsOfInterest}/>
-					{this.props.data.currentRoom.infoColumnNotes(this.props.onChange)}
-				</div>
+				{this.props.data.currentRoom.hasInfoColumn &&
+					<div className="room-component__info-col col">
+						<h3>Info</h3>
+						{this.renderRoomTimers()}
+						{!this.props.data.currentRoom.hideDefaultPushDamage &&
+							<div className="room-component__info-line">
+								<span>Push Damage:</span>
+								<span>{this.props.data.currentRoom.pushDamage}</span>
+							</div>
+						}
+						{this.props.data.currentRoom.hasRogueTreasure &&
+							<div className="room-component__info-line">
+								<span>Rogue Took Treasure:</span>
+								<input type="checkbox"
+									checked={this.props.data.currentRoom.rogueTookTreasure}
+									onChange={this.setRogueTreasure.bind(this)}/>
+							</div>
+						}
+						{this.props.data.currentRoom.initiativeWinner !== undefined &&
+							<div className="room-component__info-line">
+								<span>Initiative Winner:</span>
+								<span>{nameForInitiativeWinner(this.props.data.currentRoom.initiativeWinner)}</span>
+							</div>
+						}
+						{this.props.data.currentRoom.statBlocks.length > 0 &&
+							<StatBlockComponent statBlocks={this.props.data.currentRoom.statBlocks}/>
+						}
+						<ItemsOfInterestComponent tokens={this.props.data.currentRoom.tokensOfInterest}
+							spells={this.props.data.currentRoom.spellsOfInterest}/>
+						{this.props.data.currentRoom.infoColumnNotes(this.props.onChange)}
+					</div>
+				}
 				{this.props.data.currentRoom.monsters.length > 0 && <>
 					<div className="room-component__control-col col">
 						<CollapseComponent headerText="Dice Roller"
