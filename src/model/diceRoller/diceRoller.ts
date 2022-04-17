@@ -85,6 +85,7 @@ export class DiceRoller {
 			case "roll":
 				if (message.clear) {
 					this.rolls = [];
+					this.stateCallbacks.trigger();
 				}
 				message.rolls.forEach(this.handleRollMessage.bind(this));
 		}

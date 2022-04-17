@@ -2,10 +2,15 @@ import React, { Component, ReactNode, ChangeEvent } from "react";
 
 import { ItemListSelectComponent } from "components/controls/itemListSelectComponent";
 import { ValidatedTextInput } from "components/controls/validatedTextInput";
+import { DiceRollerControlComponent } from "components/diceRoller/diceRollerControlComponent";
+import { RollCallbackComponent } from "components/diceRoller/rollCallbackComponent";
+import { StateCallbackComponent } from "components/diceRoller/stateCallbackComponent";
 import { CollapseComponent } from "components/structure/collapseComponent";
 import { TimerComponent } from "components/widgets/timerComponent";
 
 import { DataManager } from "model/dataManager";
+import { nameForClass } from "model/partyCard/class";
+import { Player } from "model/partyCard/player";
 import { Difficulty, allDifficulties, nameForDifficulty } from "model/attributes/difficulty";
 import { ResetLevel } from "model/attributes/resetLevel";
 import { roomTimeDuration } from "model/dungeon/room";
@@ -63,6 +68,25 @@ export class SetupComponent extends Component<SetupComponentProps, SetupComponen
 		this.props.onChange();
 	}
 
+	private updateAfterRoll() {
+		this.forceUpdate();
+	}
+
+	private renderRollList(player: Player): ReactNode {
+		let hasRoll = false;
+
+		this.props.data.diceRoller.rolls.forEach((roll) => {
+			hasRoll = hasRoll || roll.class === player.class;
+		});
+
+		return <li key={player.class}>
+			<input type="checkbox"
+				disabled={true}
+				checked={hasRoll}/>
+			{nameForClass(player.class)}
+		</li>;
+	}
+
 	override render(): ReactNode {
 		let dateString = "";
 		let room1StartTime;
@@ -83,6 +107,10 @@ export class SetupComponent extends Component<SetupComponentProps, SetupComponen
 		}
 
 		return <div className="setup row">
+			<RollCallbackComponent diceRoller={this.props.data.diceRoller}
+				handleRoll={this.updateAfterRoll.bind(this)}/>
+			<StateCallbackComponent diceRoller={this.props.data.diceRoller}
+				handleStateChange={this.updateAfterRoll.bind(this)}/>
 			<div className="setup__main-col col">
 				<div className="row">
 					<div className="setup__settings-col col">
@@ -194,6 +222,20 @@ export class SetupComponent extends Component<SetupComponentProps, SetupComponen
 					</ul>
 				</section>
 			</div>
+			<section className="setup__dice-roller-col col">
+				<h3>Dice Roller</h3>
+				<div className="row">
+					<div className="setup__dice-roller-controller col">
+						<DiceRollerControlComponent diceRoller={this.props.data.diceRoller}/>
+					</div>
+					<div className="setup__dice-roller-roll-list col">
+						<h4>Rolls Received</h4>
+						<ul>
+							{this.props.data.partyCard.presentPlayers.map(this.renderRollList.bind(this))}
+						</ul>
+					</div>
+				</div>
+			</section>
 		</div>;
 	}
 }

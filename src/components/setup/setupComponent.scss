@@ -1,10 +1,8 @@
 .setup {
 
-	.col {
-		width: 100%;
-	}
-
 	.setup__main-col {
+		width: 100%;
+
 		@include breakpoint-sm() {
 			width: 50%;
 		}
@@ -15,6 +13,8 @@
 	}
 
 	.setup__settings-col {
+		width: 100%;
+
 		@include breakpoint-md() {
 			width: 50%;
 		}
@@ -25,6 +25,8 @@
 	}
 
 	.setup__time-col {
+		width: 100%;
+
 		@include breakpoint-md() {
 			width: 50%;
 		}
@@ -58,7 +60,42 @@
 		}
 	}
 
+	.setup__dice-roller-col {
+		width: 100%;
+
+		h3 {
+			text-align: center;
+		}
+	}
+
+	.setup__dice-roller-controller {
+		width: 100%;
+
+		@include breakpoint-sm() {
+			width: 50%;
+		}
+
+		@include breakpoint-md() {
+			width: calc(100% / 3);
+			margin-left: calc(100% / 6);
+		}
+	}
+
+	.setup__dice-roller-roll-list {
+		width: 100%;
+
+		@include breakpoint-sm() {
+			width: 50%;
+		}
+
+		@include breakpoint-md() {
+			width: calc(100% / 3);
+		}
+	}
+
 	.setup__checklist-col {
+		width: 100%;
+
 		@include breakpoint-sm() {
 			width: 50%;
 		}
