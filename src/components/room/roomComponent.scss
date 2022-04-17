@@ -93,3 +93,17 @@
 		}
 	}
 }
+
+.room-epilogue {
+
+	.room-component__secondary-info-col {
+
+		.col {
+			width: 100%;
+
+			@include breakpoint-md() {
+				width: 50%;
+			}
+		}
+	}
+}

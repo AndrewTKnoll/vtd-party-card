@@ -93,7 +93,7 @@ export class RoomComponent extends Component<RoomComponentProps, RoomComponentSt
 		const mainSectionNotes = this.props.data.currentRoom.mainSectionNotes(this.props.onChange);
 
 		return (
-			<div className={`room-component room-${this.props.data.currentRoom.id} row`}>
+			<div className={`room-component room-${this.props.data.currentRoom.id.toLowerCase()} row`}>
 				<h2 className="room-component__title col">
 					{this.props.data.currentRoom.name}
 				</h2>

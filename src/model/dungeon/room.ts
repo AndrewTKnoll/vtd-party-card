@@ -47,7 +47,7 @@ export class Room {
 
 	/* basic data */
 
-	private readonly dataManager: DataManager;
+	readonly dataManager: DataManager;
 
 	readonly name: string;
 	readonly id: string;
@@ -102,6 +102,10 @@ export class Room {
 	}
 
 	/* data override points */
+
+	get idIsStandalone(): boolean {
+		return false;
+	}
 
 	get roomTimers(): RoomTimer[] {
 		return [];
