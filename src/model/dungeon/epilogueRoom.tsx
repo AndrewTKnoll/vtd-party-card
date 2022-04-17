@@ -12,23 +12,14 @@ export class EpilogueRoom extends Room {
 		super({
 			dataManager: dataManager,
 			name: "Epilogue",
-			id: "Epilogue"
+			id: "Epilogue",
+			idIsStandalone: true,
+			hideRoomTimer: true,
+			hideDefaultPushDamage: true
 		});
 	}
 
 	/* data override points */
-
-	override get idIsStandalone(): boolean {
-		return true;
-	}
-
-	override get hideRoomTimer(): boolean {
-		return true;
-	}
-
-	override get hideDefaultPushDamage(): boolean {
-		return true;
-	}
 
 	override infoColumnNotes(update: () => void): ReactNode {
 		const { totalTreasure, treasureTaken } = this.dataManager.dungeon.rooms.reduce((totals, position) => {

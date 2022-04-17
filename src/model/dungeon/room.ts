@@ -39,8 +39,13 @@ interface RoomConstructorParams {
 	dataManager: DataManager;
 	name: string;
 	id: string;
+	idIsStandalone?: boolean;
 	initiativeBonus?: { [key: string]: number};
 	pushDamageType?: string;
+	hasInfoColumn?: boolean;
+	hideRoomTimer?: boolean;
+	hideDefaultPushDamage?: boolean;
+	hasRogueTreasure?: boolean;
 }
 
 export class Room {
@@ -51,6 +56,7 @@ export class Room {
 
 	readonly name: string;
 	readonly id: string;
+	readonly idIsStandalone: boolean;
 
 	get difficulty(): Difficulty {
 		return this.dataManager.difficulty;
@@ -70,6 +76,11 @@ export class Room {
 		return `${pushDamage.get(this.difficulty)}`;
 	}
 
+	readonly hasInfoColumn: boolean;
+	readonly hideRoomTimer: boolean;
+	readonly hideDefaultPushDamage: boolean;
+
+	readonly hasRogueTreasure: boolean;
 	rogueTookTreasure = false;
 
 	/* lifecycle */
@@ -79,14 +90,21 @@ export class Room {
 
 		this.name = params.name;
 		this.id = params.id;
+		this.idIsStandalone = params.idIsStandalone ?? false;
 
-		this.initiativeValues = new DefaultMap(0, params.initiativeBonus || {
+		this.initiativeValues = new DefaultMap(0, params.initiativeBonus ?? {
 			[Difficulty.hardcore]: 5,
 			[Difficulty.nightmare]: 10,
 			[Difficulty.epic]: 15
 		});
 
-		this.pushDamageType = params.pushDamageType || "";
+		this.pushDamageType = params.pushDamageType ?? "";
+
+		this.hasInfoColumn = params.hasInfoColumn ?? true;
+		this.hideRoomTimer = params.hideRoomTimer ?? false;
+		this.hideDefaultPushDamage = params.hideDefaultPushDamage ?? false;
+
+		this.hasRogueTreasure = params.hasRogueTreasure ?? false;
 	}
 
 	restoreFromArchive(archive: any) {
@@ -102,10 +120,6 @@ export class Room {
 	}
 
 	/* data override points */
-
-	get idIsStandalone(): boolean {
-		return false;
-	}
 
 	get roomTimers(): RoomTimer[] {
 		return [];
@@ -133,28 +147,12 @@ export class Room {
 		return targets[0];
 	}
 
-	get hideRoomTimer(): boolean {
-		return false;
-	}
-
-	get hideDefaultPushDamage(): boolean {
-		return false;
-	}
-
-	get hasRogueTreasure(): boolean {
-		return false;
-	}
-
 	get tokensOfInterest(): ItemOfInterest[] {
 		return [];
 	}
 
 	get spellsOfInterest(): ItemOfInterest[] {
 		return [];
-	}
-
-	get hasInfoColumn(): boolean {
-		return true;
 	}
 
 	infoColumnNotes(update: () => void): ReactNode {

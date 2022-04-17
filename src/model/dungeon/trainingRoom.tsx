@@ -11,19 +11,13 @@ export class TrainingRoom extends Room {
 		super({
 			dataManager: dataManager,
 			name: "Training Room",
-			id: "Training"
+			id: "Training",
+			idIsStandalone: true,
+			hasInfoColumn: false
 		});
 	}
 
 	/* data override points */
-
-	override get idIsStandalone(): boolean {
-		return true;
-	}
-
-	override get hasInfoColumn(): boolean {
-		return false;
-	}
 
 	override mainSectionNotes(update: () => void): ReactNode {
 		return <SetupComponent data={this.dataManager}
