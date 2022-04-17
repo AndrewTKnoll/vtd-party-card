@@ -18,7 +18,7 @@ import { roomTimeDuration, nameForInitiativeWinner } from "model/dungeon/room";
 import { RoomAction } from "model/roomAction/roomAction";
 import { RoomActionResult } from "model/roomAction/roomActionResult";
 
-const prepTimeRoomCount = 3;
+const prepTimeRoomOffsetCount = 2;
 
 type ActionType = "playerAttacks" | "quickStrike" | "initiative" | "divineIntervention" | "deathDie" | RoomActionResult;
 
@@ -67,16 +67,18 @@ export class RoomComponent extends Component<RoomComponentProps, RoomComponentSt
 		}
 
 		const roomStartTime = new Date(
-				this.props.data.startTime.getTime() + ((this.props.data.currentRoomPosition + prepTimeRoomCount) * roomTimeDuration)
+				this.props.data.startTime.getTime() + ((this.props.data.currentRoomPosition + prepTimeRoomOffsetCount) * roomTimeDuration)
 			);
 		const roomEndTime = new Date(roomStartTime.getTime() + roomTimeDuration);
 
 		return <>
-			<TimerComponent targetDate={roomEndTime}
-				countdownStartDate={roomStartTime}
-				prefixText="Time until room end:"
-				beforeTimeText="Room hasn't started yet"
-				afterTimeText="Room is complete"/>
+			{!this.props.data.currentRoom.hideRoomTimer &&
+				<TimerComponent targetDate={roomEndTime}
+					countdownStartDate={roomStartTime}
+					prefixText="Time until room end:"
+					beforeTimeText="Room hasn't started yet"
+					afterTimeText="Room is complete"/>
+			}
 			{this.props.data.currentRoom.roomTimers.map((timer, index) => {
 				return <TimerComponent key={index}
 					targetDate={new Date(roomEndTime.getTime() - timer.timeOffset)}

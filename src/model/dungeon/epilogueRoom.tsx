@@ -22,6 +22,10 @@ export class EpilogueRoom extends Room {
 		return true;
 	}
 
+	override get hideRoomTimer(): boolean {
+		return true;
+	}
+
 	override get hideDefaultPushDamage(): boolean {
 		return true;
 	}

@@ -133,6 +133,10 @@ export class Room {
 		return targets[0];
 	}
 
+	get hideRoomTimer(): boolean {
+		return false;
+	}
+
 	get hideDefaultPushDamage(): boolean {
 		return false;
 	}
