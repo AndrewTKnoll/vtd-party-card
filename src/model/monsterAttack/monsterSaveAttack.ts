@@ -22,6 +22,7 @@ interface MonsterSaveAttackParams {
 	dc?: number | undefined;
 	successMessage: string;
 	failureMessage: string;
+	immuneMessage?: string | undefined;
 	completionHandler?: ((attack: MonsterSaveAttack) => void) | undefined;
 }
 
@@ -37,6 +38,7 @@ export class MonsterSaveAttack {
 
 	readonly successMessage: string;
 	readonly failureMessage: string;
+	readonly immuneMessage: string | undefined;
 
 	private completionHandler: ((attack: MonsterSaveAttack) => void) | undefined;
 
@@ -46,6 +48,7 @@ export class MonsterSaveAttack {
 		this.dc = params.dc;
 		this.successMessage = params.successMessage;
 		this.failureMessage = params.failureMessage;
+		this.immuneMessage = params.immuneMessage;
 		this.completionHandler = params.completionHandler;
 	}
 

@@ -95,6 +95,9 @@ export class RoomActionComponent extends Component<RoomActionComponentProps, Roo
 		if (attack.result === MonsterSaveAttackResult.failure) {
 			resultText = attack.failureMessage;
 		}
+		if (attack.immuneMessage) {
+			resultText = attack.immuneMessage;
+		}
 
 		return <>
 			<span className="room-action-result-list__title col">
