@@ -104,20 +104,8 @@ export class Monster {
 	}
 
 	getHighDamagePlayers(players: Player[], roundOnly: boolean): Player[] {
-		let maxDamage = 0;
-		let highDamagePlayers = new Array<Player>();
-
-		players.forEach((player) => {
-			const playerDamage = this.damageFromPlayer(player, roundOnly);
-			if (playerDamage > maxDamage) {
-				maxDamage = playerDamage;
-				highDamagePlayers = [player];
-			}
-			else if (playerDamage === maxDamage) {
-				highDamagePlayers.push(player);
-			}
+		return players.getHighValueItems((player) => {
+			return this.damageFromPlayer(player, roundOnly);
 		});
-
-		return highDamagePlayers;
 	}
 }

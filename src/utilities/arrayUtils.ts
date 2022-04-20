@@ -6,6 +6,7 @@ declare global {
 		getItemsInRange(distance: number, centerIndex: number, includeCenter: boolean): T[];
 		getHighValueItems(evaluator: (item: T) => number): T[];
 		selectItems(itemCount: number, firstElements?: T[]): T[];
+		selectPriorityItems(itemCount: number, priorityElements: T[], firstElements?: T[]): T[];
 	}
 }
 
@@ -61,25 +62,37 @@ Array.prototype.getHighValueItems = function<T>(this: T[], evaluator: (item: T) 
 }
 
 Array.prototype.selectItems = function<T>(this: T[], itemCount: number, firstElements: T[] = []): T[] {
+	return this.selectPriorityItems(itemCount, [], firstElements);
+}
+
+Array.prototype.selectPriorityItems = function<T>(this: T[], itemCount: number, priorityElements: T[], firstElements: T[] = []): T[] {
 	let selectedElements = [...firstElements];
 
-	if (this.length === 0) {
+	if (this.length === 0 && priorityElements.length == 0) {
 		return selectedElements;
 	}
 
+	let remainingPriorityElements = priorityElements.filter((element) => {
+		return !selectedElements.includes(element);
+	});
 	let remainingElements = this.filter((element) => {
 		return !selectedElements.includes(element);
 	});
 
 	while (selectedElements.length < itemCount) {
-		if (remainingElements.length === 0) {
+		if (remainingElements.length === 0 && remainingPriorityElements.length === 0) {
+			remainingPriorityElements = [...priorityElements];
 			remainingElements = [...this];
 		}
 
-		const index = Math.floor(Math.random() * remainingElements.length);
-		const nextElement = remainingElements[index];
+		const elementSource = (remainingPriorityElements.length > 0 ? remainingPriorityElements : remainingElements);
+
+		const nextElement = elementSource[Math.floor(Math.random() * elementSource.length)];
 		selectedElements.push(nextElement);
 
+		remainingPriorityElements = remainingPriorityElements.filter((element) => {
+			return element !== nextElement;
+		});
 		remainingElements = remainingElements.filter((element) => {
 			return element !== nextElement;
 		});
