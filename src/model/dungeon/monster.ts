@@ -25,12 +25,12 @@ interface RetributionDamageDescription {
 }
 
 export class Monster {
-	private readonly dataManager: DataManager;
+	readonly dataManager: DataManager;
 
 	readonly name: string;
 
-	private roundDamageFromPlayers = new DefaultMap<Class, number>(0);
-	private totalDamageFromPlayers = new DefaultMap<Class, number>(0);
+	protected roundDamageFromPlayers = new DefaultMap<Class, number>(0);
+	protected totalDamageFromPlayers = new DefaultMap<Class, number>(0);
 
 	private _currentDamage = 0;
 	get currentDamage(): number {
@@ -107,5 +107,37 @@ export class Monster {
 		return players.getHighValueItems((player) => {
 			return this.damageFromPlayer(player, roundOnly);
 		});
+	}
+}
+
+export class SharedHealthMonster extends Monster {
+	private sharedHealth: Monster;
+
+	override get currentDamage(): number {
+		return this.sharedHealth.currentDamage;
+	}
+	override set currentDamage(newValue: number) {
+		this.sharedHealth.currentDamage = newValue;
+	}
+
+	override get maxHP(): number {
+		return this.sharedHealth.maxHP;
+	}
+
+	constructor(name: string, sharedHealth: Monster) {
+		super(sharedHealth.dataManager, name, {});
+
+		this.sharedHealth = sharedHealth;
+	}
+
+	override reset(level: ResetLevel) {
+		super.reset(level);
+		this.sharedHealth.reset(level);
+	}
+
+	override takeDamage(damage: DamageDescription | RetributionDamageDescription) {
+		this.sharedHealth.takeDamage(damage);
+		this.roundDamageFromPlayers.set(damage.player.class, this.roundDamageFromPlayers.get(damage.player.class) + damage.amount);
+		this.totalDamageFromPlayers.set(damage.player.class, this.totalDamageFromPlayers.get(damage.player.class) + damage.amount);
 	}
 }
