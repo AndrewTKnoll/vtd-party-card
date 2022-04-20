@@ -9,7 +9,7 @@ import { Log } from "model/log/log";
 import { CallbackRegistry } from "utilities/callbackRegistry";
 
 const endpointUrl = "https://us-central1-tdroller-1ac5a.cloudfunctions.net/gm";
-const socketUrl = "wss://s-usc1f-nss-2562.firebaseio.com/.ws?v=5&ns=tdroller-1ac5a-default-rtdb";
+const socketUrl = "wss://s-usc1f-nss-2561.firebaseio.com/.ws?v=5&ns=tdroller-1ac5a-default-rtdb";
 const socketSdk = "sdk.js.9-4-1";
 
 export class DiceRoller {
