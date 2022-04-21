@@ -23,6 +23,10 @@ export class Dungeon {
 		};
 	}
 
+	get dataVersion(): string {
+		return "";
+	}
+
 	get eventPasswords(): Record<Difficulty, string> {
 		return {
 			[Difficulty.normal]: "",
