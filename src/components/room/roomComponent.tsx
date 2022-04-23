@@ -15,6 +15,7 @@ import { TimerComponent } from "components/widgets/timerComponent";
 import { DataManager } from "model/dataManager";
 import { ResetLevel } from "model/attributes/resetLevel";
 import { roomTimeDuration, nameForInitiativeWinner } from "model/dungeon/room";
+import { Class } from "model/partyCard/class";
 import { RoomAction } from "model/roomAction/roomAction";
 import { RoomActionResult } from "model/roomAction/roomActionResult";
 
@@ -109,7 +110,7 @@ export class RoomComponent extends Component<RoomComponentProps, RoomComponentSt
 								<span>{this.props.data.currentRoom.pushDamage}</span>
 							</div>
 						}
-						{this.props.data.currentRoom.hasRogueTreasure &&
+						{this.props.data.currentRoom.hasRogueTreasure && this.props.data.partyCard.player(Class.rogue).isPresent &&
 							<div className="room-component__info-line">
 								<span>Rogue Took Treasure:</span>
 								<input type="checkbox"

@@ -3,7 +3,7 @@ import React, { ReactNode } from "react";
 import { DataManager } from "model/dataManager";
 import { nameForDifficulty } from "model/attributes/difficulty";
 import { Room } from "model/dungeon/room";
-import { nameForClass } from "model/partyCard/class";
+import { Class, nameForClass } from "model/partyCard/class";
 import { Player } from "model/partyCard/player";
 
 export class EpilogueRoom extends Room {
@@ -53,7 +53,7 @@ export class EpilogueRoom extends Room {
 			</div>
 			<div className="room-component__info-line">
 				<span>Rogue Treasures Taken:</span>
-				<span>{`${treasureTaken} of ${totalTreasure}`}</span>
+				<span>{this.dataManager.partyCard.player(Class.rogue).isPresent ? `${treasureTaken} of ${totalTreasure}` : "No Rogue"}</span>
 			</div>
 		</>;
 	}
