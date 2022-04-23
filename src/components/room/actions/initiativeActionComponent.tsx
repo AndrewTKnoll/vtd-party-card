@@ -106,7 +106,7 @@ export class InitiativeActionComponent extends Component<InitiativeActionCompone
 			<div className="initiative-action-component row">
 				<div className="initiative-action-component__roll col">
 					<h4>Monster Roll</h4>
-					{`${this.state.monsterRoll} (${this.monsterTotal})`}
+					{`${this.monsterTotal} (${this.state.monsterRoll})`}
 				</div>
 				<div className="initiative-action-component__roll col">
 					<h4>Player Roll</h4>
