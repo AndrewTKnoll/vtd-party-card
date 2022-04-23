@@ -183,6 +183,7 @@ export class Room {
 		}
 
 		this.initiativeWinner = undefined;
+		this.rogueTookTreasure = false;
 	}
 
 	prepareForParty(partyCard: PartyCard) {}
