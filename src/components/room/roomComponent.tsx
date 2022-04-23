@@ -106,13 +106,13 @@ export class RoomComponent extends Component<RoomComponentProps, RoomComponentSt
 						{this.renderRoomTimers()}
 						{!this.props.data.currentRoom.hideDefaultPushDamage &&
 							<div className="room-component__info-line">
-								<span>Push Damage:</span>
+								<span>Push damage:</span>
 								<span>{this.props.data.currentRoom.pushDamage}</span>
 							</div>
 						}
 						{this.props.data.currentRoom.hasRogueTreasure && this.props.data.partyCard.player(Class.rogue).isPresent &&
 							<div className="room-component__info-line">
-								<span>Rogue Took Treasure:</span>
+								<span>Rogue took treasure:</span>
 								<input type="checkbox"
 									checked={this.props.data.currentRoom.rogueTookTreasure}
 									onChange={this.setRogueTreasure.bind(this)}/>
@@ -120,7 +120,7 @@ export class RoomComponent extends Component<RoomComponentProps, RoomComponentSt
 						}
 						{this.props.data.currentRoom.initiativeWinner !== undefined &&
 							<div className="room-component__info-line">
-								<span>Initiative Winner:</span>
+								<span>Initiative winner:</span>
 								<span>{nameForInitiativeWinner(this.props.data.currentRoom.initiativeWinner)}</span>
 							</div>
 						}

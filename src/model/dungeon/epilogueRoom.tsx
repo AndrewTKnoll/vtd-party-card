@@ -52,7 +52,7 @@ export class EpilogueRoom extends Room {
 				<span>{nameForDifficulty(this.difficulty)}</span>
 			</div>
 			<div className="room-component__info-line">
-				<span>Rogue Treasures Taken:</span>
+				<span>Rogue treasures taken:</span>
 				<span>{this.dataManager.partyCard.player(Class.rogue).isPresent ? `${treasureTaken} of ${totalTreasure}` : "No Rogue"}</span>
 			</div>
 		</>;
