@@ -9,7 +9,7 @@ import { PlayerAttackType } from "model/playerAttack/playerAttackType";
 
 import { DefaultMap } from "utilities/defaultMap";
 
-interface DamageDescription {
+export interface DamageDescription {
 	readonly type: PlayerAttackType;
 	readonly player: Player;
 	readonly amount: number;
@@ -18,7 +18,7 @@ interface DamageDescription {
 	readonly aoe: boolean;
 }
 
-interface RetributionDamageDescription {
+export interface RetributionDamageDescription {
 	readonly type: "retribution";
 	readonly player: Player;
 	readonly amount: number;
