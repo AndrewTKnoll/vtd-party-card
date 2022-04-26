@@ -95,146 +95,142 @@ export class RoomComponent extends Component<RoomComponentProps, RoomComponentSt
 		const secondaryColumnNotes = this.props.data.currentRoom.secondaryColumnNotes(this.props.onChange);
 		const mainSectionNotes = this.props.data.currentRoom.mainSectionNotes(this.props.onChange);
 
-		return (
-			<div className={`room-component room-${this.props.data.currentRoom.id.toLowerCase()} row`}>
-				<h2 className="room-component__title col">
-					{this.props.data.currentRoom.name}
-				</h2>
-				{this.props.data.currentRoom.hasInfoColumn &&
-					<div className="room-component__info-col col">
-						<h3>Info</h3>
-						{this.renderRoomTimers()}
-						{!this.props.data.currentRoom.hideDefaultPushDamage &&
-							<div className="room-component__info-line">
-								<span>Push damage:</span>
-								<span>{this.props.data.currentRoom.pushDamage}</span>
-							</div>
-						}
-						{this.props.data.currentRoom.hasRogueTreasure && this.props.data.partyCard.player(Class.rogue).isPresent &&
-							<div className="room-component__info-line">
-								<span>Rogue took treasure:</span>
-								<input type="checkbox"
-									checked={this.props.data.currentRoom.rogueTookTreasure}
-									onChange={this.setRogueTreasure.bind(this)}/>
-							</div>
-						}
-						{this.props.data.currentRoom.initiativeWinner !== undefined &&
-							<div className="room-component__info-line">
-								<span>Initiative winner:</span>
-								<span>{nameForInitiativeWinner(this.props.data.currentRoom.initiativeWinner)}</span>
-							</div>
-						}
-						{this.props.data.currentRoom.statBlocks.length > 0 &&
-							<StatBlockComponent statBlocks={this.props.data.currentRoom.statBlocks}/>
-						}
-						<ItemsOfInterestComponent tokens={this.props.data.currentRoom.tokensOfInterest}
-							spells={this.props.data.currentRoom.spellsOfInterest}/>
-						{this.props.data.currentRoom.infoColumnNotes(this.props.onChange)}
-					</div>
-				}
-				{this.props.data.currentRoom.monsters.length > 0 && <>
-					<div className="room-component__control-col col">
-						<CollapseComponent headerText="Dice Roller"
-							headerLevel="h3">
+		return <div className={`room-component room-${this.props.data.currentRoom.id.toLowerCase()} row`}>
+			<h2 className="room-component__title col">
+				{this.props.data.currentRoom.name}
+			</h2>
+			{this.props.data.currentRoom.hasInfoColumn &&
+				<div className="room-component__info-col col">
+					<h3>Info</h3>
+					{this.renderRoomTimers()}
+					{!this.props.data.currentRoom.hideDefaultPushDamage &&
+						<div className="room-component__info-line">
+							<span>Push damage:</span>
+							<span>{this.props.data.currentRoom.pushDamage}</span>
+						</div>
+					}
+					{this.props.data.currentRoom.hasRogueTreasure && this.props.data.partyCard.player(Class.rogue).isPresent &&
+						<div className="room-component__info-line">
+							<span>Rogue took treasure:</span>
+							<input type="checkbox"
+								checked={this.props.data.currentRoom.rogueTookTreasure}
+								onChange={this.setRogueTreasure.bind(this)}/>
+						</div>
+					}
+					{this.props.data.currentRoom.initiativeWinner !== undefined &&
+						<div className="room-component__info-line">
+							<span>Initiative winner:</span>
+							<span>{nameForInitiativeWinner(this.props.data.currentRoom.initiativeWinner)}</span>
+						</div>
+					}
+					{this.props.data.currentRoom.statBlocks.length > 0 &&
+						<StatBlockComponent statBlocks={this.props.data.currentRoom.statBlocks}/>
+					}
+					<ItemsOfInterestComponent tokens={this.props.data.currentRoom.tokensOfInterest}
+						spells={this.props.data.currentRoom.spellsOfInterest}/>
+					{this.props.data.currentRoom.infoColumnNotes(this.props.onChange)}
+				</div>
+			}
+			{this.props.data.currentRoom.monsters.length > 0 && <>
+				<div className="room-component__control-col col">
+					<CollapseComponent headerText="Dice Roller"
+						headerLevel="h3">
 
-							<DiceRollerControlComponent diceRoller={this.props.data.diceRoller}/>
-						</CollapseComponent>
-						<h3>Room Actions</h3>
+						<DiceRollerControlComponent diceRoller={this.props.data.diceRoller}/>
+					</CollapseComponent>
+					<h3>Room Actions</h3>
+					<div className="room-component__control-row row">
+						<button type="button"
+							onClick={this.roundReset.bind(this)}>
+
+							Round Reset
+						</button>
+						{this.state.currentAction === undefined &&
+							<button type="button"
+								onClick={this.setAction.bind(this, "playerAttacks")}>
+
+								Player Attack
+							</button>
+						}
+					</div>
+					{this.state.currentAction === undefined && <>
 						<div className="room-component__control-row row">
 							<button type="button"
-								onClick={this.roundReset.bind(this)}>
+								onClick={this.setAction.bind(this, "initiative")}>
 
-								Round Reset
+								Initiative
 							</button>
-							{this.state.currentAction === undefined &&
-								<button type="button"
-									onClick={this.setAction.bind(this, "playerAttacks")}>
+							<button type="button"
+								onClick={this.setAction.bind(this, "divineIntervention")}>
 
-									Player Attack
-								</button>
-							}
+								Divine Intervention
+							</button>
+							<button type="button"
+								onClick={this.setAction.bind(this, "deathDie")}>
+
+								Death Die
+							</button>
 						</div>
-						{this.state.currentAction === undefined && <>
-							<div className="room-component__control-row row">
-								<button type="button"
-									onClick={this.setAction.bind(this, "initiative")}>
+						<div className="room-component__control-row row">
+							{this.props.data.currentRoom.actions.map((action) => {
+								return <button key={action.name}
+									type="button"
+									onClick={this.performRoomAction.bind(this, action)}>
 
-									Initiative
-								</button>
-								<button type="button"
-									onClick={this.setAction.bind(this, "divineIntervention")}>
-
-									Divine Intervention
-								</button>
-								<button type="button"
-									onClick={this.setAction.bind(this, "deathDie")}>
-
-									Death Die
-								</button>
-							</div>
-							<div className="room-component__control-row row">
-								{this.props.data.currentRoom.actions.map((action) => {
-									return (
-										<button key={action.name}
-											type="button"
-											onClick={this.performRoomAction.bind(this, action)}>
-
-											{action.name}
-										</button>
-									);
-								})}
-							</div>
-						</>}
-					</div>
-					<div className="room-component__monster-col col">
-						<h3>Monsters</h3>
-						<MonsterListComponent room={this.props.data.currentRoom}
+									{action.name}
+								</button>;
+							})}
+						</div>
+					</>}
+				</div>
+				<div className="room-component__monster-col col">
+					<h3>Monsters</h3>
+					<MonsterListComponent room={this.props.data.currentRoom}
+						onChange={this.props.onChange}/>
+				</div>
+			</>}
+			{secondaryColumnNotes &&
+				<div className="room-component__secondary-info-col col">
+					{secondaryColumnNotes}
+				</div>
+			}
+			{this.state.currentAction !== undefined &&
+				<div className="room-component__action-col col">
+					{(this.state.currentAction === "playerAttacks" || this.state.currentAction === "quickStrike") &&
+						<PlayerAttackListComponent data={this.props.data}
+							clearAction={this.setAction.bind(this, undefined)}
+							onChange={this.props.onChange}
+							isQuickStrike={this.state.currentAction === "quickStrike"}/>
+					}
+					{this.state.currentAction instanceof RoomActionResult &&
+						<RoomActionComponent result={this.state.currentAction}
+							diceRoller={this.props.data.diceRoller}
+							clearAction={this.setAction.bind(this, undefined)}
 							onChange={this.props.onChange}/>
-					</div>
-				</>}
-				{secondaryColumnNotes &&
-					<div className="room-component__secondary-info-col col">
-						{secondaryColumnNotes}
-					</div>
-				}
-				{this.state.currentAction !== undefined &&
-					<div className="room-component__action-col col">
-						{(this.state.currentAction === "playerAttacks" || this.state.currentAction === "quickStrike") &&
-							<PlayerAttackListComponent data={this.props.data}
-								clearAction={this.setAction.bind(this, undefined)}
-								onChange={this.props.onChange}
-								isQuickStrike={this.state.currentAction === "quickStrike"}/>
-						}
-						{this.state.currentAction instanceof RoomActionResult &&
-							<RoomActionComponent result={this.state.currentAction}
-								diceRoller={this.props.data.diceRoller}
-								clearAction={this.setAction.bind(this, undefined)}
-								onChange={this.props.onChange}/>
-						}
-						{this.state.currentAction === "initiative" &&
-							<InitiativeActionComponent data={this.props.data}
-								clearAction={this.setAction.bind(this, undefined)}
-								onChange={this.props.onChange}
-								triggerQuickStrike={this.setAction.bind(this, "quickStrike")}/>
-						}
-						{this.state.currentAction === "divineIntervention" &&
-							<DivineInterventionComponent data={this.props.data}
-								clearAction={this.setAction.bind(this, undefined)}
-								onChange={this.props.onChange}/>
-						}
-						{this.state.currentAction === "deathDie" &&
-							<DeathDieComponent data={this.props.data}
-								clearAction={this.setAction.bind(this, undefined)}
-								onChange={this.props.onChange}/>
-						}
-					</div>
-				}
-				{mainSectionNotes &&
-					<div className="room-component__main-info-col col">
-						{mainSectionNotes}
-					</div>
-				}
-			</div>
-		);
+					}
+					{this.state.currentAction === "initiative" &&
+						<InitiativeActionComponent data={this.props.data}
+							clearAction={this.setAction.bind(this, undefined)}
+							onChange={this.props.onChange}
+							triggerQuickStrike={this.setAction.bind(this, "quickStrike")}/>
+					}
+					{this.state.currentAction === "divineIntervention" &&
+						<DivineInterventionComponent data={this.props.data}
+							clearAction={this.setAction.bind(this, undefined)}
+							onChange={this.props.onChange}/>
+					}
+					{this.state.currentAction === "deathDie" &&
+						<DeathDieComponent data={this.props.data}
+							clearAction={this.setAction.bind(this, undefined)}
+							onChange={this.props.onChange}/>
+					}
+				</div>
+			}
+			{mainSectionNotes &&
+				<div className="room-component__main-info-col col">
+					{mainSectionNotes}
+				</div>
+			}
+		</div>;
 	}
 }

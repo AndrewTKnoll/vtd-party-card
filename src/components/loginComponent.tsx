@@ -46,23 +46,21 @@ export class LoginComponent extends Component<LoginComponentProps, LoginComponen
 	}
 
 	override render(): ReactNode {
-		return (
-			<form onSubmit={(event) => { event.preventDefault(); }}>
-				<label>
-					Password:
-					<input type="password"
-						required={true}
-						disabled={this.state.isLoggingIn}
-						value={this.state.password}
-						onChange={this.passwordChanged.bind(this)}/>
-				</label>
-				<button type="submit"
+		return <form onSubmit={(event) => { event.preventDefault(); }}>
+			<label>
+				Password:
+				<input type="password"
+					required={true}
 					disabled={this.state.isLoggingIn}
-					onClick={this.logIn.bind(this)}>
+					value={this.state.password}
+					onChange={this.passwordChanged.bind(this)}/>
+			</label>
+			<button type="submit"
+				disabled={this.state.isLoggingIn}
+				onClick={this.logIn.bind(this)}>
 
-					Log In
-				</button>
-			</form>
-		);
+				Log In
+			</button>
+		</form>;
 	}
 }

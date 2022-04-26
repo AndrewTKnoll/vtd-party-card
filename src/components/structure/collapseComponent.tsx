@@ -42,20 +42,18 @@ export class CollapseComponent extends Component<CollapseComponentProps, Collaps
 			contentClasses.push(this.props.contentClass.trim());
 		}
 
-		return (
-			<section className={sectionClasses.join(" ")}>
-				<HeaderType className="collapse-component__header">
-					<button type="button"
-						className="collapse-component__toggle"
-						onClick={this.toggleCollapse.bind(this)}>
+		return <section className={sectionClasses.join(" ")}>
+			<HeaderType className="collapse-component__header">
+				<button type="button"
+					className="collapse-component__toggle"
+					onClick={this.toggleCollapse.bind(this)}>
 
-						{this.props.headerText}
-					</button>
-				</HeaderType>
-				<div className={contentClasses.join(" ")}>
-					{this.props.children}
-				</div>
-			</section>
-		);
+					{this.props.headerText}
+				</button>
+			</HeaderType>
+			<div className={contentClasses.join(" ")}>
+				{this.props.children}
+			</div>
+		</section>;
 	}
 }

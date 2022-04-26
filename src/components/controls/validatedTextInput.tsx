@@ -33,21 +33,19 @@ export class ValidatedTextInput extends Component<ValidatedTextInputProps, Valid
 	}
 
 	override render(): ReactNode {
-		return (
-			<div className="validated-text-input">
-				<input type="text"
-					value={this.state.draftValue}
-					onChange={this.inputValueChanged.bind(this)}/>
-				<button type="button"
-					disabled={!this.props.validation.test(this.state.draftValue)}
-					onClick={this.updateButtonClicked.bind(this)}>
+		return <div className="validated-text-input">
+			<input type="text"
+				value={this.state.draftValue}
+				onChange={this.inputValueChanged.bind(this)}/>
+			<button type="button"
+				disabled={!this.props.validation.test(this.state.draftValue)}
+				onClick={this.updateButtonClicked.bind(this)}>
 
-					Update
-				</button>
-				{this.props.value.length > 0 &&
-					<span>{this.props.value}</span>
-				}
-			</div>
-		);
+				Update
+			</button>
+			{this.props.value.length > 0 &&
+				<span>{this.props.value}</span>
+			}
+		</div>;
 	}
 }

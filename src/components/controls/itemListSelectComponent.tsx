@@ -33,22 +33,18 @@ export class ItemListSelectComponent<ItemType> extends Component<ItemListSelectC
 	}
 
 	override render(): ReactNode {
-		return (
-			<select value={this.props.selectedItem === undefined ? "none" : this.props.items.indexOf(this.props.selectedItem)}
-				disabled={this.props.disabled}
-				onChange={this.newItemSelected.bind(this)}>
+		return <select value={this.props.selectedItem === undefined ? "none" : this.props.items.indexOf(this.props.selectedItem)}
+			disabled={this.props.disabled}
+			onChange={this.newItemSelected.bind(this)}>
 
-				{this.props.isOptional && <option value="none">None</option>}
-				{this.props.items.map((item, index) => {
-					return (
-						<option key={index}
-							value={index}>
+			{this.props.isOptional && <option value="none">None</option>}
+			{this.props.items.map((item, index) => {
+				return <option key={index}
+					value={index}>
 
-							{this.props.labelForItem(item)}
-						</option>
-					);
-				})}
-			</select>
-		);
+					{this.props.labelForItem(item)}
+				</option>;
+			})}
+		</select>;
 	}
 }

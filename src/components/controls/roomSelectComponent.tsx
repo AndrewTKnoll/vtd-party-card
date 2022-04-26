@@ -22,36 +22,30 @@ export class RoomSelectComponent extends Component<RoomSelectComponentProps, Roo
 	}
 
 	private renderOption(option: Room, positionIndex: number, optionIndex: number): ReactNode {
-		return (
-			<button key={optionIndex}
-				type="button"
-				disabled={option === this.props.data.currentRoom}
-				onClick={this.newRoomSelected.bind(this, option)}>
+		return <button key={optionIndex}
+			type="button"
+			disabled={option === this.props.data.currentRoom}
+			onClick={this.newRoomSelected.bind(this, option)}>
 
-				{option.idIsStandalone ? option.id : `Room ${option.id}`}
-			</button>
-		);
+			{option.idIsStandalone ? option.id : `Room ${option.id}`}
+		</button>;
 	}
 
 	private renderPosition(position: Room[], positionIndex: number): ReactNode {
-		return (
-			<li key={positionIndex}
-				className="col">
+		return <li key={positionIndex}
+			className="col">
 
-				{position.map((option, optionIndex) => {
-					return this.renderOption(option, positionIndex, optionIndex);
-				})}
-			</li>
-		);
+			{position.map((option, optionIndex) => {
+				return this.renderOption(option, positionIndex, optionIndex);
+			})}
+		</li>;
 	}
 
 	override render(): ReactNode {
-		return (
-			<ul className="room-select-component row">
-				{this.props.data.dungeon.rooms.map((position, positionIndex) => {
-					return this.renderPosition(position, positionIndex);
-				})}
-			</ul>
-		);
+		return <ul className="room-select-component row">
+			{this.props.data.dungeon.rooms.map((position, positionIndex) => {
+				return this.renderPosition(position, positionIndex);
+			})}
+		</ul>;
 	}
 }

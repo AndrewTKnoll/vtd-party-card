@@ -61,13 +61,11 @@ export class EpilogueRoom extends Room {
 	private renderPlayerList(players: Player[]): ReactNode {
 		return <ul className="epilogue-component__player-list">
 			{players.map((player) => {
-				return (
-					<li key={player.class}
-						className="epilogue-component__player-label">
+				return <li key={player.class}
+					className="epilogue-component__player-label">
 
-						{nameForClass(player.class)}
-					</li>
-				);
+					{nameForClass(player.class)}
+				</li>;
 			})}
 		</ul>;
 	}

@@ -55,13 +55,11 @@ export class VTDPartyCardComponent extends Component<VTDPartyCardComponentProps,
 
 	override render(): ReactNode {
 		if (!this.props.data.diceRoller.authToken) {
-			return (
-				<LoginComponent diceRoller={this.props.data.diceRoller}
-					onLogin={this.forceUpdate.bind(this)}/>
-			);
+			return <LoginComponent diceRoller={this.props.data.diceRoller}
+				onLogin={this.forceUpdate.bind(this)}/>;
 		}
 
-		return (<>
+		return <>
 			<PlayerListComponent partyCard={this.props.data.partyCard}
 				currentRoom={this.props.data.currentRoom}
 				onChange={this.forceUpdate.bind(this)}/>
@@ -70,6 +68,6 @@ export class VTDPartyCardComponent extends Component<VTDPartyCardComponentProps,
 			<RoomComponent ref={this.roomComponentRef}
 				data={this.props.data}
 				onChange={this.forceUpdate.bind(this)}/>
-		</>);
+		</>;
 	}
 }

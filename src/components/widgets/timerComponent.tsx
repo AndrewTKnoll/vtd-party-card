@@ -64,19 +64,15 @@ export class TimerComponent extends Component<TimerComponentProps, TimerComponen
 
 	private renderTimerText(): ReactNode {
 		if (this.props.targetDate < this.state.now && this.props.afterTimeText) {
-			return (
-				<span className="timer__text">
-					{this.props.afterTimeText}
-				</span>
-			);
+			return <span className="timer__text">
+				{this.props.afterTimeText}
+			</span>;
 		}
 
 		if (this.props.countdownStartDate && this.props.countdownStartDate >= this.state.now && this.props.beforeTimeText) {
-			return (
-				<span className="timer__text">
-					{this.props.beforeTimeText}
-				</span>
-			);
+			return <span className="timer__text">
+				{this.props.beforeTimeText}
+			</span>;
 		}
 
 		const interval = Math.floor(Math.abs(this.props.targetDate.getTime() - this.state.now.getTime()) / 1000);
@@ -85,38 +81,32 @@ export class TimerComponent extends Component<TimerComponentProps, TimerComponen
 		let minutes = Math.floor(interval / 60);
 
 		if (!this.props.hours) {
-			return (
-				<span className="timer__interval">
-					{`${minutes}:${seconds > 9 ? "" : "0"}${seconds}`}
-				</span>
-			);
+			return <span className="timer__interval">
+				{`${minutes}:${seconds > 9 ? "" : "0"}${seconds}`}
+			</span>;
 		}
 
 		minutes = minutes % 60;
 		const hours = Math.floor(interval / 60 / 60);
 
-		return (
-			<span className="timer__interval">
-				{`${hours}:${minutes > 9 ? "" : "0"}${minutes}:${seconds > 9 ? "" : "0"}${seconds}`}
-			</span>
-		);
+		return <span className="timer__interval">
+			{`${hours}:${minutes > 9 ? "" : "0"}${minutes}:${seconds > 9 ? "" : "0"}${seconds}`}
+		</span>;
 	}
 
 	override render(): ReactNode {
-		return (
-			<div className="timer">
-				{this.props.prefixText !== undefined &&
-					<span className="timer__prefix">
-						{this.props.prefixText}
-					</span>
-				}
-				{this.renderTimerText()}
-				{this.props.suffixText !== undefined &&
-					<span className="timer__suffix">
-						{this.props.suffixText}
-					</span>
-				}
-			</div>
-		);
+		return <div className="timer">
+			{this.props.prefixText !== undefined &&
+				<span className="timer__prefix">
+					{this.props.prefixText}
+				</span>
+			}
+			{this.renderTimerText()}
+			{this.props.suffixText !== undefined &&
+				<span className="timer__suffix">
+					{this.props.suffixText}
+				</span>
+			}
+		</div>;
 	}
 }

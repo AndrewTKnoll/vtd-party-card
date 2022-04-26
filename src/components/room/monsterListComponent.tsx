@@ -27,27 +27,25 @@ export class MonsterListComponent extends Component<MonsterListComponentProps, M
 		return <div className="monster-list-component">
 			<ul>
 				{this.props.room.monsters.map((monster) => {
-					return (
-						<li key={monster.name}
-							className={`monster-list-component__monster${monster.isAlive ? "" : " monster-list-component__monster--dead"} row`}>
+					return <li key={monster.name}
+						className={`monster-list-component__monster${monster.isAlive ? "" : " monster-list-component__monster--dead"} row`}>
 
-							<span className="monster-list-component__name col">
-								{`${monster.name}${monster.statusNote ? ` (${monster.statusNote})` : ""}`}
-							</span>
-							{monster.isTauntable &&
-								<label className="monster-list-component__taunt col">
-									<input type="checkbox"
-										checked={monster.isTaunted}
-										onChange={this.monsterTaunted.bind(this, monster)}/>
+						<span className="monster-list-component__name col">
+							{`${monster.name}${monster.statusNote ? ` (${monster.statusNote})` : ""}`}
+						</span>
+						{monster.isTauntable &&
+							<label className="monster-list-component__taunt col">
+								<input type="checkbox"
+									checked={monster.isTaunted}
+									onChange={this.monsterTaunted.bind(this, monster)}/>
 
-									Taunted
-								</label>
-							}
-							<span className="monster-list-component__health col">
-								{`${monster.currentDamage} of ${monster.maxHP}`}
-							</span>
-						</li>
-					);
+								Taunted
+							</label>
+						}
+						<span className="monster-list-component__health col">
+							{`${monster.currentDamage} of ${monster.maxHP}`}
+						</span>
+					</li>;
 				})}
 			</ul>
 			<ModalComponent title="Adjust Monster HP"
@@ -56,21 +54,19 @@ export class MonsterListComponent extends Component<MonsterListComponentProps, M
 
 				<ul>
 					{this.props.room.monsters.map((monster) => {
-						return (
-							<li key={monster.name}
-								className="monster-list-component__adjust-monster row">
+						return <li key={monster.name}
+							className="monster-list-component__adjust-monster row">
 
-								<span className="monster-list-component__adjust-name col">
-									{monster.name}
-								</span>
-								<div className="monster-list-component__adjust-health col">
-									<input type="number"
-										value={monster.currentDamage}
-										onChange={this.monsterHPAdjusted.bind(this, monster)}/>
-									{` of ${monster.maxHP}`}
-								</div>
-							</li>
-						);
+							<span className="monster-list-component__adjust-name col">
+								{monster.name}
+							</span>
+							<div className="monster-list-component__adjust-health col">
+								<input type="number"
+									value={monster.currentDamage}
+									onChange={this.monsterHPAdjusted.bind(this, monster)}/>
+								{` of ${monster.maxHP}`}
+							</div>
+						</li>;
 					})}
 				</ul>
 			</ModalComponent>

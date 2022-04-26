@@ -46,34 +46,32 @@ export class ModalComponent extends Component<ModalComponentProps, ModalComponen
 			contentWrapperClasses.push(this.props.contentClass);
 		}
 
-		return (
-			<section className={`modal-component${this.state.shown ? " modal-component--shown" : ""}`}>
-				<button type="button"
-					className="modal-component__open-button"
-					onClick={this.toggleShown.bind(this, true)}>
+		return <section className={`modal-component${this.state.shown ? " modal-component--shown" : ""}`}>
+			<button type="button"
+				className="modal-component__open-button"
+				onClick={this.toggleShown.bind(this, true)}>
 
-					{this.props.openButtonText}
-				</button>
-				<div className="modal-component__frame"
-					onClick={this.frameClicked.bind(this)}>
-					<div className="modal-component__window">
-						<div className="modal-component__header">
-							<HeaderType className="modal-component__title">
-								{this.props.title}
-							</HeaderType>
-							<button type="button"
-								className="modal-component__close-button"
-								onClick={this.toggleShown.bind(this, false)}>
+				{this.props.openButtonText}
+			</button>
+			<div className="modal-component__frame"
+				onClick={this.frameClicked.bind(this)}>
+				<div className="modal-component__window">
+					<div className="modal-component__header">
+						<HeaderType className="modal-component__title">
+							{this.props.title}
+						</HeaderType>
+						<button type="button"
+							className="modal-component__close-button"
+							onClick={this.toggleShown.bind(this, false)}>
 
-								{this.props.closeButtonText || "Close"}
-							</button>
-						</div>
-						<div className={contentWrapperClasses.join(" ")}>
-							{this.props.children}
-						</div>
+							{this.props.closeButtonText || "Close"}
+						</button>
+					</div>
+					<div className={contentWrapperClasses.join(" ")}>
+						{this.props.children}
 					</div>
 				</div>
-			</section>
-		);
+			</div>
+		</section>;
 	}
 }

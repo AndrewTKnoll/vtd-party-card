@@ -16,23 +16,19 @@ interface PlayerListComponentState {}
 export class PlayerListComponent extends Component<PlayerListComponentProps, PlayerListComponentState> {
 
 	override render(): ReactNode {
-		return (
-			<CollapseComponent headerText="Players"
-				headerLevel="h2">
+		return <CollapseComponent headerText="Players"
+			headerLevel="h2">
 
-				<ul className="row player-list-component">
-					{this.props.partyCard.players.map((player) => {
-						return (
-							<li key={player.class}
-								className="col player-list-component__player-card">
-								<PlayerComponent player={player}
-									currentRoom={this.props.currentRoom}
-									onChange={this.props.onChange}/>
-							</li>
-						);
-					})}
-				</ul>
-			</CollapseComponent>
-		);
+			<ul className="row player-list-component">
+				{this.props.partyCard.players.map((player) => {
+					return <li key={player.class}
+						className="col player-list-component__player-card">
+						<PlayerComponent player={player}
+							currentRoom={this.props.currentRoom}
+							onChange={this.props.onChange}/>
+					</li>;
+				})}
+			</ul>
+		</CollapseComponent>;
 	}
 }

@@ -34,31 +34,29 @@ export class ItemsOfInterestComponent extends Component<ItemsOfInterestComponent
 
 	override render(): ReactNode {
 		if (this.props.tokens.length === 0 && this.props.spells.length === 0) {
-			return <></>;
+			return undefined;
 		}
 
-		return (
-			<CollapseComponent headerText="Tokens/Spells of Interest"
-				headerLevel="h4"
-				contentClass="items-of-interest-component">
+		return <CollapseComponent headerText="Tokens/Spells of Interest"
+			headerLevel="h4"
+			contentClass="items-of-interest-component">
 
-				{this.props.tokens.length > 0 &&
-					<div className="info-box">
-						<h5>Tokens</h5>
-						<ul>
-							{this.props.tokens.map(ItemsOfInterestComponent.renderItem)}
-						</ul>
-					</div>
-				}
-				{this.props.spells.length > 0 &&
-					<div className="info-box">
-						<h5>Spells/Powers</h5>
-						<ul>
-							{this.props.spells.map(ItemsOfInterestComponent.renderItem)}
-						</ul>
-					</div>
-				}
-			</CollapseComponent>
-		);
+			{this.props.tokens.length > 0 &&
+				<div className="info-box">
+					<h5>Tokens</h5>
+					<ul>
+						{this.props.tokens.map(ItemsOfInterestComponent.renderItem)}
+					</ul>
+				</div>
+			}
+			{this.props.spells.length > 0 &&
+				<div className="info-box">
+					<h5>Spells/Powers</h5>
+					<ul>
+						{this.props.spells.map(ItemsOfInterestComponent.renderItem)}
+					</ul>
+				</div>
+			}
+		</CollapseComponent>;
 	}
 }

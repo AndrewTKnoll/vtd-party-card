@@ -152,13 +152,11 @@ export class RoomActionComponent extends Component<RoomActionComponentProps, Roo
 				completeAction={this.completeRoomAction.bind(this)}/>
 			<ul className="room-action-result-list">
 				{this.props.result?.attacks.map((attack, index) => {
-					return (
-						<li key={index}
-							className="room-action-result-list__attack row">
+					return <li key={index}
+						className="room-action-result-list__attack row">
 
-							{this.renderAttack(attack)}
-						</li>
-					);
+						{this.renderAttack(attack)}
+					</li>;
 				})}
 			</ul>
 		</>;

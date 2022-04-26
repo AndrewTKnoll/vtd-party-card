@@ -84,7 +84,7 @@ export class MonsterWeaponAttack {
 			this.hit = { auto: true };
 		}
 
-		this.autoHitThreshold = params.autoHitThreshold || 20;
+		this.autoHitThreshold = params.autoHitThreshold ?? 20;
 
 		this.target = params.target;
 		this.retributionTarget = params.retributionTarget;
@@ -93,7 +93,7 @@ export class MonsterWeaponAttack {
 		this.damageAmount = params.damageAmount;
 		this.damageType = params.damageType;
 
-		this.note = (typeof(params.note) === "function") ? params.note(this) : (params.note || "");
+		this.note = (typeof(params.note) === "function") ? params.note(this) : (params.note ?? "");
 
 		this.completionHandler = params.completionHandler;
 	}

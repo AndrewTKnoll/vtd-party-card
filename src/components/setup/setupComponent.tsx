@@ -215,9 +215,7 @@ export class SetupComponent extends Component<SetupComponentProps, SetupComponen
 					<h3>Pre-Event Checklist</h3>
 					<ul>
 						{this.props.data.preEventChecklistItems.map((item, index) => {
-							return (
-								<li key={index}>{item}</li>
-							);
+							return <li key={index}>{item}</li>;
 						})}
 					</ul>
 				</section>
