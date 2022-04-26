@@ -5,7 +5,7 @@ import "./main.scss";
 import "utilities/arrayUtils";
 
 import React from "react";
-import ReactDOM from "react-dom";
+import { createRoot } from "react-dom/client";
 
 import { VTDPartyCardComponent } from "components/vtdPartyCardComponent";
 
@@ -20,5 +20,5 @@ if (versionLabel) {
 	versionLabel.textContent = data.dungeon.dataVersion;
 }
 
-const wrapper = document.querySelector(".vtd-party-card");
-ReactDOM.render(<VTDPartyCardComponent data={data}/>, wrapper);
+const root = createRoot(document.querySelector(".vtd-party-card")!);
+root.render(<VTDPartyCardComponent data={data}/>);
