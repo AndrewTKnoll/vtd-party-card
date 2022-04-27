@@ -71,7 +71,7 @@ export class EpilogueRoom extends Room {
 	}
 
 	override secondaryColumnNotes(update: () => void): ReactNode {
-		const [deadPlayers, livePlayers] = this.dataManager.partyCard.presentPlayers.separate((player) => {
+		const { matches: deadPlayers, nonMatches: livePlayers } = this.dataManager.partyCard.presentPlayers.separate((player) => {
 			return player.isDead;
 		});
 

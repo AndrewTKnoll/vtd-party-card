@@ -1,8 +1,10 @@
 export {}
 
+type SeparateResultType<T> = { matches: T[], nonMatches: T[] };
+
 declare global {
 	interface Array<T> {
-		separate(separator: (element: T) => boolean): [T[], T[]];
+		separate(separator: (element: T) => boolean): SeparateResultType<T>;
 		getItemsInRange(distance: number, centerIndex: number, includeCenter: boolean): T[];
 		getHighValueItems(evaluator: (item: T) => number): T[];
 		selectItems(itemCount: number, firstElements?: T[]): T[];
@@ -10,17 +12,19 @@ declare global {
 	}
 }
 
-Array.prototype.separate = function<T>(this: T[], separator: (element: T) => boolean): [T[], T[]] {
-	return this.reduce((results: [T[], T[]], element: T): [T[], T[]] => {
-
+Array.prototype.separate = function<T>(this: T[], separator: (element: T) => boolean): SeparateResultType<T> {
+	return this.reduce((results: SeparateResultType<T>, element) => {
 		if (separator(element)) {
-			results[0].push(element);
+			results.matches.push(element);
 		}
 		else {
-			results[1].push(element);
+			results.nonMatches.push(element);
 		}
 		return results;
-	}, [[], []]);
+	}, {
+		matches: [],
+		nonMatches: []
+	});
 }
 
 Array.prototype.getItemsInRange = function<T>(this: T[], distance: number, centerIndex: number, includeCenter: boolean): T[] {
