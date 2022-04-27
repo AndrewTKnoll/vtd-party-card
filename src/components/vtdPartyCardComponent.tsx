@@ -1,4 +1,4 @@
-import React, { Component, ReactNode, RefObject } from "react";
+import React, { Component, ReactNode } from "react";
 
 import { LoginComponent } from "components/loginComponent";
 import { RoomSelectComponent } from "components/controls/roomSelectComponent";
@@ -13,14 +13,7 @@ interface VTDPartyCardComponentProps {
 interface VTDPartyCardComponentState {}
 
 export class VTDPartyCardComponent extends Component<VTDPartyCardComponentProps, VTDPartyCardComponentState> {
-	private roomComponentRef: RefObject<RoomComponent>;
 	private errorCallbackId!: number;
-
-	constructor(props: VTDPartyCardComponentProps) {
-		super(props);
-
-		this.roomComponentRef = React.createRef();
-	}
 
 	override componentDidMount() {
 		this.errorCallbackId = this.props.data.diceRoller.errorCallbacks.register(this.handleDiceRollerError.bind(this));
@@ -48,11 +41,6 @@ export class VTDPartyCardComponent extends Component<VTDPartyCardComponentProps,
 		}
 	}
 
-	private clearAttackLists() {
-		this.roomComponentRef.current?.setAction(undefined);
-		this.forceUpdate();
-	}
-
 	override render(): ReactNode {
 		if (!this.props.data.diceRoller.authToken) {
 			return <LoginComponent diceRoller={this.props.data.diceRoller}
@@ -64,9 +52,9 @@ export class VTDPartyCardComponent extends Component<VTDPartyCardComponentProps,
 				currentRoom={this.props.data.currentRoom}
 				onChange={this.forceUpdate.bind(this)}/>
 			<RoomSelectComponent data={this.props.data}
-				onChange={this.clearAttackLists.bind(this)}/>
-			<RoomComponent ref={this.roomComponentRef}
-				data={this.props.data}
+				onChange={this.forceUpdate.bind(this)}/>
+			<RoomComponent data={this.props.data}
+				currentRoom={this.props.data.currentRoom}
 				onChange={this.forceUpdate.bind(this)}/>
 		</>;
 	}

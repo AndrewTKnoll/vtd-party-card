@@ -14,7 +14,7 @@ import { TimerComponent } from "components/widgets/timerComponent";
 
 import { DataManager } from "model/dataManager";
 import { ResetLevel } from "model/attributes/resetLevel";
-import { roomTimeDuration, nameForInitiativeWinner } from "model/dungeon/room";
+import { Room, roomTimeDuration, nameForInitiativeWinner } from "model/dungeon/room";
 import { Class } from "model/partyCard/class";
 import { RoomAction } from "model/roomAction/roomAction";
 import { RoomActionResult } from "model/roomAction/roomActionResult";
@@ -25,6 +25,7 @@ type ActionType = "playerAttacks" | "quickStrike" | "initiative" | "divineInterv
 
 interface RoomComponentProps {
 	data: DataManager;
+	currentRoom: Room;
 	onChange: () => void;
 }
 interface RoomComponentState {
@@ -41,13 +42,19 @@ export class RoomComponent extends Component<RoomComponentProps, RoomComponentSt
 		};
 	}
 
+	override componentDidUpdate(prevProps: RoomComponentProps) {
+		if (prevProps.currentRoom !== this.props.currentRoom) {
+			this.setAction(undefined);
+		}
+	}
+
 	private roundReset() {
 		this.props.data.reset(ResetLevel.round);
 		this.setAction(undefined);
 		this.props.onChange();
 	}
 
-	setAction(action: ActionType | undefined) {
+	private setAction(action: ActionType | undefined) {
 		this.setState({
 			currentAction: action
 		});
@@ -58,7 +65,7 @@ export class RoomComponent extends Component<RoomComponentProps, RoomComponentSt
 	}
 
 	private setRogueTreasure(event: ChangeEvent<HTMLInputElement>) {
-		this.props.data.currentRoom.rogueTookTreasure = event.target.checked;
+		this.props.currentRoom.rogueTookTreasure = event.target.checked;
 		this.props.onChange();
 	}
 
@@ -68,19 +75,19 @@ export class RoomComponent extends Component<RoomComponentProps, RoomComponentSt
 		}
 
 		const roomStartTime = new Date(
-				this.props.data.startTime.getTime() + ((this.props.data.currentRoomPosition + prepTimeRoomOffsetCount) * roomTimeDuration)
-			);
+			this.props.data.startTime.getTime() + ((this.props.data.currentRoomPosition + prepTimeRoomOffsetCount) * roomTimeDuration)
+		);
 		const roomEndTime = new Date(roomStartTime.getTime() + roomTimeDuration);
 
 		return <>
-			{!this.props.data.currentRoom.hideRoomTimer &&
+			{!this.props.currentRoom.hideRoomTimer &&
 				<TimerComponent targetDate={roomEndTime}
 					countdownStartDate={roomStartTime}
 					prefixText="Time until room end:"
 					beforeTimeText="Room hasn't started yet"
 					afterTimeText="Room is complete"/>
 			}
-			{this.props.data.currentRoom.roomTimers.map((timer, index) => {
+			{this.props.currentRoom.roomTimers.map((timer, index) => {
 				return <TimerComponent key={index}
 					targetDate={new Date(roomEndTime.getTime() - timer.timeOffset)}
 					countdownStartDate={roomStartTime}
@@ -92,46 +99,46 @@ export class RoomComponent extends Component<RoomComponentProps, RoomComponentSt
 	}
 
 	override render(): ReactNode {
-		const secondaryColumnNotes = this.props.data.currentRoom.secondaryColumnNotes(this.props.onChange);
-		const mainSectionNotes = this.props.data.currentRoom.mainSectionNotes(this.props.onChange);
+		const secondaryColumnNotes = this.props.currentRoom.secondaryColumnNotes(this.props.onChange);
+		const mainSectionNotes = this.props.currentRoom.mainSectionNotes(this.props.onChange);
 
-		return <div className={`room-component room-${this.props.data.currentRoom.id.toLowerCase()} row`}>
+		return <div className={`room-component room-${this.props.currentRoom.id.toLowerCase()} row`}>
 			<h2 className="room-component__title col">
-				{this.props.data.currentRoom.name}
+				{this.props.currentRoom.name}
 			</h2>
-			{this.props.data.currentRoom.hasInfoColumn &&
+			{this.props.currentRoom.hasInfoColumn &&
 				<div className="room-component__info-col col">
 					<h3>Info</h3>
 					{this.renderRoomTimers()}
-					{!this.props.data.currentRoom.hideDefaultPushDamage &&
+					{!this.props.currentRoom.hideDefaultPushDamage &&
 						<div className="room-component__info-line">
 							<span>Push damage:</span>
-							<span>{this.props.data.currentRoom.pushDamage}</span>
+							<span>{this.props.currentRoom.pushDamage}</span>
 						</div>
 					}
-					{this.props.data.currentRoom.hasRogueTreasure && this.props.data.partyCard.player(Class.rogue).isPresent &&
+					{this.props.currentRoom.hasRogueTreasure && this.props.data.partyCard.player(Class.rogue).isPresent &&
 						<div className="room-component__info-line">
 							<span>Rogue took treasure:</span>
 							<input type="checkbox"
-								checked={this.props.data.currentRoom.rogueTookTreasure}
+								checked={this.props.currentRoom.rogueTookTreasure}
 								onChange={this.setRogueTreasure.bind(this)}/>
 						</div>
 					}
-					{this.props.data.currentRoom.initiativeWinner !== undefined &&
+					{this.props.currentRoom.initiativeWinner !== undefined &&
 						<div className="room-component__info-line">
 							<span>Initiative winner:</span>
-							<span>{nameForInitiativeWinner(this.props.data.currentRoom.initiativeWinner)}</span>
+							<span>{nameForInitiativeWinner(this.props.currentRoom.initiativeWinner)}</span>
 						</div>
 					}
-					{this.props.data.currentRoom.statBlocks.length > 0 &&
-						<StatBlockComponent statBlocks={this.props.data.currentRoom.statBlocks}/>
+					{this.props.currentRoom.statBlocks.length > 0 &&
+						<StatBlockComponent statBlocks={this.props.currentRoom.statBlocks}/>
 					}
-					<ItemsOfInterestComponent tokens={this.props.data.currentRoom.tokensOfInterest}
-						spells={this.props.data.currentRoom.spellsOfInterest}/>
-					{this.props.data.currentRoom.infoColumnNotes(this.props.onChange)}
+					<ItemsOfInterestComponent tokens={this.props.currentRoom.tokensOfInterest}
+						spells={this.props.currentRoom.spellsOfInterest}/>
+					{this.props.currentRoom.infoColumnNotes(this.props.onChange)}
 				</div>
 			}
-			{this.props.data.currentRoom.monsters.length > 0 && <>
+			{this.props.currentRoom.monsters.length > 0 && <>
 				<div className="room-component__control-col col">
 					<CollapseComponent headerText="Dice Roller"
 						headerLevel="h3">
@@ -172,7 +179,7 @@ export class RoomComponent extends Component<RoomComponentProps, RoomComponentSt
 							</button>
 						</div>
 						<div className="room-component__control-row row">
-							{this.props.data.currentRoom.actions.map((action) => {
+							{this.props.currentRoom.actions.map((action) => {
 								return <button key={action.name}
 									type="button"
 									onClick={this.performRoomAction.bind(this, action)}>
@@ -185,7 +192,7 @@ export class RoomComponent extends Component<RoomComponentProps, RoomComponentSt
 				</div>
 				<div className="room-component__monster-col col">
 					<h3>Monsters</h3>
-					<MonsterListComponent room={this.props.data.currentRoom}
+					<MonsterListComponent room={this.props.currentRoom}
 						onChange={this.props.onChange}/>
 				</div>
 			</>}
