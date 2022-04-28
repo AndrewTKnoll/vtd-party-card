@@ -1,6 +1,6 @@
 import React, { Component, ReactNode } from "react";
 
-import { StateCallbackComponent } from "components/diceRoller/stateCallbackComponent";
+import { CallbackComponent } from "components/widgets/callbackComponent";
 
 import { DiceRoller } from "model/diceRoller/diceRoller";
 import { RollState } from "model/diceRoller/rollState";
@@ -88,8 +88,8 @@ export class RoomActionButtonListComponent extends Component<RoomActionButtonLis
 		const buttonsDisabled = !this.currentStateMatches || (this.state.type === "reveal" && this.state.complete);
 
 		return <div className="room-action-button-list-component">
-			<StateCallbackComponent diceRoller={this.props.diceRoller}
-				handleStateChange={this.updateRollState.bind(this)}/>
+			<CallbackComponent registry={this.props.diceRoller.stateCallbacks}
+				callback={this.updateRollState.bind(this)}/>
 			<button type="button"
 				onClick={this.props.cancelAction}>
 

@@ -1,6 +1,6 @@
 import React, { Component, ReactNode } from "react";
 
-import { StateCallbackComponent } from "components/diceRoller/stateCallbackComponent";
+import { CallbackComponent } from "components/widgets/callbackComponent";
 
 import { SaveType } from "model/attributes/saveType";
 import { DiceRoller } from "model/diceRoller/diceRoller";
@@ -57,8 +57,8 @@ export class DiceRollerControlComponent extends Component<DiceRollerControlCompo
 		const isInitiativeRoll = (this.state.type === "accept" || this.state.type === "reveal") && (this.state.rollType.type === "initiative");
 
 		return <>
-			<StateCallbackComponent diceRoller={this.props.diceRoller}
-				handleStateChange={this.updateRollState.bind(this)}/>
+			<CallbackComponent registry={this.props.diceRoller.stateCallbacks}
+				callback={this.updateRollState.bind(this)}/>
 			<div className="dice-roller-control-component row">
 				{!rollsRevealed && !acceptingRolls && <>
 					<div className="col">

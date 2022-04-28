@@ -3,9 +3,8 @@ import React, { Component, ReactNode, ChangeEvent } from "react";
 import { ItemListSelectComponent } from "components/controls/itemListSelectComponent";
 import { ValidatedTextInput } from "components/controls/validatedTextInput";
 import { DiceRollerControlComponent } from "components/diceRoller/diceRollerControlComponent";
-import { RollCallbackComponent } from "components/diceRoller/rollCallbackComponent";
-import { StateCallbackComponent } from "components/diceRoller/stateCallbackComponent";
 import { CollapseComponent } from "components/structure/collapseComponent";
+import { CallbackComponent } from "components/widgets/callbackComponent";
 import { TimerComponent } from "components/widgets/timerComponent";
 
 import { DataManager } from "model/dataManager";
@@ -107,10 +106,10 @@ export class SetupComponent extends Component<SetupComponentProps, SetupComponen
 		}
 
 		return <div className="setup row">
-			<RollCallbackComponent diceRoller={this.props.data.diceRoller}
-				handleRoll={this.updateAfterRoll.bind(this)}/>
-			<StateCallbackComponent diceRoller={this.props.data.diceRoller}
-				handleStateChange={this.updateAfterRoll.bind(this)}/>
+			<CallbackComponent registry={this.props.data.diceRoller.rollCallbacks}
+				callback={this.updateAfterRoll.bind(this)}/>
+			<CallbackComponent registry={this.props.data.diceRoller.stateCallbacks}
+				callback={this.updateAfterRoll.bind(this)}/>
 			<div className="setup__main-col col">
 				<div className="row">
 					<div className="setup__settings-col col">

@@ -1,7 +1,7 @@
 import React, { Component, ReactNode } from "react";
 
-import { RollCallbackComponent } from "components/diceRoller/rollCallbackComponent";
 import { RoomActionButtonListComponent } from "components/room/roomActionButtonListComponent";
+import { CallbackComponent } from "components/widgets/callbackComponent";
 
 import { DataManager } from "model/dataManager";
 import { DamageType } from "model/attributes/damageType";
@@ -28,6 +28,10 @@ export class DivineInterventionComponent extends Component<DivineInterventionCom
 		this.state = {
 			playerRoll: undefined
 		};
+	}
+
+	override componentDidMount() {
+		this.props.data.diceRoller.rolls.forEach(this.handlePlayerRoll.bind(this));
 	}
 
 	/* events */
@@ -64,8 +68,8 @@ export class DivineInterventionComponent extends Component<DivineInterventionCom
 
 	override render(): ReactNode {
 		return <>
-			<RollCallbackComponent diceRoller={this.props.data.diceRoller}
-				handleRoll={this.handlePlayerRoll.bind(this)}/>
+			<CallbackComponent registry={this.props.data.diceRoller.rollCallbacks}
+				callback={this.handlePlayerRoll.bind(this)}/>
 			<h3>Divine Intervention</h3>
 			<RoomActionButtonListComponent diceRoller={this.props.data.diceRoller}
 				rollType={{type: "initiative"}}
