@@ -4,19 +4,13 @@ import { CallbackComponent } from "components/widgets/callbackComponent";
 
 import { SaveType } from "model/attributes/saveType";
 import { DiceRoller } from "model/diceRoller/diceRoller";
-import { RollState } from "model/diceRoller/rollState";
 
 interface DiceRollerControlComponentProps {
 	diceRoller: DiceRoller;
 }
+interface DiceRollerControlComponentState {}
 
-export class DiceRollerControlComponent extends Component<DiceRollerControlComponentProps, RollState> {
-
-	constructor(props: DiceRollerControlComponentProps) {
-		super(props);
-
-		this.state = props.diceRoller.rollState;
-	}
+export class DiceRollerControlComponent extends Component<DiceRollerControlComponentProps, DiceRollerControlComponentState> {
 
 	private updateRollState() {
 		this.setState(this.props.diceRoller.rollState);
@@ -48,13 +42,15 @@ export class DiceRollerControlComponent extends Component<DiceRollerControlCompo
 	}
 
 	override render(): ReactNode {
-		const rollsRevealed = (this.state.type === "reveal");
-		const revealComplete = (this.state.type === "reveal") && this.state.complete;
+		const rollState = this.props.diceRoller.rollState;
 
-		const acceptingRolls = (this.state.type === "accept");
-		const slotCodeShown = (this.state.type === "showSlotId");
+		const rollsRevealed = (rollState.type === "reveal");
+		const revealComplete = (rollState.type === "reveal") && rollState.complete;
 
-		const isInitiativeRoll = (this.state.type === "accept" || this.state.type === "reveal") && (this.state.rollType.type === "initiative");
+		const acceptingRolls = (rollState.type === "accept");
+		const slotCodeShown = (rollState.type === "showSlotId");
+
+		const isInitiativeRoll = (rollState.type === "accept" || rollState.type === "reveal") && (rollState.rollType.type === "initiative");
 
 		return <>
 			<CallbackComponent registry={this.props.diceRoller.stateCallbacks}

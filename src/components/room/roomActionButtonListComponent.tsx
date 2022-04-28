@@ -3,7 +3,6 @@ import React, { Component, ReactNode } from "react";
 import { CallbackComponent } from "components/widgets/callbackComponent";
 
 import { DiceRoller } from "model/diceRoller/diceRoller";
-import { RollState } from "model/diceRoller/rollState";
 import { RollType } from "model/diceRoller/rollType";
 
 interface RoomActionButtonListComponentProps {
@@ -12,24 +11,19 @@ interface RoomActionButtonListComponentProps {
 	cancelAction: () => void;
 	completeAction: () => void;
 }
+interface RoomActionButtonListComponentState {}
 
-export class RoomActionButtonListComponent extends Component<RoomActionButtonListComponentProps, RollState> {
+export class RoomActionButtonListComponent extends Component<RoomActionButtonListComponentProps, RoomActionButtonListComponentState> {
 	private shouldRequestRolls = false;
 
 	/* lifecycle */
-
-	constructor(props: RoomActionButtonListComponentProps) {
-		super(props);
-
-		this.state = props.diceRoller.rollState;
-	}
 
 	override componentDidMount() {
 		if (this.props.rollType === undefined || this.currentStateMatches || !this.props.diceRoller.slotId) {
 			return;
 		}
 
-		switch (this.state.type) {
+		switch (this.props.diceRoller.rollState.type) {
 			case "disabled":
 			case "showSlotId":
 				this.props.diceRoller.acceptRolls(this.props.rollType);
@@ -69,13 +63,16 @@ export class RoomActionButtonListComponent extends Component<RoomActionButtonLis
 		if (this.props.rollType === undefined) {
 			return false;
 		}
-		if (this.state.type === "disabled" || this.state.type === "showSlotId") {
+
+		const currentRollState = this.props.diceRoller.rollState;
+
+		if (currentRollState.type === "disabled" || currentRollState.type === "showSlotId") {
 			return false;
 		}
-		if (this.state.rollType.type !== this.props.rollType.type) {
+		if (currentRollState.rollType.type !== this.props.rollType.type) {
 			return false;
 		}
-		if (this.state.rollType.type === "save" && this.props.rollType.type === "save" && this.state.rollType.save !== this.props.rollType.save) {
+		if (currentRollState.rollType.type === "save" && this.props.rollType.type === "save" && currentRollState.rollType.save !== this.props.rollType.save) {
 			return false;
 		}
 
@@ -85,7 +82,9 @@ export class RoomActionButtonListComponent extends Component<RoomActionButtonLis
 	/* rendering */
 
 	override render(): ReactNode {
-		const buttonsDisabled = !this.currentStateMatches || (this.state.type === "reveal" && this.state.complete);
+		const currentRollState = this.props.diceRoller.rollState;
+
+		const buttonsDisabled = !this.currentStateMatches || (currentRollState.type === "reveal" && currentRollState.complete);
 
 		return <div className="room-action-button-list-component">
 			<CallbackComponent registry={this.props.diceRoller.stateCallbacks}
