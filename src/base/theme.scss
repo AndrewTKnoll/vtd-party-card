@@ -1,0 +1,18 @@
+@mixin dark-mode() {
+	@media (prefers-color-scheme: dark) {
+		@content;
+	}
+}
+
+:root {
+	color-scheme: light dark;
+	--accent-color: #ccc;
+	--background-color: #fff;
+	--text-color: #000;
+
+	@include dark-mode() {
+		--accent-color: #555;
+		--background-color: #000;
+		--text-color: #fff;
+	}
+}
