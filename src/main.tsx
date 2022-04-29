@@ -15,10 +15,8 @@ import { DataManager } from "model/dataManager";
 
 const data = new DataManager();
 
-const versionLabel = document.querySelector(".dungeon-version-label");
-if (versionLabel) {
-	versionLabel.textContent = data.dungeon.dataVersion;
-}
-
 const root = createRoot(document.querySelector(".vtd-party-card")!);
-root.render(<VTDPartyCardComponent data={data}/>);
+root.render(
+	<VTDPartyCardComponent data={data}
+		versionElement={document.querySelector(".dungeon-version-label")!}/>
+);
