@@ -1,6 +1,6 @@
 import React, { Component, ReactNode, ChangeEvent } from "react";
 
-import { ItemListSelectComponent } from "components/controls/itemListSelectComponent";
+import { ItemListSelectComponent, OptionalItemListSelectComponent } from "components/controls/itemListSelectComponent";
 import { RoomActionButtonListComponent } from "components/room/roomActionButtonListComponent";
 import { CallbackComponent } from "components/widgets/callbackComponent";
 
@@ -188,8 +188,7 @@ export class PlayerAttackListComponent extends Component<PlayerAttackListCompone
 							</button>
 						</div>
 						<div className="player-attack-list__type col">
-							<ItemListSelectComponent<PlayerAttackType> isOptional={true}
-								items={allPlayerAttackTypes}
+							<OptionalItemListSelectComponent items={allPlayerAttackTypes}
 								labelForItem={nameForPlayerAttackType}
 								selectedItem={attack.attackType}
 								onChange={this.attackTypeChanged.bind(this, attack)}/>
@@ -204,8 +203,7 @@ export class PlayerAttackListComponent extends Component<PlayerAttackListCompone
 								</span>
 							}
 							{attack.attackType === PlayerAttackType.spell && <>
-								<ItemListSelectComponent<DamageType> isOptional={true}
-									items={allDamageTypes}
+								<OptionalItemListSelectComponent items={allDamageTypes}
 									labelForItem={nameForDamageType}
 									selectedItem={attack.damageType}
 									onChange={this.damageTypeChanged.bind(this, attack)}/>
@@ -221,9 +219,8 @@ export class PlayerAttackListComponent extends Component<PlayerAttackListCompone
 							<span className="player-attack-list__target-name">
 								First:
 							</span>
-							<ItemListSelectComponent<Monster> isOptional={true}
+							<OptionalItemListSelectComponent items={this.props.data.currentRoom.monsters}
 								disabled={attack.attackType === undefined}
-								items={this.props.data.currentRoom.monsters}
 								labelForItem={targetLabelForMonster}
 								selectedItem={attack.primaryTarget}
 								onChange={this.targetChanged.bind(this, attack, true)}/>
@@ -231,9 +228,8 @@ export class PlayerAttackListComponent extends Component<PlayerAttackListCompone
 								disabled={attack.attackType === undefined}
 								value={attack.primaryDamageAmount}
 								onChange={this.damageAmountChanged.bind(this, attack, "primaryDamageAmount")}/>
-							<ItemListSelectComponent isOptional={false}
+							<ItemListSelectComponent items={allPlayerAttackCritMultipliers}
 								disabled={attack.attackType === undefined}
-								items={allPlayerAttackCritMultipliers}
 								labelForItem={nameForPlayerAttackCritMultiplier}
 								selectedItem={attack.primaryCritMultiplier}
 								onChange={this.critMultiplierChange.bind(this, attack, "primaryCritMultiplier")}/>
@@ -242,9 +238,8 @@ export class PlayerAttackListComponent extends Component<PlayerAttackListCompone
 							<span className="player-attack-list__target-name">
 								Second:
 							</span>
-							<ItemListSelectComponent<Monster> isOptional={true}
+							<OptionalItemListSelectComponent items={this.props.data.currentRoom.monsters}
 								disabled={attack.attackType === undefined}
-								items={this.props.data.currentRoom.monsters}
 								labelForItem={targetLabelForMonster}
 								selectedItem={attack.secondaryTarget}
 								onChange={this.targetChanged.bind(this, attack, false)}/>
@@ -252,9 +247,8 @@ export class PlayerAttackListComponent extends Component<PlayerAttackListCompone
 								disabled={attack.attackType === undefined}
 								value={attack.secondaryDamageAmount}
 								onChange={this.damageAmountChanged.bind(this, attack, "secondaryDamageAmount")}/>
-							<ItemListSelectComponent isOptional={false}
+							<ItemListSelectComponent items={allPlayerAttackCritMultipliers}
 								disabled={attack.attackType === undefined}
-								items={allPlayerAttackCritMultipliers}
 								labelForItem={nameForPlayerAttackCritMultiplier}
 								selectedItem={attack.secondaryCritMultiplier}
 								onChange={this.critMultiplierChange.bind(this, attack, "secondaryCritMultiplier")}/>

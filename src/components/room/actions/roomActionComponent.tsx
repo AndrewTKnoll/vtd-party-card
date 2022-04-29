@@ -1,6 +1,6 @@
 import React, { Component, ReactNode } from "react";
 
-import { ItemListSelectComponent } from "components/controls/itemListSelectComponent";
+import { OptionalItemListSelectComponent } from "components/controls/itemListSelectComponent";
 import { RoomActionButtonListComponent } from "components/room/roomActionButtonListComponent";
 import { CallbackComponent } from "components/widgets/callbackComponent";
 
@@ -113,8 +113,7 @@ export class RoomActionComponent extends Component<RoomActionComponentProps, Roo
 				{shortNameForSaveType(attack.save)}
 			</span>
 			<span className="room-action-result-list__roll col">
-				<ItemListSelectComponent<MonsterSaveAttackResult> isOptional={true}
-					items={allMonsterSaveAttackResults}
+				<OptionalItemListSelectComponent items={allMonsterSaveAttackResults}
 					labelForItem={nameForMonsterSaveAttackResult}
 					selectedItem={attack.result}
 					onChange={this.saveAttackResultChanged.bind(this, attack)}/>

@@ -124,8 +124,7 @@ export class SetupComponent extends Component<SetupComponentProps, SetupComponen
 								<label>
 									Difficulty:
 
-									<ItemListSelectComponent isOptional={false}
-										items={allDifficulties}
+									<ItemListSelectComponent items={allDifficulties}
 										labelForItem={nameForDifficulty}
 										selectedItem={this.props.data.difficulty}
 										onChange={this.setDifficulty.bind(this)}/>
