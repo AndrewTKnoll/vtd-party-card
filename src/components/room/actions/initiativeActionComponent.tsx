@@ -1,7 +1,7 @@
 import React, { Component, ReactNode } from "react";
 
-import { RollCallbackComponent } from "components/diceRoller/rollCallbackComponent";
 import { RoomActionButtonListComponent } from "components/room/roomActionButtonListComponent";
+import { CallbackComponent } from "components/widgets/callbackComponent";
 
 import { DataManager } from "model/dataManager";
 import { Roll } from "model/diceRoller/roll";
@@ -29,6 +29,10 @@ export class InitiativeActionComponent extends Component<InitiativeActionCompone
 			monsterRoll: Math.floor(Math.random() * 20) + 1,
 			playerRoll: undefined
 		};
+	}
+
+	override componentDidMount() {
+		this.props.data.diceRoller.rolls.forEach(this.handlePlayerRoll.bind(this));
 	}
 
 	/* events */
@@ -96,8 +100,8 @@ export class InitiativeActionComponent extends Component<InitiativeActionCompone
 
 	override render(): ReactNode {
 		return <>
-			<RollCallbackComponent diceRoller={this.props.data.diceRoller}
-				handleRoll={this.handlePlayerRoll.bind(this)}/>
+			<CallbackComponent registry={this.props.data.diceRoller.rollCallbacks}
+				callback={this.handlePlayerRoll.bind(this)}/>
 			<h3>Initiative</h3>
 			<RoomActionButtonListComponent diceRoller={this.props.data.diceRoller}
 				rollType={{type: "initiative"}}

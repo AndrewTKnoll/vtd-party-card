@@ -4,6 +4,7 @@ import { LoginComponent } from "components/loginComponent";
 import { RoomSelectComponent } from "components/controls/roomSelectComponent";
 import { PlayerListComponent } from "components/playerList/playerListComponent";
 import { RoomComponent } from "components/room/roomComponent";
+import { CallbackComponent } from "components/widgets/callbackComponent";
 
 import { DataManager } from "model/dataManager";
 
@@ -13,23 +14,9 @@ interface VTDPartyCardComponentProps {
 interface VTDPartyCardComponentState {}
 
 export class VTDPartyCardComponent extends Component<VTDPartyCardComponentProps, VTDPartyCardComponentState> {
-	private errorCallbackId!: number;
-
-	override componentDidMount() {
-		this.errorCallbackId = this.props.data.diceRoller.errorCallbacks.register(this.handleDiceRollerError.bind(this));
-	}
 
 	override componentDidUpdate(prevProps: VTDPartyCardComponentProps) {
 		this.props.data.save();
-
-		if (prevProps.data.diceRoller !== this.props.data.diceRoller) {
-			prevProps.data.diceRoller.errorCallbacks.unregister(this.errorCallbackId);
-			this.errorCallbackId = this.props.data.diceRoller.errorCallbacks.register(this.handleDiceRollerError.bind(this));
-		}
-	}
-
-	override componentWillUnmount() {
-		this.props.data.diceRoller.errorCallbacks.unregister(this.errorCallbackId);
 	}
 
 	private handleDiceRollerError(error: string, auth: boolean) {
@@ -42,20 +29,22 @@ export class VTDPartyCardComponent extends Component<VTDPartyCardComponentProps,
 	}
 
 	override render(): ReactNode {
-		if (!this.props.data.diceRoller.authToken) {
-			return <LoginComponent diceRoller={this.props.data.diceRoller}
-				onLogin={this.forceUpdate.bind(this)}/>;
-		}
-
 		return <>
-			<PlayerListComponent partyCard={this.props.data.partyCard}
-				currentRoom={this.props.data.currentRoom}
-				onChange={this.forceUpdate.bind(this)}/>
-			<RoomSelectComponent data={this.props.data}
-				onChange={this.forceUpdate.bind(this)}/>
-			<RoomComponent data={this.props.data}
-				currentRoom={this.props.data.currentRoom}
-				onChange={this.forceUpdate.bind(this)}/>
+			<CallbackComponent registry={this.props.data.diceRoller.errorCallbacks}
+				callback={this.handleDiceRollerError.bind(this)}/>
+			{this.props.data.diceRoller.authToken ? <>
+				<PlayerListComponent partyCard={this.props.data.partyCard}
+					currentRoom={this.props.data.currentRoom}
+					onChange={this.forceUpdate.bind(this)}/>
+				<RoomSelectComponent data={this.props.data}
+					onChange={this.forceUpdate.bind(this)}/>
+				<RoomComponent data={this.props.data}
+					currentRoom={this.props.data.currentRoom}
+					onChange={this.forceUpdate.bind(this)}/>
+			</> :
+				<LoginComponent diceRoller={this.props.data.diceRoller}
+					onLogin={this.forceUpdate.bind(this)}/>
+			}
 		</>;
 	}
 }

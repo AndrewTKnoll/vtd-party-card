@@ -1,8 +1,8 @@
 import React, { Component, ReactNode, ChangeEvent } from "react";
 
 import { ItemListSelectComponent } from "components/controls/itemListSelectComponent";
-import { RollCallbackComponent } from "components/diceRoller/rollCallbackComponent";
 import { RoomActionButtonListComponent } from "components/room/roomActionButtonListComponent";
+import { CallbackComponent } from "components/widgets/callbackComponent";
 
 import { DataManager } from "model/dataManager";
 import { DamageType, allDamageTypes, nameForDamageType } from "model/attributes/damageType";
@@ -45,6 +45,10 @@ export class PlayerAttackListComponent extends Component<PlayerAttackListCompone
 				return attack;
 			})
 		};
+	}
+
+	override componentDidMount() {
+		this.props.data.diceRoller.rolls.forEach(this.handlePlayerRoll.bind(this));
 	}
 
 	/* events */
@@ -158,8 +162,8 @@ export class PlayerAttackListComponent extends Component<PlayerAttackListCompone
 
 	override render(): ReactNode {
 		return <>
-			<RollCallbackComponent diceRoller={this.props.data.diceRoller}
-				handleRoll={this.handlePlayerRoll.bind(this)}/>
+			<CallbackComponent registry={this.props.data.diceRoller.rollCallbacks}
+				callback={this.handlePlayerRoll.bind(this)}/>
 			<h3>Player Attacks</h3>
 			<RoomActionButtonListComponent diceRoller={this.props.data.diceRoller}
 				rollType={{type: "attack"}}

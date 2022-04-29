@@ -1,7 +1,7 @@
 import React, { Component, ReactNode } from "react";
 
-import { RollCallbackComponent } from "components/diceRoller/rollCallbackComponent";
 import { RoomActionButtonListComponent } from "components/room/roomActionButtonListComponent";
+import { CallbackComponent } from "components/widgets/callbackComponent";
 
 import { DataManager } from "model/dataManager";
 import { Roll } from "model/diceRoller/roll";
@@ -26,6 +26,10 @@ export class DeathDieComponent extends Component<DeathDieComponentProps, DeathDi
 		this.state = {
 			playerRoll: undefined
 		};
+	}
+
+	override componentDidMount() {
+		this.props.data.diceRoller.rolls.forEach(this.handlePlayerRoll.bind(this));
 	}
 
 	/* events */
@@ -82,8 +86,8 @@ export class DeathDieComponent extends Component<DeathDieComponentProps, DeathDi
 
 	override render(): ReactNode {
 		return <>
-			<RollCallbackComponent diceRoller={this.props.data.diceRoller}
-				handleRoll={this.handlePlayerRoll.bind(this)}/>
+			<CallbackComponent registry={this.props.data.diceRoller.rollCallbacks}
+				callback={this.handlePlayerRoll.bind(this)}/>
 			<h3>Druegar's Death Die</h3>
 			<RoomActionButtonListComponent diceRoller={this.props.data.diceRoller}
 				rollType={{type: "initiative"}}

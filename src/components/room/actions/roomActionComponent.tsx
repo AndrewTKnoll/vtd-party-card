@@ -1,8 +1,8 @@
 import React, { Component, ReactNode } from "react";
 
 import { ItemListSelectComponent } from "components/controls/itemListSelectComponent";
-import { RollCallbackComponent } from "components/diceRoller/rollCallbackComponent";
 import { RoomActionButtonListComponent } from "components/room/roomActionButtonListComponent";
+import { CallbackComponent } from "components/widgets/callbackComponent";
 
 import { shortNameForSaveType } from "model/attributes/saveType";
 import { DiceRoller } from "model/diceRoller/diceRoller";
@@ -22,6 +22,12 @@ interface RoomActionComponentProps {
 interface RoomActionComponentState {}
 
 export class RoomActionComponent extends Component<RoomActionComponentProps, RoomActionComponentState> {
+
+	/* lifecycle */
+
+	override componentDidMount() {
+		this.props.diceRoller.rolls.forEach(this.handlePlayerRoll.bind(this));
+	}
 
 	/* events */
 
@@ -143,8 +149,8 @@ export class RoomActionComponent extends Component<RoomActionComponentProps, Roo
 
 	override render(): ReactNode {
 		return <>
-			<RollCallbackComponent diceRoller={this.props.diceRoller}
-				handleRoll={this.handlePlayerRoll.bind(this)}/>
+			<CallbackComponent registry={this.props.diceRoller.rollCallbacks}
+				callback={this.handlePlayerRoll.bind(this)}/>
 			<h3>{this.props.result.action.name}</h3>
 			<RoomActionButtonListComponent diceRoller={this.props.diceRoller}
 				rollType={this.props.result.action.associatedSave !== undefined ? { type: "save", save: this.props.result.action.associatedSave } : undefined}
