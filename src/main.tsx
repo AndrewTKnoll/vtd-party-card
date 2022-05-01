@@ -19,5 +19,5 @@ const data = new DataManager();
 const root = createRoot(document.querySelector(".vtd-party-card")!);
 root.render(
 	<VTDPartyCardComponent data={data}
-		versionElement={document.querySelector(".dungeon-version-label")!}/>
+		versionElement={document.querySelector(".vtd-header__settings")!}/>
 );
