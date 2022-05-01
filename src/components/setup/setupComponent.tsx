@@ -3,7 +3,6 @@ import React, { Component, ReactNode, ChangeEvent } from "react";
 import { ItemListSelectComponent } from "components/controls/itemListSelectComponent";
 import { ValidatedTextInput } from "components/controls/validatedTextInput";
 import { DiceRollerControlComponent } from "components/diceRoller/diceRollerControlComponent";
-import { CollapseComponent } from "components/structure/collapseComponent";
 import { CallbackComponent } from "components/widgets/callbackComponent";
 import { TimerComponent } from "components/widgets/timerComponent";
 
@@ -56,10 +55,6 @@ export class SetupComponent extends Component<SetupComponentProps, SetupComponen
 		if (this.props.data.diceRoller.slotId) {
 			navigator.clipboard.writeText(this.props.data.diceRoller.slotId.toUpperCase());
 		}
-	}
-
-	private downloadLogFile() {
-		this.props.data.log.exportLog();
 	}
 
 	private updateSlotId(newValue: string) {
@@ -158,18 +153,6 @@ export class SetupComponent extends Component<SetupComponentProps, SetupComponen
 								</button>
 							</div>
 						</section>
-						<CollapseComponent headerText="Log File"
-							headerLevel="h3"
-							contentClass="info-box">
-
-							<p>If something weird happens with the dice roller, this file could help figure it out.</p>
-							<button type="button"
-								className="setup__log-download-button"
-								onClick={this.downloadLogFile.bind(this)}>
-
-								Download Log File
-							</button>
-						</CollapseComponent>
 					</div>
 					<div className="setup__time-col col">
 						<section className="info-box">
