@@ -114,14 +114,6 @@ export class DataManager {
 			this.difficulty = archive.difficulty;
 			this._startTime = archive.startTime ? new Date(archive.startTime) : undefined;
 			this.diceRoller.slotId = archive.slotId;
-
-			const sessionArchiveString = sessionStorage.getItem(storageKey);
-			if (!sessionArchiveString) {
-				return;
-			}
-			const sessionArchive = JSON.parse(sessionArchiveString);
-
-			this.diceRoller.authToken = sessionArchive.authToken;
 		}
 		catch (error) {
 			this.reset(ResetLevel.full);
@@ -136,10 +128,6 @@ export class DataManager {
 			difficulty: this.difficulty,
 			startTime: this.startTime?.getTime(),
 			slotId: this.diceRoller.slotId
-		}));
-
-		sessionStorage.setItem(storageKey, JSON.stringify({
-			authToken: this.diceRoller.authToken
 		}));
 	}
 

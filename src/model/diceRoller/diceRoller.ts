@@ -8,6 +8,8 @@ import { Log } from "model/log/log";
 
 import { CallbackRegistry } from "utilities/callbackRegistry";
 
+const authTokenStorageKey = "diceRollerAuthToken";
+
 const endpointUrl = "https://us-central1-tdroller-1ac5a.cloudfunctions.net/gm";
 const socketUrl = "wss://s-usc1f-nss-2561.firebaseio.com/.ws?v=5&ns=tdroller-1ac5a-default-rtdb";
 const socketSdk = "sdk.js.9-4-1";
@@ -17,7 +19,21 @@ export class DiceRoller {
 
 	private socket!: SocketWrapper;
 
-	authToken: string | undefined = undefined;
+	private _authToken: string | undefined = undefined;
+	get authToken(): string | undefined {
+		return this._authToken;
+	}
+	set authToken(newValue: string | undefined) {
+		this._authToken = newValue;
+
+		if (newValue) {
+			sessionStorage.setItem(authTokenStorageKey, newValue);
+		}
+		else {
+			sessionStorage.removeItem(authTokenStorageKey);
+		}
+	}
+
 	private _slotId: string | undefined = undefined;
 	get slotId(): string | undefined {
 		return this._slotId;
@@ -48,6 +64,8 @@ export class DiceRoller {
 
 	constructor(log: Log) {
 		this.log = log;
+
+		this._authToken = sessionStorage.getItem(authTokenStorageKey) ?? undefined;
 
 		this.reconnect();
 	}
