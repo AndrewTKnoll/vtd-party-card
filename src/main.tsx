@@ -3,6 +3,7 @@ import "./main.scss";
 
 /**** js imports ****/
 import "utilities/arrayUtils";
+import "utilities/storageUtils";
 
 import React from "react";
 import { createRoot } from "react-dom/client";
