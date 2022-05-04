@@ -2,6 +2,8 @@ import { ResetLevel } from "model/attributes/resetLevel";
 import { Class, allClasses } from "model/partyCard/class";
 import { Player } from "model/partyCard/player";
 
+import { JSONValue, isObject, isArray } from "utilities/jsonUtils";
+
 export class PartyCard {
 	readonly players: Player[] = allClasses.map((classId: Class) => {
 		return new Player(classId);
@@ -25,9 +27,18 @@ export class PartyCard {
 		})!;
 	}
 
-	restoreFromArchive(archive: any) {
+	restoreFromArchive(archive: JSONValue | undefined) {
+		if (!isObject(archive)) {
+			return;
+		}
+
+		const playerArchive = archive["players"];
+		if (!isArray(playerArchive)) {
+			return;
+		}
+
 		this.players.forEach((player, index) => {
-			player.restoreFromArchive(archive.players[index]);
+			player.restoreFromArchive(playerArchive[index]);
 		});
 	}
 

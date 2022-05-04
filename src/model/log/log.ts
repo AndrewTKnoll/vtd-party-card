@@ -1,5 +1,7 @@
 import { DataManager } from "model/dataManager";
 
+import { isArray } from "utilities/jsonUtils";
+
 interface LogItem {
 	message: string;
 	timestamp: Date;
@@ -16,21 +18,16 @@ export class Log {
 	constructor(dataManager: DataManager) {
 		this.dataManager = dataManager;
 
-		try {
-			const archiveString = localStorage.getItem(storageKey);
-			if (!archiveString) {
-				return;
-			}
-			const archive = JSON.parse(archiveString);
+		const archive = localStorage.readJSON(storageKey);
 
-			this.items = archive;
-
-			this.log("page reload");
-		}
-		catch (error: any) {
+		if (!isArray(archive)) {
 			this.items = [];
-			this.log("archive read error", error.message);
+			this.log("archive read error");
+			return;
 		}
+
+		this.items = archive as any;
+		this.log("page reload");
 	}
 
 	log(message: string, data?: any) {

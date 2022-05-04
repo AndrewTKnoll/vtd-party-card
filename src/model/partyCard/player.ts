@@ -2,11 +2,17 @@ import { ResetLevel } from "model/attributes/resetLevel";
 import { Class, nakedACForClass } from "model/partyCard/class";
 
 import { DefaultMap } from "utilities/defaultMap";
+import { JSONValue, validate, isObject } from "utilities/jsonUtils";
 
 export enum WeaponType {
 	melee = "melee",
 	ranged = "ranged"
 }
+
+const allWeaponTypes = [
+	WeaponType.melee,
+	WeaponType.ranged
+];
 
 export enum ACType {
 	melee = "melee",
@@ -66,33 +72,37 @@ export class Player {
 		this.class = classId;
 	}
 
-	restoreFromArchive(archive: any) {
-		this.isPresent = archive.isPresent;
-		this.isDead = archive.isDead;
-		this.isGuarded = archive.isGuarded;
+	restoreFromArchive(archive: JSONValue | undefined) {
+		if (!isObject(archive)) {
+			return;
+		}
 
-		this.currentWeapon = archive.currentWeapon;
+		this.isPresent = validate(archive["isPresent"], this.isPresent);
+		this.isDead = validate(archive["isDead"], this.isDead);
+		this.isGuarded = validate(archive["isGuarded"], this.isGuarded);
 
-		this.meleeAC = archive.meleeAC;
-		this.meleeWeapon = archive.meleeWeapon;
-		this.meleeDamageBonus = archive.meleeDamageBonus;
-		this.meleeDamageTypes = new DefaultMap(0, archive.meleeDamageTypes.values);
+		this.currentWeapon = validate(archive["currentWeapon"], this.currentWeapon, allWeaponTypes);
 
-		this.rangedAC = archive.rangedAC;
-		this.rangedWeapon = archive.rangedWeapon;
-		this.rangedDamageBonus = archive.rangedDamageBonus;
-		this.rangedDamageTypes = new DefaultMap(0, archive.rangedDamageTypes.values);
+		this.meleeAC = validate(archive["meleeAC"], this.meleeAC);
+		this.meleeWeapon = validate(archive["meleeWeapon"], this.meleeWeapon);
+		this.meleeDamageBonus = validate(archive["meleeDamageBonus"], this.meleeDamageBonus);
+		this.meleeDamageTypes.restoreFromArchive(archive["meleeDamageTypes"]);
 
-		this.retributionDamageTotal = archive.retributionDamageTotal;
-		this.retributionDamageTypes = new DefaultMap(0, archive.retributionDamageTypes.values);
+		this.rangedAC = validate(archive["rangedAC"], this.rangedAC);
+		this.rangedWeapon = validate(archive["rangedWeapon"], this.rangedWeapon);
+		this.rangedDamageBonus = validate(archive["rangedDamageBonus"], this.rangedDamageBonus);
+		this.rangedDamageTypes.restoreFromArchive(archive["rangedDamageTypes"]);
 
-		this.acAdjust = archive.acAdjust;
+		this.retributionDamageTotal = validate(archive["retributionDamageTotal"], this.retributionDamageTotal);
+		this.retributionDamageTypes.restoreFromArchive(archive["retributionDamageTypes"]);
 
-		this.hasFreeMovement = archive.hasFreeMovement;
-		this.hasQuickStrike = archive.hasQuickStrike;
+		this.acAdjust = validate(archive["acAdjust"], this.acAdjust);
 
-		this.flags = new DefaultMap(false, archive.flags.values);
-		this.countFlags = new DefaultMap(0, archive.countFlags.values);
+		this.hasFreeMovement = validate(archive["hasFreeMovement"], this.hasFreeMovement);
+		this.hasQuickStrike = validate(archive["hasQuickStrike"], this.hasQuickStrike);
+
+		this.flags.restoreFromArchive(archive["flags"]);
+		this.countFlags.restoreFromArchive(archive["countFlags"]);
 	}
 
 	reset(level: ResetLevel) {
