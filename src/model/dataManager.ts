@@ -1,10 +1,12 @@
-import { Difficulty } from "model/attributes/difficulty";
+import { Difficulty, allDifficulties } from "model/attributes/difficulty";
 import { ResetLevel } from "model/attributes/resetLevel";
 import { DiceRoller } from "model/diceRoller/diceRoller";
 import { Dungeon } from "model/dungeon/dungeon";
 import { Room } from "model/dungeon/room";
 import { Log } from "model/log/log";
 import { PartyCard } from "model/partyCard/partyCard";
+
+import { validate, optional, isObject, isArray } from "utilities/jsonUtils";
 
 const storageKey = "data";
 const timezoneOffsetScale = 60 * 1000;
@@ -100,35 +102,45 @@ export class DataManager {
 		this.dungeon = new Dungeon(this);
 		this.diceRoller = new DiceRoller(this.log);
 
-		try {
-			const archiveString = localStorage.getItem(storageKey);
-			if (!archiveString) {
-				return;
+		const archive = localStorage.readJSON(storageKey);
+
+		if (!isObject(archive)) {
+			return;
+		}
+
+		this.dungeon.restoreFromArchive(archive["dungeon"]);
+		this.partyCard.restoreFromArchive(archive["partyCard"]);
+		this.diceRoller.restoreFromArchive(archive["diceRoller"]);
+
+		const currentRoomArchive = archive["currentRoom"];
+		if (isArray(currentRoomArchive)) {
+			this.currentRoomIndex[0] = validate(currentRoomArchive[0], this.currentRoomIndex[0]);
+			this.currentRoomIndex[1] = validate(currentRoomArchive[1], this.currentRoomIndex[1]);
+
+			if (this.currentRoomIndex[0] >= this.dungeon.rooms.length) {
+				this.currentRoomIndex[0] = 0;
 			}
-			const archive = JSON.parse(archiveString);
 
-			this.dungeon.restoreFromArchive(archive.dungeon);
-			this.partyCard.restoreFromArchive(archive.partyCard);
+			if (this.currentRoomIndex[1] >= this.dungeon.rooms[this.currentRoomIndex[0]].length) {
+				this.currentRoomIndex[1] = 0;
+			}
+		}
 
-			this.currentRoomIndex = archive.currentRoom;
-			this.difficulty = archive.difficulty;
-			this._startTime = archive.startTime ? new Date(archive.startTime) : undefined;
-			this.diceRoller.slotId = archive.slotId;
-		}
-		catch (error) {
-			this.reset(ResetLevel.full);
-		}
+		this.difficulty = validate(archive["difficulty"], this.difficulty, allDifficulties);
+
+		const startTimeArchive = optional("number", archive["startTime"], this.startTime?.getTime());
+		this._startTime = startTimeArchive ? new Date(startTimeArchive) : undefined;
 	}
 
 	save() {
-		localStorage.setItem(storageKey, JSON.stringify({
+		localStorage.writeJSON(storageKey, {
 			dungeon: this.dungeon,
 			partyCard: this.partyCard,
+			diceRoller: this.diceRoller,
 			currentRoom: this.currentRoomIndex,
 			difficulty: this.difficulty,
-			startTime: this.startTime?.getTime(),
-			slotId: this.diceRoller.slotId
-		}));
+			startTime: this.startTime?.getTime()
+		});
 	}
 
 	reset(level: ResetLevel) {

@@ -11,6 +11,7 @@ import { PlayerAttack } from "model/playerAttack/playerAttack";
 import { RoomAction } from "model/roomAction/roomAction";
 
 import { DefaultMap } from "utilities/defaultMap";
+import { JSONValue, validate, optional, isObject } from "utilities/jsonUtils";
 
 export const roomTimeDuration = 12 * 60 * 1000;
 
@@ -18,6 +19,11 @@ export enum InitiativeWinner {
 	players = "players",
 	monster = "monster"
 }
+
+const allInitiativeWinners = [
+	InitiativeWinner.players,
+	InitiativeWinner.monster
+];
 
 export function nameForInitiativeWinner(winner: InitiativeWinner): string {
 	return winner.charAt(0).toUpperCase() + winner.slice(1);
@@ -107,9 +113,13 @@ export class Room {
 		this.hasRogueTreasure = params.hasRogueTreasure ?? false;
 	}
 
-	restoreFromArchive(archive: any) {
-		this.initiativeWinner = archive.initiativeWinner;
-		this.rogueTookTreasure = archive.rogueTookTreasure;
+	restoreFromArchive(archive: JSONValue | undefined) {
+		if (!isObject(archive)) {
+			return;
+		}
+
+		this.initiativeWinner = optional("string", archive["initiativeWinner"], this.initiativeWinner, allInitiativeWinners);
+		this.rogueTookTreasure = validate(archive["rogueTookTreasure"], this.rogueTookTreasure);
 	}
 
 	toJSON(): any {

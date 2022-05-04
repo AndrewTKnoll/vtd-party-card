@@ -6,13 +6,29 @@ import { Room } from "model/dungeon/room";
 import { TrainingRoom } from "model/dungeon/trainingRoom";
 import { PartyCard } from "model/partyCard/partyCard";
 
+import { JSONValue, isObject, isArray } from "utilities/jsonUtils";
+
 export class Dungeon {
 	readonly rooms: Room[][];
 
-	restoreFromArchive(archive: any) {
+	restoreFromArchive(archive: JSONValue | undefined) {
+		if (!isObject(archive)) {
+			return;
+		}
+
+		const roomArchive = archive["rooms"];
+		if (!isArray(roomArchive)) {
+			return;
+		}
+
 		this.rooms.forEach((position, positionIndex) => {
+			const positionArchive = roomArchive[positionIndex];
+			if (!isArray(positionArchive)) {
+				return;
+			}
+
 			position.forEach((option, optionIndex) => {
-				option.restoreFromArchive(archive.rooms[positionIndex][optionIndex]);
+				option.restoreFromArchive(positionArchive[optionIndex]);
 			});
 		});
 	}

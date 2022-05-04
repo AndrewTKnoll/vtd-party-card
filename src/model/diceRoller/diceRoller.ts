@@ -7,6 +7,7 @@ import { SocketWrapper } from "model/diceRoller/socket/socketWrapper";
 import { Log } from "model/log/log";
 
 import { CallbackRegistry } from "utilities/callbackRegistry";
+import { JSONValue, optional, isObject } from "utilities/jsonUtils";
 
 const authTokenStorageKey = "diceRollerAuthToken";
 
@@ -68,6 +69,20 @@ export class DiceRoller {
 		this._authToken = sessionStorage.getItem(authTokenStorageKey) ?? undefined;
 
 		this.reconnect();
+	}
+
+	restoreFromArchive(archive: JSONValue | undefined) {
+		if (!isObject(archive)) {
+			return;
+		}
+
+		this.slotId = optional("string", archive["slotId"], this.slotId);
+	}
+
+	toJSON(): any {
+		return {
+			slotId: this.slotId
+		};
 	}
 
 	/* socket management */

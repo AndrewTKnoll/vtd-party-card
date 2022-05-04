@@ -8,6 +8,7 @@ import { PlayerAttackCritMultiplier } from "model/playerAttack/playerAttackCritM
 import { PlayerAttackType } from "model/playerAttack/playerAttackType";
 
 import { DefaultMap } from "utilities/defaultMap";
+import { JSONValue, validate, isObject } from "utilities/jsonUtils";
 
 export interface DamageDescription {
 	readonly type: PlayerAttackType;
@@ -61,11 +62,15 @@ export class Monster {
 		this.maxHPValues = new DefaultMap(0, maxHP);
 	}
 
-	restoreFromArchive(archive: any) {
-		this.roundDamageFromPlayers = new DefaultMap(0, archive.roundDamageFromPlayers.values);
-		this.totalDamageFromPlayers = new DefaultMap(0, archive.totalDamageFromPlayers.values);
-		this.currentDamage = archive.currentDamage;
-		this.isTaunted = archive.isTaunted;
+	restoreFromArchive(archive: JSONValue | undefined) {
+		if (!isObject(archive)) {
+			return;
+		}
+
+		this.roundDamageFromPlayers.restoreFromArchive(archive["roundDamageFromPlayers"]);
+		this.totalDamageFromPlayers.restoreFromArchive(archive["totalDamageFromPlayers"]);
+		this.currentDamage = validate(archive["currentDamage"], this.currentDamage);
+		this.isTaunted = validate(archive["isTaunted"], this.isTaunted);
 	}
 
 	toJSON(): any {
