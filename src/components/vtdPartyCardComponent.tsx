@@ -14,7 +14,7 @@ import { SettingsManager } from "model/settingsManager";
 interface VTDPartyCardComponentProps {
 	data: DataManager;
 	settings: SettingsManager;
-	versionElement: Element;
+	settingsContainer: Element;
 }
 interface VTDPartyCardComponentState {}
 
@@ -40,7 +40,7 @@ export class VTDPartyCardComponent extends Component<VTDPartyCardComponentProps,
 			{createPortal(
 				<SettingsComponent data={this.props.data}
 					settings={this.props.settings}/>,
-				this.props.versionElement
+				this.props.settingsContainer
 			)}
 			{this.props.data.diceRoller.authToken ? <>
 				<PlayerListComponent partyCard={this.props.data.partyCard}

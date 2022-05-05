@@ -22,5 +22,5 @@ const root = createRoot(document.querySelector(".vtd-party-card")!);
 root.render(
 	<VTDPartyCardComponent data={data}
 		settings={settings}
-		versionElement={document.querySelector(".vtd-header__settings")!}/>
+		settingsContainer={document.querySelector(".vtd-header__settings")!}/>
 );
