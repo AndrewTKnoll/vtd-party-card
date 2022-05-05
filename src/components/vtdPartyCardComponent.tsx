@@ -9,9 +9,11 @@ import { SettingsComponent } from "components/settings/settingsComponent";
 import { CallbackComponent } from "components/widgets/callbackComponent";
 
 import { DataManager } from "model/dataManager";
+import { SettingsManager } from "model/settingsManager";
 
 interface VTDPartyCardComponentProps {
 	data: DataManager;
+	settings: SettingsManager;
 	versionElement: Element;
 }
 interface VTDPartyCardComponentState {}
@@ -35,7 +37,11 @@ export class VTDPartyCardComponent extends Component<VTDPartyCardComponentProps,
 		return <>
 			<CallbackComponent registry={this.props.data.diceRoller.errorCallbacks}
 				callback={this.handleDiceRollerError.bind(this)}/>
-			{createPortal(<SettingsComponent data={this.props.data}/>, this.props.versionElement)}
+			{createPortal(
+				<SettingsComponent data={this.props.data}
+					settings={this.props.settings}/>,
+				this.props.versionElement
+			)}
 			{this.props.data.diceRoller.authToken ? <>
 				<PlayerListComponent partyCard={this.props.data.partyCard}
 					currentRoom={this.props.data.currentRoom}
