@@ -4,11 +4,13 @@ import { RoomActionButtonListComponent } from "components/room/roomActionButtonL
 import { CallbackComponent } from "components/widgets/callbackComponent";
 
 import { DataManager } from "model/dataManager";
+import { SettingsManager } from "model/settingsManager";
 import { Roll } from "model/diceRoller/roll";
 import { Class } from "model/partyCard/class";
 
 interface DeathDieComponentProps {
 	data: DataManager;
+	settings: SettingsManager;
 	clearAction: () => void;
 	onChange: () => void;
 }
@@ -90,6 +92,7 @@ export class DeathDieComponent extends Component<DeathDieComponentProps, DeathDi
 				callback={this.handlePlayerRoll.bind(this)}/>
 			<h3>Druegar's Death Die</h3>
 			<RoomActionButtonListComponent diceRoller={this.props.data.diceRoller}
+				settings={this.props.settings}
 				rollType={{type: "initiative"}}
 				cancelAction={this.props.clearAction}
 				completeAction={this.completeDeathDie.bind(this)}/>

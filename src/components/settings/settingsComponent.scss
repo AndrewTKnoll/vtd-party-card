@@ -1,0 +1,23 @@
+.settings-component {
+
+	.modal-component &.modal-component__content {
+		margin-bottom: 0;
+	}
+
+	.col {
+		width: 100%;
+
+		@include breakpoint-sm() {
+			width: 50%;
+		}
+	}
+
+	.info-box {
+		margin-bottom: 1rem;
+
+		select,
+		button {
+			margin: 0 0 0.5rem;
+		}
+	}
+}

@@ -1,4 +1,4 @@
-header {
+.vtd-header {
 	display: flex;
 	justify-content: space-between;
 	align-items: flex-end;
@@ -6,5 +6,12 @@ header {
 
 	h1 {
 		margin: 0;
+	}
+
+	.vtd-header__settings {
+
+		.modal-component__open-button {
+			margin: 0 0 0 0.5rem;
+		}
 	}
 }

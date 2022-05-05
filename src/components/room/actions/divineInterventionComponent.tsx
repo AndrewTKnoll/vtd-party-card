@@ -4,6 +4,7 @@ import { RoomActionButtonListComponent } from "components/room/roomActionButtonL
 import { CallbackComponent } from "components/widgets/callbackComponent";
 
 import { DataManager } from "model/dataManager";
+import { SettingsManager } from "model/settingsManager";
 import { DamageType } from "model/attributes/damageType";
 import { Roll } from "model/diceRoller/roll";
 import { Class } from "model/partyCard/class";
@@ -11,6 +12,7 @@ import { PlayerAttackType } from "model/playerAttack/playerAttackType";
 
 interface DivineInterventionComponentProps {
 	data: DataManager;
+	settings: SettingsManager;
 	clearAction: () => void;
 	onChange: () => void;
 }
@@ -72,6 +74,7 @@ export class DivineInterventionComponent extends Component<DivineInterventionCom
 				callback={this.handlePlayerRoll.bind(this)}/>
 			<h3>Divine Intervention</h3>
 			<RoomActionButtonListComponent diceRoller={this.props.data.diceRoller}
+				settings={this.props.settings}
 				rollType={{type: "initiative"}}
 				cancelAction={this.props.clearAction}
 				completeAction={this.completeDivineIntervention.bind(this)}/>

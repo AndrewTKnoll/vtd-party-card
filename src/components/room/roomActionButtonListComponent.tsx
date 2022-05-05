@@ -2,10 +2,12 @@ import React, { Component, ReactNode } from "react";
 
 import { CallbackComponent } from "components/widgets/callbackComponent";
 
+import { SettingsManager } from "model/settingsManager";
 import { DiceRoller } from "model/diceRoller/diceRoller";
 import { RollType } from "model/diceRoller/rollType";
 
 interface RoomActionButtonListComponentProps {
+	settings: SettingsManager;
 	diceRoller: DiceRoller;
 	rollType: RollType | undefined;
 	cancelAction: () => void;
@@ -19,7 +21,7 @@ export class RoomActionButtonListComponent extends Component<RoomActionButtonLis
 	/* lifecycle */
 
 	override componentDidMount() {
-		if (this.props.rollType === undefined || this.currentStateMatches || !this.props.diceRoller.slotId) {
+		if (!this.props.settings.roomActionAutomaticDiceRoller || this.props.rollType === undefined || this.currentStateMatches || !this.props.diceRoller.slotId) {
 			return;
 		}
 
@@ -35,7 +37,7 @@ export class RoomActionButtonListComponent extends Component<RoomActionButtonLis
 	}
 
 	override componentWillUnmount() {
-		if (this.props.rollType !== undefined && this.props.diceRoller.slotId) {
+		if (this.props.settings.roomActionAutomaticDiceRoller && this.props.rollType !== undefined && this.props.diceRoller.slotId) {
 			this.props.diceRoller.resetRolls();
 		}
 	}

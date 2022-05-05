@@ -4,6 +4,7 @@ import { OptionalItemListSelectComponent } from "components/controls/itemListSel
 import { RoomActionButtonListComponent } from "components/room/roomActionButtonListComponent";
 import { CallbackComponent } from "components/widgets/callbackComponent";
 
+import { SettingsManager } from "model/settingsManager";
 import { shortNameForSaveType } from "model/attributes/saveType";
 import { DiceRoller } from "model/diceRoller/diceRoller";
 import { Roll } from "model/diceRoller/roll";
@@ -14,6 +15,7 @@ import { nameForClass } from "model/partyCard/class";
 import { RoomActionResult, MonsterAttack, MonsterAttackType } from "model/roomAction/roomActionResult";
 
 interface RoomActionComponentProps {
+	settings: SettingsManager;
 	result: RoomActionResult;
 	diceRoller: DiceRoller;
 	clearAction: () => void;
@@ -152,6 +154,7 @@ export class RoomActionComponent extends Component<RoomActionComponentProps, Roo
 				callback={this.handlePlayerRoll.bind(this)}/>
 			<h3>{this.props.result.action.name}</h3>
 			<RoomActionButtonListComponent diceRoller={this.props.diceRoller}
+				settings={this.props.settings}
 				rollType={this.props.result.action.associatedSave !== undefined ? { type: "save", save: this.props.result.action.associatedSave } : undefined}
 				cancelAction={this.props.clearAction}
 				completeAction={this.completeRoomAction.bind(this)}/>
