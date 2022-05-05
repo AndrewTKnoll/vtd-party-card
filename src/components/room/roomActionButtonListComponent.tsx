@@ -21,7 +21,13 @@ export class RoomActionButtonListComponent extends Component<RoomActionButtonLis
 	/* lifecycle */
 
 	override componentDidMount() {
-		if (!this.props.settings.roomActionAutomaticDiceRoller || this.props.rollType === undefined || this.currentStateMatches || !this.props.diceRoller.slotId) {
+		if (
+			!this.props.settings.roomActionAutomaticDiceRoller ||
+			this.props.rollType === undefined ||
+			this.currentStateMatches ||
+			!this.props.diceRoller.slotId ||
+			!this.props.diceRoller.authToken
+		) {
 			return;
 		}
 
@@ -37,7 +43,12 @@ export class RoomActionButtonListComponent extends Component<RoomActionButtonLis
 	}
 
 	override componentWillUnmount() {
-		if (this.props.settings.roomActionAutomaticDiceRoller && this.props.rollType !== undefined && this.props.diceRoller.slotId) {
+		if (
+			this.props.settings.roomActionAutomaticDiceRoller &&
+			this.props.rollType !== undefined &&
+			this.props.diceRoller.slotId &&
+			this.props.diceRoller.authToken
+		) {
 			this.props.diceRoller.resetRolls();
 		}
 	}
