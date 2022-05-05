@@ -49,6 +49,7 @@ export class VTDPartyCardComponent extends Component<VTDPartyCardComponentProps,
 				<RoomSelectComponent data={this.props.data}
 					onChange={this.forceUpdate.bind(this)}/>
 				<RoomComponent data={this.props.data}
+					settings={this.props.settings}
 					currentRoom={this.props.data.currentRoom}
 					onChange={this.forceUpdate.bind(this)}/>
 			</> :

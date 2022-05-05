@@ -13,6 +13,7 @@ import { CollapseComponent } from "components/structure/collapseComponent";
 import { TimerComponent } from "components/widgets/timerComponent";
 
 import { DataManager } from "model/dataManager";
+import { SettingsManager } from "model/settingsManager";
 import { ResetLevel } from "model/attributes/resetLevel";
 import { Room, roomTimeDuration, nameForInitiativeWinner } from "model/dungeon/room";
 import { Class } from "model/partyCard/class";
@@ -25,6 +26,7 @@ type ActionType = "playerAttacks" | "quickStrike" | "initiative" | "divineInterv
 
 interface RoomComponentProps {
 	data: DataManager;
+	settings: SettingsManager;
 	currentRoom: Room;
 	onChange: () => void;
 }
@@ -205,29 +207,34 @@ export class RoomComponent extends Component<RoomComponentProps, RoomComponentSt
 				<div className="room-component__action-col col">
 					{(this.state.currentAction === "playerAttacks" || this.state.currentAction === "quickStrike") &&
 						<PlayerAttackListComponent data={this.props.data}
+							settings={this.props.settings}
 							clearAction={this.setAction.bind(this, undefined)}
 							onChange={this.props.onChange}
 							isQuickStrike={this.state.currentAction === "quickStrike"}/>
 					}
 					{this.state.currentAction instanceof RoomActionResult &&
 						<RoomActionComponent result={this.state.currentAction}
+							settings={this.props.settings}
 							diceRoller={this.props.data.diceRoller}
 							clearAction={this.setAction.bind(this, undefined)}
 							onChange={this.props.onChange}/>
 					}
 					{this.state.currentAction === "initiative" &&
 						<InitiativeActionComponent data={this.props.data}
+							settings={this.props.settings}
 							clearAction={this.setAction.bind(this, undefined)}
 							onChange={this.props.onChange}
 							triggerQuickStrike={this.setAction.bind(this, "quickStrike")}/>
 					}
 					{this.state.currentAction === "divineIntervention" &&
 						<DivineInterventionComponent data={this.props.data}
+							settings={this.props.settings}
 							clearAction={this.setAction.bind(this, undefined)}
 							onChange={this.props.onChange}/>
 					}
 					{this.state.currentAction === "deathDie" &&
 						<DeathDieComponent data={this.props.data}
+							settings={this.props.settings}
 							clearAction={this.setAction.bind(this, undefined)}
 							onChange={this.props.onChange}/>
 					}

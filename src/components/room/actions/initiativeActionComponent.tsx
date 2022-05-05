@@ -4,11 +4,13 @@ import { RoomActionButtonListComponent } from "components/room/roomActionButtonL
 import { CallbackComponent } from "components/widgets/callbackComponent";
 
 import { DataManager } from "model/dataManager";
+import { SettingsManager } from "model/settingsManager";
 import { Roll } from "model/diceRoller/roll";
 import { InitiativeWinner } from "model/dungeon/room";
 
 interface InitiativeActionComponentProps {
 	data: DataManager;
+	settings: SettingsManager;
 	clearAction: () => void;
 	onChange: () => void;
 	triggerQuickStrike: (() => void);
@@ -104,6 +106,7 @@ export class InitiativeActionComponent extends Component<InitiativeActionCompone
 				callback={this.handlePlayerRoll.bind(this)}/>
 			<h3>Initiative</h3>
 			<RoomActionButtonListComponent diceRoller={this.props.data.diceRoller}
+				settings={this.props.settings}
 				rollType={{type: "initiative"}}
 				cancelAction={this.props.clearAction}
 				completeAction={this.completeInitiative.bind(this, false)}/>

@@ -5,6 +5,7 @@ import { RoomActionButtonListComponent } from "components/room/roomActionButtonL
 import { CallbackComponent } from "components/widgets/callbackComponent";
 
 import { DataManager } from "model/dataManager";
+import { SettingsManager } from "model/settingsManager";
 import { DamageType, allDamageTypes, nameForDamageType } from "model/attributes/damageType";
 import { Roll } from "model/diceRoller/roll";
 import { Monster } from "model/dungeon/monster";
@@ -15,6 +16,7 @@ import { PlayerAttackType, allPlayerAttackTypes, nameForPlayerAttackType } from 
 
 interface PlayerAttackListComponentProps {
 	data: DataManager;
+	settings: SettingsManager;
 	isQuickStrike: boolean;
 	clearAction: () => void;
 	onChange: () => void;
@@ -166,6 +168,7 @@ export class PlayerAttackListComponent extends Component<PlayerAttackListCompone
 				callback={this.handlePlayerRoll.bind(this)}/>
 			<h3>Player Attacks</h3>
 			<RoomActionButtonListComponent diceRoller={this.props.data.diceRoller}
+				settings={this.props.settings}
 				rollType={{type: "attack"}}
 				cancelAction={this.props.clearAction}
 				completeAction={this.completeAllAttacks.bind(this)}/>
