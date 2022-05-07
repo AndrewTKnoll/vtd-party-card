@@ -8,9 +8,8 @@ interface RoomSelectComponentProps {
 	data: DataManager;
 	onChange: () => void;
 }
-interface RoomSelectComponentState {}
 
-export class RoomSelectComponent extends Component<RoomSelectComponentProps, RoomSelectComponentState> {
+export class RoomSelectComponent extends Component<RoomSelectComponentProps> {
 
 	private newRoomSelected(room: Room) {
 		if (this.props.data.currentRoom !== room) {

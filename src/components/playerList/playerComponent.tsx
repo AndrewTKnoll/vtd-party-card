@@ -12,9 +12,8 @@ interface PlayerComponentProps {
 	currentRoom: Room;
 	onChange: () => void;
 }
-interface PlayerComponentState {}
 
-export class PlayerComponent extends Component<PlayerComponentProps, PlayerComponentState> {
+export class PlayerComponent extends Component<PlayerComponentProps> {
 
 	private setBooleanValue(key: "isPresent" | "isDead" | "isGuarded" | "hasFreeMovement" | "hasQuickStrike", event: ChangeEvent<HTMLInputElement>) {
 		this.props.player[key] = event.target.checked;

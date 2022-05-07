@@ -6,9 +6,8 @@ interface CallbackComponentProps<CallbackType extends (...args: any[]) => any> {
 	registry: CallbackRegistry<CallbackType>;
 	callback: CallbackType;
 }
-interface CallbackComponentState {}
 
-export class CallbackComponent<CallbackType extends (...args: any[]) => any> extends Component<CallbackComponentProps<CallbackType>, CallbackComponentState> {
+export class CallbackComponent<CallbackType extends (...args: any[]) => any> extends Component<CallbackComponentProps<CallbackType>> {
 	private callbackId!: number;
 
 	override componentDidMount() {

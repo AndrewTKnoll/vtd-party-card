@@ -16,9 +16,8 @@ interface VTDPartyCardComponentProps {
 	settings: SettingsManager;
 	settingsContainer: Element;
 }
-interface VTDPartyCardComponentState {}
 
-export class VTDPartyCardComponent extends Component<VTDPartyCardComponentProps, VTDPartyCardComponentState> {
+export class VTDPartyCardComponent extends Component<VTDPartyCardComponentProps> {
 
 	override componentDidUpdate(prevProps: VTDPartyCardComponentProps) {
 		this.props.data.save();

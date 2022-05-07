@@ -8,9 +8,8 @@ import { DiceRoller } from "model/diceRoller/diceRoller";
 interface DiceRollerControlComponentProps {
 	diceRoller: DiceRoller;
 }
-interface DiceRollerControlComponentState {}
 
-export class DiceRollerControlComponent extends Component<DiceRollerControlComponentProps, DiceRollerControlComponentState> {
+export class DiceRollerControlComponent extends Component<DiceRollerControlComponentProps> {
 
 	private updateRollState() {
 		this.setState(this.props.diceRoller.rollState);

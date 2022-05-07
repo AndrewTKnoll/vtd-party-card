@@ -10,9 +10,8 @@ interface SettingsComponentProps {
 	data: DataManager;
 	settings: SettingsManager;
 }
-interface SettingsComponentState {}
 
-export class SettingsComponent extends Component<SettingsComponentProps, SettingsComponentState> {
+export class SettingsComponent extends Component<SettingsComponentProps> {
 
 	private diceRollerBehaviorChanged(newValue: boolean) {
 		this.props.settings.roomActionAutomaticDiceRoller = newValue;

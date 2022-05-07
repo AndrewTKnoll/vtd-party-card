@@ -16,9 +16,7 @@ interface OptionalItemListSelectComponentProps<ItemType> extends BaseItemListSel
 	onChange: (newItem: ItemType | undefined) => void;
 }
 
-interface ItemListSelectComponentState {}
-
-export class ItemListSelectComponent<ItemType> extends Component<ConcreteItemListSelectComponentProps<ItemType>, ItemListSelectComponentState> {
+export class ItemListSelectComponent<ItemType> extends Component<ConcreteItemListSelectComponentProps<ItemType>> {
 
 	private newItemSelected(event: ChangeEvent<HTMLSelectElement>) {
 		const index = Number.parseInt(event.target.value);
@@ -42,7 +40,7 @@ export class ItemListSelectComponent<ItemType> extends Component<ConcreteItemLis
 	}
 }
 
-export class OptionalItemListSelectComponent<ItemType> extends Component<OptionalItemListSelectComponentProps<ItemType>, ItemListSelectComponentState> {
+export class OptionalItemListSelectComponent<ItemType> extends Component<OptionalItemListSelectComponentProps<ItemType>> {
 
 	private labelForItem(item: ItemType | undefined): string {
 		if (item === undefined) {

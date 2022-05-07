@@ -8,9 +8,8 @@ interface ItemsOfInterestComponentProps {
 	tokens: ItemOfInterest[];
 	spells: ItemOfInterest[];
 }
-interface ItemsOfInterestComponentState {}
 
-export class ItemsOfInterestComponent extends Component<ItemsOfInterestComponentProps, ItemsOfInterestComponentState> {
+export class ItemsOfInterestComponent extends Component<ItemsOfInterestComponentProps> {
 
 	private static renderItem(item: ItemOfInterest): ReactNode {
 		return <li key={item.name}>

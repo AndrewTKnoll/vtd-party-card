@@ -21,9 +21,8 @@ interface RoomActionComponentProps {
 	clearAction: () => void;
 	onChange: () => void;
 }
-interface RoomActionComponentState {}
 
-export class RoomActionComponent extends Component<RoomActionComponentProps, RoomActionComponentState> {
+export class RoomActionComponent extends Component<RoomActionComponentProps> {
 
 	/* lifecycle */
 

@@ -7,9 +7,8 @@ import { StatBlock } from "model/dungeon/statBlock";
 interface StatBlockComponentProps {
 	statBlocks: StatBlock[];
 }
-interface StatBlockComponentState {}
 
-export class StatBlockComponent extends Component<StatBlockComponentProps, StatBlockComponentState> {
+export class StatBlockComponent extends Component<StatBlockComponentProps> {
 
 	private static renderStatBlock(statBlock: StatBlock): ReactNode {
 		return <Fragment key={statBlock.name}>

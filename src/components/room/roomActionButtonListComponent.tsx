@@ -13,9 +13,8 @@ interface RoomActionButtonListComponentProps {
 	cancelAction: () => void;
 	completeAction: () => void;
 }
-interface RoomActionButtonListComponentState {}
 
-export class RoomActionButtonListComponent extends Component<RoomActionButtonListComponentProps, RoomActionButtonListComponentState> {
+export class RoomActionButtonListComponent extends Component<RoomActionButtonListComponentProps> {
 	private shouldRequestRolls = false;
 
 	/* lifecycle */

@@ -17,9 +17,8 @@ interface SetupComponentProps {
 	data: DataManager;
 	onChange: () => void;
 }
-interface SetupComponentState {}
 
-export class SetupComponent extends Component<SetupComponentProps, SetupComponentState> {
+export class SetupComponent extends Component<SetupComponentProps> {
 
 	private setDifficulty(newDifficulty: Difficulty) {
 		this.props.data.difficulty = newDifficulty;

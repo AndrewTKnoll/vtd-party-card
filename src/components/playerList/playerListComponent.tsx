@@ -11,9 +11,8 @@ interface PlayerListComponentProps {
 	currentRoom: Room;
 	onChange: () => void;
 }
-interface PlayerListComponentState {}
 
-export class PlayerListComponent extends Component<PlayerListComponentProps, PlayerListComponentState> {
+export class PlayerListComponent extends Component<PlayerListComponentProps> {
 
 	override render(): ReactNode {
 		return <CollapseComponent headerText="Players"

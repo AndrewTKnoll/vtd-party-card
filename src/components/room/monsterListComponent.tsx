@@ -9,9 +9,8 @@ interface MonsterListComponentProps {
 	room: Room;
 	onChange: () => void;
 }
-interface MonsterListComponentState {}
 
-export class MonsterListComponent extends Component<MonsterListComponentProps, MonsterListComponentState> {
+export class MonsterListComponent extends Component<MonsterListComponentProps> {
 
 	private monsterHPAdjusted(monster: Monster, event: ChangeEvent<HTMLInputElement>) {
 		monster.currentDamage = event.target.valueAsNumber;
