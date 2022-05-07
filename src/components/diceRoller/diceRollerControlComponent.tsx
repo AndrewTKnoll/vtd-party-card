@@ -11,10 +11,6 @@ interface DiceRollerControlComponentProps {
 
 export class DiceRollerControlComponent extends Component<DiceRollerControlComponentProps> {
 
-	private updateRollState() {
-		this.setState(this.props.diceRoller.rollState);
-	}
-
 	private acceptRolls(type: "initiative" | "attack") {
 		this.props.diceRoller.acceptRolls({
 			type: type
@@ -53,7 +49,7 @@ export class DiceRollerControlComponent extends Component<DiceRollerControlCompo
 
 		return <>
 			<CallbackComponent registry={this.props.diceRoller.stateCallbacks}
-				callback={this.updateRollState.bind(this)}/>
+				callback={this.forceUpdate.bind(this)}/>
 			<div className="dice-roller-control-component row">
 				{!rollsRevealed && !acceptingRolls && <>
 					<div className="col">
