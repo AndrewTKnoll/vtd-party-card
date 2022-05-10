@@ -1,17 +1,10 @@
 import React, { Component, ReactNode } from "react";
 
+import { ContextData, injectContext } from "components/globalContext";
 import { ItemListSelectComponent } from "components/controls/itemListSelectComponent";
 import { ModalComponent } from  "components/structure/modalComponent";
 
-import { DataManager } from "model/dataManager";
-import { SettingsManager } from "model/settingsManager";
-
-interface SettingsComponentProps {
-	data: DataManager;
-	settings: SettingsManager;
-}
-
-export class SettingsComponent extends Component<SettingsComponentProps> {
+export const SettingsComponent = injectContext(class extends Component<ContextData> {
 
 	private diceRollerBehaviorChanged(newValue: boolean) {
 		this.props.settings.roomActionAutomaticDiceRoller = newValue;
@@ -55,7 +48,7 @@ export class SettingsComponent extends Component<SettingsComponentProps> {
 			</ModalComponent>
 		</>;
 	}
-}
+});
 
 function diceRollerBehaviorLabel(isAutomatic: boolean): string {
 	return isAutomatic ? "Automatic" : "Manual";

@@ -1,19 +1,17 @@
 import React, { Component, ChangeEvent, ReactNode } from "react";
 
+import { ContextData, injectContext } from "components/globalContext";
 import { ModalComponent } from "components/structure/modalComponent";
 
 import { DamageType, allDamageTypes, nameForDamageType } from "model/attributes/damageType";
-import { Room } from "model/dungeon/room";
 import { nameForClass } from "model/partyCard/class";
 import { Player, WeaponType, ACType } from "model/partyCard/player";
 
-interface PlayerComponentProps {
+type PlayerComponentProps = ContextData & {
 	player: Player;
-	currentRoom: Room;
-	onChange: () => void;
 }
 
-export class PlayerComponent extends Component<PlayerComponentProps> {
+export const PlayerComponent = injectContext(class extends Component<PlayerComponentProps> {
 
 	private setBooleanValue(key: "isPresent" | "isDead" | "isGuarded" | "hasFreeMovement" | "hasQuickStrike", event: ChangeEvent<HTMLInputElement>) {
 		this.props.player[key] = event.target.checked;
@@ -133,7 +131,7 @@ export class PlayerComponent extends Component<PlayerComponentProps> {
 	}
 
 	override render() {
-		const statusNote = this.props.currentRoom.statusForPlayer(this.props.player);
+		const statusNote = this.props.data.currentRoom.statusForPlayer(this.props.player);
 
 		return <div className={`player-component${this.props.player.isDead ? " player-component--dead" : ""}${this.props.player.isPresent ? "" : " player-component--not-present"}`}>
 			<div className="player-component__title-row">
@@ -208,4 +206,4 @@ export class PlayerComponent extends Component<PlayerComponentProps> {
 			}
 		</div>;
 	}
-}
+});

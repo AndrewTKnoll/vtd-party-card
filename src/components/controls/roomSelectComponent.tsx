@@ -1,15 +1,10 @@
 import React, { Component, ReactNode } from "react";
 
+import { ContextData, injectContext } from "components/globalContext";
 import { ResetLevel } from "model/attributes/resetLevel";
-import { DataManager } from "model/dataManager";
 import { Room } from "model/dungeon/room";
 
-interface RoomSelectComponentProps {
-	data: DataManager;
-	onChange: () => void;
-}
-
-export class RoomSelectComponent extends Component<RoomSelectComponentProps> {
+export const RoomSelectComponent = injectContext(class extends Component<ContextData> {
 
 	private newRoomSelected(room: Room) {
 		if (this.props.data.currentRoom !== room) {
@@ -47,4 +42,4 @@ export class RoomSelectComponent extends Component<RoomSelectComponentProps> {
 			})}
 		</ul>;
 	}
-}
+});

@@ -1,16 +1,11 @@
 import React, { Component, ChangeEvent, ReactNode } from "react";
 
+import { ContextData, injectContext } from "components/globalContext";
 import { ModalComponent } from "components/structure/modalComponent";
 
 import { Monster } from "model/dungeon/monster";
-import { Room } from "model/dungeon/room";
 
-interface MonsterListComponentProps {
-	room: Room;
-	onChange: () => void;
-}
-
-export class MonsterListComponent extends Component<MonsterListComponentProps> {
+export const MonsterListComponent = injectContext(class extends Component<ContextData> {
 
 	private monsterHPAdjusted(monster: Monster, event: ChangeEvent<HTMLInputElement>) {
 		monster.currentDamage = event.target.valueAsNumber;
@@ -25,7 +20,7 @@ export class MonsterListComponent extends Component<MonsterListComponentProps> {
 	override render(): ReactNode {
 		return <div className="monster-list-component">
 			<ul>
-				{this.props.room.monsters.map((monster) => {
+				{this.props.data.currentRoom.monsters.map((monster) => {
 					return <li key={monster.name}
 						className={`monster-list-component__monster${monster.isAlive ? "" : " monster-list-component__monster--dead"} row`}>
 
@@ -52,7 +47,7 @@ export class MonsterListComponent extends Component<MonsterListComponentProps> {
 				openButtonText="Adjust">
 
 				<ul>
-					{this.props.room.monsters.map((monster) => {
+					{this.props.data.currentRoom.monsters.map((monster) => {
 						return <li key={monster.name}
 							className="monster-list-component__adjust-monster row">
 
@@ -71,4 +66,4 @@ export class MonsterListComponent extends Component<MonsterListComponentProps> {
 			</ModalComponent>
 		</div>;
 	}
-}
+});

@@ -1,19 +1,15 @@
 import React, { Component, ReactNode, ChangeEvent } from "react";
 
-import { DiceRoller } from "model/diceRoller/diceRoller";
+import { ContextData, injectContext } from "components/globalContext";
 
-interface LoginComponentProps {
-	diceRoller: DiceRoller;
-	onLogin: () => void;
-}
 interface LoginComponentState {
 	isLoggingIn: boolean;
 	password: string;
 }
 
-export class LoginComponent extends Component<LoginComponentProps, LoginComponentState> {
+export const LoginComponent = injectContext(class extends Component<ContextData, LoginComponentState> {
 
-	constructor(props: LoginComponentProps) {
+	constructor(props: ContextData) {
 		super(props);
 
 		this.state = {
@@ -33,14 +29,14 @@ export class LoginComponent extends Component<LoginComponentProps, LoginComponen
 			isLoggingIn: true
 		});
 
-		await this.props.diceRoller.logIn(this.state.password);
+		await this.props.data.diceRoller.logIn(this.state.password);
 
 		this.setState({
 			isLoggingIn: false
 		});
 
-		if (this.props.diceRoller.authToken) {
-			this.props.onLogin();
+		if (this.props.data.diceRoller.authToken) {
+			this.props.onChange();
 			return;
 		}
 	}
@@ -63,4 +59,4 @@ export class LoginComponent extends Component<LoginComponentProps, LoginComponen
 			</button>
 		</form>;
 	}
-}
+});

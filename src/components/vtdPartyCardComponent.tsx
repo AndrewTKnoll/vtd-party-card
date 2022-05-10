@@ -32,24 +32,13 @@ export const VTDPartyCardComponent = injectContext(class extends Component<VTDPa
 		return <>
 			<CallbackComponent registry={this.props.data.diceRoller.errorCallbacks}
 				callback={this.handleDiceRollerError.bind(this)}/>
-			{createPortal(
-				<SettingsComponent data={this.props.data}
-					settings={this.props.settings}/>,
-				this.props.settingsContainer
-			)}
+			{createPortal(<SettingsComponent/>, this.props.settingsContainer)}
 			{this.props.data.diceRoller.authToken ? <>
-				<PlayerListComponent partyCard={this.props.data.partyCard}
-					currentRoom={this.props.data.currentRoom}
-					onChange={this.forceUpdate.bind(this)}/>
-				<RoomSelectComponent data={this.props.data}
-					onChange={this.forceUpdate.bind(this)}/>
-				<RoomComponent data={this.props.data}
-					settings={this.props.settings}
-					currentRoom={this.props.data.currentRoom}
-					onChange={this.forceUpdate.bind(this)}/>
+				<PlayerListComponent/>
+				<RoomSelectComponent/>
+				<RoomComponent currentRoom={this.props.data.currentRoom}/>
 			</> :
-				<LoginComponent diceRoller={this.props.data.diceRoller}
-					onLogin={this.forceUpdate.bind(this)}/>
+				<LoginComponent/>
 			}
 		</>;
 	}

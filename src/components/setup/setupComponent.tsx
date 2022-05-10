@@ -1,24 +1,19 @@
 import React, { Component, ReactNode, ChangeEvent } from "react";
 
+import { ContextData, injectContext } from "components/globalContext";
 import { ItemListSelectComponent } from "components/controls/itemListSelectComponent";
 import { ValidatedTextInput } from "components/controls/validatedTextInput";
 import { DiceRollerControlComponent } from "components/diceRoller/diceRollerControlComponent";
 import { CallbackComponent } from "components/widgets/callbackComponent";
 import { TimerComponent } from "components/widgets/timerComponent";
 
-import { DataManager } from "model/dataManager";
 import { nameForClass } from "model/partyCard/class";
 import { Player } from "model/partyCard/player";
 import { Difficulty, allDifficulties, nameForDifficulty } from "model/attributes/difficulty";
 import { ResetLevel } from "model/attributes/resetLevel";
 import { roomTimeDuration } from "model/dungeon/room";
 
-interface SetupComponentProps {
-	data: DataManager;
-	onChange: () => void;
-}
-
-export class SetupComponent extends Component<SetupComponentProps> {
+export const SetupComponent = injectContext(class extends Component<ContextData> {
 
 	private setDifficulty(newDifficulty: Difficulty) {
 		this.props.data.difficulty = newDifficulty;
@@ -216,4 +211,4 @@ export class SetupComponent extends Component<SetupComponentProps> {
 			</section>
 		</div>;
 	}
-}
+});
