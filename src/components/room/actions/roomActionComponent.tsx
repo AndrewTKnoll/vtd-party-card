@@ -1,12 +1,11 @@
 import React, { Component, ReactNode } from "react";
 
+import { ContextData, injectContext } from "components/globalContext";
 import { OptionalItemListSelectComponent } from "components/controls/itemListSelectComponent";
 import { RoomActionButtonListComponent } from "components/room/roomActionButtonListComponent";
 import { CallbackComponent } from "components/widgets/callbackComponent";
 
-import { SettingsManager } from "model/settingsManager";
 import { shortNameForSaveType } from "model/attributes/saveType";
-import { DiceRoller } from "model/diceRoller/diceRoller";
 import { Roll } from "model/diceRoller/roll";
 import { MonsterSaveAttack, MonsterSaveAttackResult, allMonsterSaveAttackResults, nameForMonsterSaveAttackResult } from "model/monsterAttack/monsterSaveAttack";
 import { MonsterSpecialAttack } from "model/monsterAttack/monsterSpecialAttack";
@@ -14,20 +13,17 @@ import { MonsterWeaponAttack } from "model/monsterAttack/monsterWeaponAttack";
 import { nameForClass } from "model/partyCard/class";
 import { RoomActionResult, MonsterAttack, MonsterAttackType } from "model/roomAction/roomActionResult";
 
-interface RoomActionComponentProps {
-	settings: SettingsManager;
-	result: RoomActionResult;
-	diceRoller: DiceRoller;
+type RoomActionComponentProps = ContextData & {
 	clearAction: () => void;
-	onChange: () => void;
+	result: RoomActionResult;
 }
 
-export class RoomActionComponent extends Component<RoomActionComponentProps> {
+export const RoomActionComponent = injectContext(class extends Component<RoomActionComponentProps> {
 
 	/* lifecycle */
 
 	override componentDidMount() {
-		this.props.diceRoller.rolls.forEach(this.handlePlayerRoll.bind(this));
+		this.props.data.diceRoller.rolls.forEach(this.handlePlayerRoll.bind(this));
 	}
 
 	/* events */
@@ -149,12 +145,10 @@ export class RoomActionComponent extends Component<RoomActionComponentProps> {
 
 	override render(): ReactNode {
 		return <>
-			<CallbackComponent registry={this.props.diceRoller.rollCallbacks}
+			<CallbackComponent registry={this.props.data.diceRoller.rollCallbacks}
 				callback={this.handlePlayerRoll.bind(this)}/>
 			<h3>{this.props.result.action.name}</h3>
-			<RoomActionButtonListComponent diceRoller={this.props.diceRoller}
-				settings={this.props.settings}
-				rollType={this.props.result.action.associatedSave !== undefined ? { type: "save", save: this.props.result.action.associatedSave } : undefined}
+			<RoomActionButtonListComponent rollType={this.props.result.action.associatedSave !== undefined ? { type: "save", save: this.props.result.action.associatedSave } : undefined}
 				cancelAction={this.props.clearAction}
 				completeAction={this.completeRoomAction.bind(this)}/>
 			<ul className="room-action-result-list">
@@ -168,4 +162,4 @@ export class RoomActionComponent extends Component<RoomActionComponentProps> {
 			</ul>
 		</>;
 	}
-}
+});

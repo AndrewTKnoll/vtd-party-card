@@ -1,24 +1,20 @@
 import React, { Component, ReactNode } from "react";
 
+import { ContextData, injectContext } from "components/globalContext";
 import { RoomActionButtonListComponent } from "components/room/roomActionButtonListComponent";
 import { CallbackComponent } from "components/widgets/callbackComponent";
 
-import { DataManager } from "model/dataManager";
-import { SettingsManager } from "model/settingsManager";
 import { Roll } from "model/diceRoller/roll";
 import { Class } from "model/partyCard/class";
 
-interface DeathDieComponentProps {
-	data: DataManager;
-	settings: SettingsManager;
+type DeathDieComponentProps = ContextData & {
 	clearAction: () => void;
-	onChange: () => void;
 }
 interface DeathDieComponentState {
 	playerRoll: { roll: number, class: Class } | undefined;
 }
 
-export class DeathDieComponent extends Component<DeathDieComponentProps, DeathDieComponentState> {
+export const DeathDieComponent = injectContext(class extends Component<DeathDieComponentProps, DeathDieComponentState> {
 
 	/* lifecycle */
 
@@ -91,9 +87,7 @@ export class DeathDieComponent extends Component<DeathDieComponentProps, DeathDi
 			<CallbackComponent registry={this.props.data.diceRoller.rollCallbacks}
 				callback={this.handlePlayerRoll.bind(this)}/>
 			<h3>Druegar's Death Die</h3>
-			<RoomActionButtonListComponent diceRoller={this.props.data.diceRoller}
-				settings={this.props.settings}
-				rollType={{type: "initiative"}}
+			<RoomActionButtonListComponent rollType={{type: "initiative"}}
 				cancelAction={this.props.clearAction}
 				completeAction={this.completeDeathDie.bind(this)}/>
 			<div className="death-die-component">
@@ -118,4 +112,4 @@ export class DeathDieComponent extends Component<DeathDieComponentProps, DeathDi
 			</div>
 		</>;
 	}
-}
+});

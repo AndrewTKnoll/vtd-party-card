@@ -1,6 +1,7 @@
 import React, { Component, ReactNode } from "react";
 import { createPortal } from "react-dom";
 
+import { ContextData, injectContext } from "components/globalContext";
 import { LoginComponent } from "components/loginComponent";
 import { RoomSelectComponent } from "components/controls/roomSelectComponent";
 import { PlayerListComponent } from "components/playerList/playerListComponent";
@@ -8,16 +9,11 @@ import { RoomComponent } from "components/room/roomComponent";
 import { SettingsComponent } from "components/settings/settingsComponent";
 import { CallbackComponent } from "components/widgets/callbackComponent";
 
-import { DataManager } from "model/dataManager";
-import { SettingsManager } from "model/settingsManager";
-
-interface VTDPartyCardComponentProps {
-	data: DataManager;
-	settings: SettingsManager;
+type VTDPartyCardComponentProps = ContextData & {
 	settingsContainer: Element;
 }
 
-export class VTDPartyCardComponent extends Component<VTDPartyCardComponentProps> {
+export const VTDPartyCardComponent = injectContext(class extends Component<VTDPartyCardComponentProps> {
 
 	override componentDidUpdate(prevProps: VTDPartyCardComponentProps) {
 		this.props.data.save();
@@ -36,25 +32,14 @@ export class VTDPartyCardComponent extends Component<VTDPartyCardComponentProps>
 		return <>
 			<CallbackComponent registry={this.props.data.diceRoller.errorCallbacks}
 				callback={this.handleDiceRollerError.bind(this)}/>
-			{createPortal(
-				<SettingsComponent data={this.props.data}
-					settings={this.props.settings}/>,
-				this.props.settingsContainer
-			)}
+			{createPortal(<SettingsComponent/>, this.props.settingsContainer)}
 			{this.props.data.diceRoller.authToken ? <>
-				<PlayerListComponent partyCard={this.props.data.partyCard}
-					currentRoom={this.props.data.currentRoom}
-					onChange={this.forceUpdate.bind(this)}/>
-				<RoomSelectComponent data={this.props.data}
-					onChange={this.forceUpdate.bind(this)}/>
-				<RoomComponent data={this.props.data}
-					settings={this.props.settings}
-					currentRoom={this.props.data.currentRoom}
-					onChange={this.forceUpdate.bind(this)}/>
+				<PlayerListComponent/>
+				<RoomSelectComponent/>
+				<RoomComponent currentRoom={this.props.data.currentRoom}/>
 			</> :
-				<LoginComponent diceRoller={this.props.data.diceRoller}
-					onLogin={this.forceUpdate.bind(this)}/>
+				<LoginComponent/>
 			}
 		</>;
 	}
-}
+});

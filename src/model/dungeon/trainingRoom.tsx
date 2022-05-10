@@ -20,7 +20,6 @@ export class TrainingRoom extends Room {
 	/* data override points */
 
 	override mainSectionNotes(update: () => void): ReactNode {
-		return <SetupComponent data={this.dataManager}
-			onChange={update}/>;
+		return <SetupComponent/>;
 	}
 }

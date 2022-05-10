@@ -1,18 +1,14 @@
 import React, { Component, ReactNode } from "react";
 
+import { ContextData, injectContext } from "components/globalContext";
 import { RoomActionButtonListComponent } from "components/room/roomActionButtonListComponent";
 import { CallbackComponent } from "components/widgets/callbackComponent";
 
-import { DataManager } from "model/dataManager";
-import { SettingsManager } from "model/settingsManager";
 import { Roll } from "model/diceRoller/roll";
 import { InitiativeWinner } from "model/dungeon/room";
 
-interface InitiativeActionComponentProps {
-	data: DataManager;
-	settings: SettingsManager;
+type InitiativeActionComponentProps = ContextData & {
 	clearAction: () => void;
-	onChange: () => void;
 	triggerQuickStrike: (() => void);
 }
 interface InitiativeActionComponentState {
@@ -20,7 +16,7 @@ interface InitiativeActionComponentState {
 	playerRoll: { dieResult: number, total: number } | undefined;
 }
 
-export class InitiativeActionComponent extends Component<InitiativeActionComponentProps, InitiativeActionComponentState> {
+export const InitiativeActionComponent = injectContext(class extends Component<InitiativeActionComponentProps, InitiativeActionComponentState> {
 
 	/* lifecycle */
 
@@ -105,9 +101,7 @@ export class InitiativeActionComponent extends Component<InitiativeActionCompone
 			<CallbackComponent registry={this.props.data.diceRoller.rollCallbacks}
 				callback={this.handlePlayerRoll.bind(this)}/>
 			<h3>Initiative</h3>
-			<RoomActionButtonListComponent diceRoller={this.props.data.diceRoller}
-				settings={this.props.settings}
-				rollType={{type: "initiative"}}
+			<RoomActionButtonListComponent rollType={{type: "initiative"}}
 				cancelAction={this.props.clearAction}
 				completeAction={this.completeInitiative.bind(this, false)}/>
 			<div className="initiative-action-component row">
@@ -133,4 +127,4 @@ export class InitiativeActionComponent extends Component<InitiativeActionCompone
 			</div>
 		</>;
 	}
-}
+});

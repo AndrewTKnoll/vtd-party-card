@@ -1,26 +1,22 @@
 import React, { Component, ReactNode } from "react";
 
+import { ContextData, injectContext } from "components/globalContext";
 import { RoomActionButtonListComponent } from "components/room/roomActionButtonListComponent";
 import { CallbackComponent } from "components/widgets/callbackComponent";
 
-import { DataManager } from "model/dataManager";
-import { SettingsManager } from "model/settingsManager";
 import { DamageType } from "model/attributes/damageType";
 import { Roll } from "model/diceRoller/roll";
 import { Class } from "model/partyCard/class";
 import { PlayerAttackType } from "model/playerAttack/playerAttackType";
 
-interface DivineInterventionComponentProps {
-	data: DataManager;
-	settings: SettingsManager;
+type DivineInterventionComponentProps = ContextData & {
 	clearAction: () => void;
-	onChange: () => void;
 }
 interface DivineInterventionComponentState {
 	playerRoll: number | undefined;
 }
 
-export class DivineInterventionComponent extends Component<DivineInterventionComponentProps, DivineInterventionComponentState> {
+export const DivineInterventionComponent = injectContext(class extends Component<DivineInterventionComponentProps, DivineInterventionComponentState> {
 
 	/* lifecycle */
 
@@ -73,9 +69,7 @@ export class DivineInterventionComponent extends Component<DivineInterventionCom
 			<CallbackComponent registry={this.props.data.diceRoller.rollCallbacks}
 				callback={this.handlePlayerRoll.bind(this)}/>
 			<h3>Divine Intervention</h3>
-			<RoomActionButtonListComponent diceRoller={this.props.data.diceRoller}
-				settings={this.props.settings}
-				rollType={{type: "initiative"}}
+			<RoomActionButtonListComponent rollType={{type: "initiative"}}
 				cancelAction={this.props.clearAction}
 				completeAction={this.completeDivineIntervention.bind(this)}/>
 			<div className="divine-intervention-component">
@@ -120,4 +114,4 @@ export class DivineInterventionComponent extends Component<DivineInterventionCom
 			</div>
 		</>;
 	}
-}
+});

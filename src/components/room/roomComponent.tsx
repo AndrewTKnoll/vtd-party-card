@@ -1,5 +1,6 @@
 import React, { Component, ReactNode, ChangeEvent } from "react";
 
+import { ContextData, injectContext } from "components/globalContext";
 import { DiceRollerControlComponent } from "components/diceRoller/diceRollerControlComponent";
 import { ItemsOfInterestComponent } from "components/room/itemsOfInterestComponent";
 import { MonsterListComponent } from "components/room/monsterListComponent";
@@ -12,8 +13,6 @@ import { RoomActionComponent } from "components/room/actions/roomActionComponent
 import { CollapseComponent } from "components/structure/collapseComponent";
 import { TimerComponent } from "components/widgets/timerComponent";
 
-import { DataManager } from "model/dataManager";
-import { SettingsManager } from "model/settingsManager";
 import { ResetLevel } from "model/attributes/resetLevel";
 import { Room, roomTimeDuration, nameForInitiativeWinner } from "model/dungeon/room";
 import { Class } from "model/partyCard/class";
@@ -24,17 +23,14 @@ const prepTimeRoomOffsetCount = 2;
 
 type ActionType = "playerAttacks" | "quickStrike" | "initiative" | "divineIntervention" | "deathDie" | RoomActionResult;
 
-interface RoomComponentProps {
-	data: DataManager;
-	settings: SettingsManager;
-	currentRoom: Room;
-	onChange: () => void;
+type RoomComponentProps = ContextData & {
+	currentRoom: Room; // keeping a direct reference to detect room changes
 }
 interface RoomComponentState {
 	currentAction: ActionType | undefined;
 }
 
-export class RoomComponent extends Component<RoomComponentProps, RoomComponentState> {
+export const RoomComponent = injectContext(class extends Component<RoomComponentProps, RoomComponentState> {
 
 	constructor(props: RoomComponentProps) {
 		super(props);
@@ -194,8 +190,7 @@ export class RoomComponent extends Component<RoomComponentProps, RoomComponentSt
 				</div>
 				<div className="room-component__monster-col col">
 					<h3>Monsters</h3>
-					<MonsterListComponent room={this.props.currentRoom}
-						onChange={this.props.onChange}/>
+					<MonsterListComponent/>
 				</div>
 			</>}
 			{secondaryColumnNotes &&
@@ -206,37 +201,22 @@ export class RoomComponent extends Component<RoomComponentProps, RoomComponentSt
 			{this.state.currentAction !== undefined &&
 				<div className="room-component__action-col col">
 					{(this.state.currentAction === "playerAttacks" || this.state.currentAction === "quickStrike") &&
-						<PlayerAttackListComponent data={this.props.data}
-							settings={this.props.settings}
-							clearAction={this.setAction.bind(this, undefined)}
-							onChange={this.props.onChange}
+						<PlayerAttackListComponent clearAction={this.setAction.bind(this, undefined)}
 							isQuickStrike={this.state.currentAction === "quickStrike"}/>
 					}
 					{this.state.currentAction instanceof RoomActionResult &&
-						<RoomActionComponent result={this.state.currentAction}
-							settings={this.props.settings}
-							diceRoller={this.props.data.diceRoller}
-							clearAction={this.setAction.bind(this, undefined)}
-							onChange={this.props.onChange}/>
+						<RoomActionComponent clearAction={this.setAction.bind(this, undefined)}
+							result={this.state.currentAction}/>
 					}
 					{this.state.currentAction === "initiative" &&
-						<InitiativeActionComponent data={this.props.data}
-							settings={this.props.settings}
-							clearAction={this.setAction.bind(this, undefined)}
-							onChange={this.props.onChange}
+						<InitiativeActionComponent clearAction={this.setAction.bind(this, undefined)}
 							triggerQuickStrike={this.setAction.bind(this, "quickStrike")}/>
 					}
 					{this.state.currentAction === "divineIntervention" &&
-						<DivineInterventionComponent data={this.props.data}
-							settings={this.props.settings}
-							clearAction={this.setAction.bind(this, undefined)}
-							onChange={this.props.onChange}/>
+						<DivineInterventionComponent clearAction={this.setAction.bind(this, undefined)}/>
 					}
 					{this.state.currentAction === "deathDie" &&
-						<DeathDieComponent data={this.props.data}
-							settings={this.props.settings}
-							clearAction={this.setAction.bind(this, undefined)}
-							onChange={this.props.onChange}/>
+						<DeathDieComponent clearAction={this.setAction.bind(this, undefined)}/>
 					}
 				</div>
 			}
@@ -247,4 +227,4 @@ export class RoomComponent extends Component<RoomComponentProps, RoomComponentSt
 			}
 		</div>;
 	}
-}
+});

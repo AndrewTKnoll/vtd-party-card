@@ -1,11 +1,10 @@
 import React, { Component, ReactNode, ChangeEvent } from "react";
 
+import { ContextData, injectContext } from "components/globalContext";
 import { ItemListSelectComponent, OptionalItemListSelectComponent } from "components/controls/itemListSelectComponent";
 import { RoomActionButtonListComponent } from "components/room/roomActionButtonListComponent";
 import { CallbackComponent } from "components/widgets/callbackComponent";
 
-import { DataManager } from "model/dataManager";
-import { SettingsManager } from "model/settingsManager";
 import { DamageType, allDamageTypes, nameForDamageType } from "model/attributes/damageType";
 import { Roll } from "model/diceRoller/roll";
 import { Monster } from "model/dungeon/monster";
@@ -14,12 +13,9 @@ import { PlayerAttack } from "model/playerAttack/playerAttack";
 import { PlayerAttackCritMultiplier, allPlayerAttackCritMultipliers, nameForPlayerAttackCritMultiplier } from "model/playerAttack/playerAttackCritMultiplier";
 import { PlayerAttackType, allPlayerAttackTypes, nameForPlayerAttackType } from "model/playerAttack/playerAttackType";
 
-interface PlayerAttackListComponentProps {
-	data: DataManager;
-	settings: SettingsManager;
-	isQuickStrike: boolean;
+type PlayerAttackListComponentProps = ContextData & {
 	clearAction: () => void;
-	onChange: () => void;
+	isQuickStrike: boolean;
 }
 interface PlayerAttackListComponentState {
 	attacks: PlayerAttack[];
@@ -29,7 +25,7 @@ function targetLabelForMonster(monster: Monster): string {
 	return monster.name;
 }
 
-export class PlayerAttackListComponent extends Component<PlayerAttackListComponentProps, PlayerAttackListComponentState> {
+export const PlayerAttackListComponent = injectContext(class extends Component<PlayerAttackListComponentProps, PlayerAttackListComponentState> {
 
 	/* lifecycle */
 
@@ -167,9 +163,7 @@ export class PlayerAttackListComponent extends Component<PlayerAttackListCompone
 			<CallbackComponent registry={this.props.data.diceRoller.rollCallbacks}
 				callback={this.handlePlayerRoll.bind(this)}/>
 			<h3>Player Attacks</h3>
-			<RoomActionButtonListComponent diceRoller={this.props.data.diceRoller}
-				settings={this.props.settings}
-				rollType={{type: "attack"}}
+			<RoomActionButtonListComponent rollType={{type: "attack"}}
 				cancelAction={this.props.clearAction}
 				completeAction={this.completeAllAttacks.bind(this)}/>
 			<ul className="player-attack-list">
@@ -261,4 +255,4 @@ export class PlayerAttackListComponent extends Component<PlayerAttackListCompone
 			</ul>
 		</>;
 	}
-}
+});
