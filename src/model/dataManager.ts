@@ -6,7 +6,7 @@ import { Room } from "model/dungeon/room";
 import { Log } from "model/log/log";
 import { PartyCard } from "model/partyCard/partyCard";
 
-import { validate, optional, isObject, isArray } from "utilities/jsonUtils";
+import { JSONValue, validate, optional, isObject, isArray } from "utilities/jsonUtils";
 
 const storageKey = "data";
 const timezoneOffsetScale = 60 * 1000;
@@ -79,8 +79,10 @@ export class DataManager {
 		this.dungeon = new Dungeon(this);
 		this.diceRoller = new DiceRoller(this.log);
 
-		const archive = localStorage.readJSON(storageKey);
+		this.restoreFromArchive(localStorage.readJSON(storageKey));
+	}
 
+	restoreFromArchive(archive: JSONValue | undefined) {
 		if (!isObject(archive)) {
 			return;
 		}
@@ -110,7 +112,11 @@ export class DataManager {
 	}
 
 	save() {
-		localStorage.writeJSON(storageKey, {
+		localStorage.setItem(storageKey, this.generateArchive());
+	}
+
+	generateArchive(): string {
+		return JSON.stringify({
 			dungeon: this.dungeon,
 			partyCard: this.partyCard,
 			diceRoller: this.diceRoller,

@@ -33,6 +33,13 @@ input[type="checkbox"] {
 	margin: 0 0.25rem 0 0;
 }
 
+textarea {
+	min-width: 100%;
+	max-width: 100%;
+	min-height: 100px;
+	margin-bottom: 0.5rem;
+}
+
 img {
 	max-width: 100%;
 }

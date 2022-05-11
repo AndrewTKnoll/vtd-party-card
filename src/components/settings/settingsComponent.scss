@@ -6,10 +6,18 @@
 
 	.col {
 		width: 100%;
+	}
+
+	.settings-component__half-col {
 
 		@include breakpoint-sm() {
 			width: 50%;
 		}
+	}
+
+	.settings-component__button-list {
+		display: flex;
+		justify-content: space-between;
 	}
 
 	.info-box {

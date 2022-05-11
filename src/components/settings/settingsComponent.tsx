@@ -1,10 +1,22 @@
-import React, { Component, ReactNode } from "react";
+import React, { Component, ReactNode, ChangeEvent } from "react";
 
 import { ContextData, injectContext } from "components/globalContext";
 import { ItemListSelectComponent } from "components/controls/itemListSelectComponent";
 import { ModalComponent } from  "components/structure/modalComponent";
 
-export const SettingsComponent = injectContext(class extends Component<ContextData> {
+interface SettingsComponentState {
+	archiveString: string;
+}
+
+export const SettingsComponent = injectContext(class extends Component<ContextData, SettingsComponentState> {
+
+	constructor(props: ContextData) {
+		super(props);
+
+		this.state = {
+			archiveString: ""
+		};
+	}
 
 	private diceRollerBehaviorChanged(newValue: boolean) {
 		this.props.settings.roomActionAutomaticDiceRoller = newValue;
@@ -15,6 +27,32 @@ export const SettingsComponent = injectContext(class extends Component<ContextDa
 		this.props.data.log.exportLog();
 	}
 
+	private copyDataToClipboard() {
+		navigator.clipboard.writeText(this.props.data.generateArchive());
+	}
+
+	private setArchiveString(event: ChangeEvent<HTMLTextAreaElement>) {
+		this.setState({
+			archiveString: event.target.value
+		});
+	}
+
+	private importPartyData() {
+		try {
+			const archive = JSON.parse(this.state.archiveString);
+
+			if (!confirm("Confirm Import")) {
+				return;
+			}
+
+			this.props.data.restoreFromArchive(archive);
+			this.props.onChange();
+		}
+		catch (error) {
+			alert("Invalid Data");
+		}
+	}
+
 	override render(): ReactNode {
 		return <>
 			{this.props.data.diceRoller.authToken ? this.props.data.dungeon.dataVersion : undefined}
@@ -23,7 +61,7 @@ export const SettingsComponent = injectContext(class extends Component<ContextDa
 				openButtonText="Settings"
 				contentClass="settings-component row">
 
-				<div className="col">
+				<div className="settings-component__half-col col">
 					<div className="info-box">
 						<h3>Dice Roller Behavior</h3>
 						<p>Controls if room actions automatically trigger dice roller state changes or not.</p>
@@ -33,7 +71,7 @@ export const SettingsComponent = injectContext(class extends Component<ContextDa
 							onChange={this.diceRollerBehaviorChanged.bind(this)}/>
 					</div>
 				</div>
-				<div className="col">
+				<div className="settings-component__half-col col">
 					<div className="info-box">
 						<h3>Log File</h3>
 						<p>If something weird happens with the dice roller, this file could help figure it out.</p>
@@ -43,6 +81,28 @@ export const SettingsComponent = injectContext(class extends Component<ContextDa
 
 							Download Log File
 						</button>
+					</div>
+				</div>
+				<div className="col">
+					<div className="info-box">
+						<h3>Party Data Export</h3>
+						<p>
+							Export the party card's current state. The text can then be pasted into the box below to import.
+						</p>
+						<div className="settings-component__button-list">
+							<button type="button"
+								onClick={this.copyDataToClipboard.bind(this)}>
+
+								Copy Party Data to Clipboard
+							</button>
+							<button type="button"
+								onClick={this.importPartyData.bind(this)}>
+
+								Read Party Data from Input Box
+							</button>
+						</div>
+						<textarea value={this.state.archiveString}
+							onChange={this.setArchiveString.bind(this)}/>
 					</div>
 				</div>
 			</ModalComponent>
