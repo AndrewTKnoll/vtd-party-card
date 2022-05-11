@@ -73,29 +73,6 @@ export class DataManager {
 		this._startTime = new Date(newValue.getTime() + (offset * timezoneOffsetScale));
 	}
 
-	get skillTestLinks(): string[] {
-		return [
-			"https://truedungeon.com/files/Bard_Skill_Test.pdf",
-			"https://truedungeon.com/files/Cleric_Skill_Test.pdf",
-			"https://truedungeon.com/files/Druid_Skill_Test.pdf",
-			"https://truedungeon.com/files/Wizard_Skill_Test.pdf"
-		];
-	}
-
-	get preEventChecklistItems(): string[] {
-		return [
-			"Difficulty set?",
-			"Party card filled out?",
-			"Bard instrument set?",
-			"Initiative tzar selected?",
-			"Paladin default guard?",
-			"Strict horn reminder",
-			"Adventure codeword entered?",
-			"Dice roller codeword entered?",
-			"Remember to move rooms"
-		];
-	}
-
 	constructor() {
 		this.log = new Log(this);
 

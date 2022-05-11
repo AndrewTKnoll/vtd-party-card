@@ -43,7 +43,12 @@ export const SetupComponent = injectContext(class extends Component<ContextData>
 	}
 
 	private copySkillTestsToClipboard() {
-		navigator.clipboard.writeText(this.props.data.skillTestLinks.join("\n"));
+		navigator.clipboard.writeText([
+			"https://truedungeon.com/files/Bard_Skill_Test.pdf",
+			"https://truedungeon.com/files/Cleric_Skill_Test.pdf",
+			"https://truedungeon.com/files/Druid_Skill_Test.pdf",
+			"https://truedungeon.com/files/Wizard_Skill_Test.pdf"
+		].join("\n"));
 	}
 
 	private copySlotIDToClipboard() {
@@ -190,9 +195,15 @@ export const SetupComponent = injectContext(class extends Component<ContextData>
 				<section className="info-box">
 					<h3>Pre-Event Checklist</h3>
 					<ul>
-						{this.props.data.preEventChecklistItems.map((item, index) => {
-							return <li key={index}>{item}</li>;
-						})}
+						<li>Difficulty set?</li>
+						<li>Party card filled out?</li>
+						<li>Bard instrument set?</li>
+						<li>Initiative tzar selected?</li>
+						<li>Paladin default guard?</li>
+						<li>Strict horn reminder</li>
+						<li>Adventure codeword entered?</li>
+						<li>Dice roller codeword entered?</li>
+						<li>Remember to move rooms</li>
 					</ul>
 				</section>
 			</div>
