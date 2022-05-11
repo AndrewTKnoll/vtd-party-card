@@ -115,7 +115,7 @@ export const PlayerAttackListComponent = injectContext(class extends Component<P
 	private damageAmountChanged(attack: PlayerAttack, damageKey: `${"primary" | "secondary" | "aoe"}DamageAmount`, event: ChangeEvent<HTMLInputElement>) {
 		const newValue = isNaN(event.target.valueAsNumber) ? 0 : Math.round(event.target.valueAsNumber);
 
-		attack[damageKey] = newValue
+		attack[damageKey] = newValue;
 
 		event.target.valueAsNumber = newValue;
 		this.forceUpdate();
