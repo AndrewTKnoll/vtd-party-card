@@ -15,6 +15,8 @@ const endpointUrl = "https://us-central1-tdroller-1ac5a.cloudfunctions.net/gm";
 const socketUrl = "wss://s-usc1f-nss-2561.firebaseio.com/.ws?v=5&ns=tdroller-1ac5a-default-rtdb";
 const socketSdk = "sdk.js.9-4-1";
 
+export const slotIdPattern = /^[a-z,A-Z]{6}$/;
+
 export class DiceRoller {
 	private log: Log;
 
@@ -41,7 +43,9 @@ export class DiceRoller {
 	}
 	set slotId(newValue: string | undefined) {
 		this.listenToSlot(false);
-		this._slotId = newValue;
+		if (!newValue || slotIdPattern.test(newValue)) {
+			this._slotId = newValue;
+		}
 		this.listenToSlot(true);
 
 		if (!this._slotId) {

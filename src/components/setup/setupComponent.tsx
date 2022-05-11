@@ -7,6 +7,7 @@ import { DiceRollerControlComponent } from "components/diceRoller/diceRollerCont
 import { CallbackComponent } from "components/widgets/callbackComponent";
 import { TimerComponent } from "components/widgets/timerComponent";
 
+import { slotIdPattern } from "model/diceRoller/diceRoller";
 import { nameForClass } from "model/partyCard/class";
 import { Player } from "model/partyCard/player";
 import { Difficulty, allDifficulties, nameForDifficulty } from "model/attributes/difficulty";
@@ -153,7 +154,7 @@ export const SetupComponent = injectContext(class extends Component<ContextData>
 							<h3>Run-Specific Settings</h3>
 							<h4>Dice Roller Slot ID:</h4>
 							<ValidatedTextInput value={this.props.data.diceRoller.slotId?.toUpperCase() || ""}
-								validation={/^[a-z,A-Z]{6}$/}
+								validation={slotIdPattern}
 								onChange={this.updateSlotId.bind(this)}/>
 							{this.props.data.diceRoller.slotId !== undefined &&
 								<button type="button"
