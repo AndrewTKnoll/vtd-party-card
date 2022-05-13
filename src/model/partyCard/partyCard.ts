@@ -2,7 +2,7 @@ import { ResetLevel } from "model/attributes/resetLevel";
 import { Class, allClasses } from "model/partyCard/class";
 import { Player } from "model/partyCard/player";
 
-import { JSONValue, isObject, isArray } from "utilities/jsonUtils";
+import { JSONValue, validate, isObject, isArray } from "utilities/jsonUtils";
 
 export class PartyCard {
 	readonly players: Player[] = allClasses.map((classId: Class) => {
@@ -27,10 +27,14 @@ export class PartyCard {
 		})!;
 	}
 
+	initiativeBonus = 0;
+
 	restoreFromArchive(archive: JSONValue | undefined) {
 		if (!isObject(archive)) {
 			return;
 		}
+
+		this.initiativeBonus = validate(archive["initiativeBonus"], this.initiativeBonus);
 
 		const playerArchive = archive["players"];
 		if (!isArray(playerArchive)) {
@@ -46,5 +50,11 @@ export class PartyCard {
 		this.players.forEach((player) => {
 			player.reset(level);
 		});
+
+		if (level !== ResetLevel.full) {
+			return;
+		}
+
+		this.initiativeBonus = 0;
 	}
 }

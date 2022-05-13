@@ -62,6 +62,15 @@ export const SetupComponent = injectContext(class extends Component<ContextData>
 		this.props.onChange();
 	}
 
+	private updateInitiativeBonus(event: ChangeEvent<HTMLInputElement>) {
+		const newValue = isNaN(event.target.valueAsNumber) ? 0 : Math.round(event.target.valueAsNumber);
+
+		this.props.data.partyCard.initiativeBonus = newValue;
+
+		event.target.valueAsNumber = newValue;
+		this.props.onChange();
+	}
+
 	private updateAfterRoll() {
 		this.forceUpdate();
 	}
@@ -109,7 +118,7 @@ export const SetupComponent = injectContext(class extends Component<ContextData>
 				<div className="row">
 					<div className="setup__settings-col col">
 						<section className="info-box">
-							<h3>Settings</h3>
+							<h3>Party Settings</h3>
 							<div className="room-component__info-line">
 								<button type="button"
 									onClick={this.fullReset.bind(this)}>
@@ -152,11 +161,18 @@ export const SetupComponent = injectContext(class extends Component<ContextData>
 									Copy to Clipboard
 								</button>
 							</div>
+							<label className="room-component__info-line">
+								Initiative Bonus:
+								<input type="number"
+									className="setup__initiative-value"
+									value={this.props.data.partyCard.initiativeBonus}
+									onChange={this.updateInitiativeBonus.bind(this)}/>
+							</label>
 						</section>
 					</div>
 					<div className="setup__time-col col">
 						<section className="info-box">
-							<h3>Run-Specific Settings</h3>
+							<h3>Timeslot Settings</h3>
 							<h4>Dice Roller Slot ID:</h4>
 							<ValidatedTextInput value={this.props.data.diceRoller.slotId?.toUpperCase() || ""}
 								validation={slotIdPattern}
