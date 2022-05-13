@@ -2,12 +2,14 @@ export type SocketResponseMessage = StartupSocketResponse | MessageResponseSocke
 
 export function parseResponse(data: any): SocketResponseMessage {
 	return isStartup(data) || isMessageResponse(data) || isStateChange(data) || {
-		type: "unknown"
+		type: "unknown",
+		raw: data
 	};
 }
 
 export interface StartupSocketResponse {
 	type: "startup";
+	raw: any;
 	connectionId: string;
 }
 
@@ -25,12 +27,14 @@ function isStartup(data: any): StartupSocketResponse | undefined {
 
 	return {
 		type: "startup",
+		raw: data,
 		connectionId: data.d.s
 	};
 }
 
 export interface MessageResponseSocketResponse {
 	type: "response";
+	raw: any;
 	requestId: number;
 	status: string;
 }
@@ -46,6 +50,7 @@ function isMessageResponse(data: any): MessageResponseSocketResponse | undefined
 
 	return {
 		type: "response",
+		raw: data,
 		requestId: data.r,
 		status: data.b.s
 	};
@@ -53,6 +58,7 @@ function isMessageResponse(data: any): MessageResponseSocketResponse | undefined
 
 export interface SettingsChangeSocketResponse {
 	type: "settings";
+	raw: any;
 	rollState?: string | undefined;
 	roll?: string | undefined;
 	reveal?: string | undefined;
@@ -62,6 +68,7 @@ export interface SettingsChangeSocketResponse {
 
 export interface RollChangeSocketResponse {
 	type: "roll";
+	raw: any;
 	clear: boolean;
 	rolls: RollChangeData[];
 }
@@ -94,6 +101,7 @@ function isStateChange(data: any): SettingsChangeSocketResponse | RollChangeSock
 	if (data.b.p.includes("/settings")) {
 		return {
 			type: "settings",
+			raw: data,
 			...data.b.d
 		};
 	}
@@ -102,6 +110,7 @@ function isStateChange(data: any): SettingsChangeSocketResponse | RollChangeSock
 		if (!data.b.d) {
 			return {
 				type: "roll",
+				raw: data,
 				clear: true,
 				rolls: []
 			};
@@ -109,6 +118,7 @@ function isStateChange(data: any): SettingsChangeSocketResponse | RollChangeSock
 
 		return {
 			type: "roll",
+			raw: data,
 			clear: false,
 			rolls: Object.keys(data.b.d).map((key) => {
 				return mapRollChangeData(data.b.d[key]);
@@ -119,6 +129,7 @@ function isStateChange(data: any): SettingsChangeSocketResponse | RollChangeSock
 	if (data.b.p.includes("/rolls")) {
 		return {
 			type: "roll",
+			raw: data,
 			clear: false,
 			rolls: [mapRollChangeData(data.b.d)]
 		};
@@ -138,4 +149,5 @@ function mapRollChangeData(data: any): RollChangeData {
 
 export interface UnknownSocketResponse {
 	type: "unknown";
+	raw: any;
 }
