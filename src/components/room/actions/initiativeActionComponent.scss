@@ -3,6 +3,11 @@
 	.initiative-action-component__roll {
 		width: 50%;
 		text-align: center;
+
+		p,
+		label {
+			margin-bottom: 0.5rem;
+		}
 	}
 
 	.initiative-action-component__result {

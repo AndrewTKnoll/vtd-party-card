@@ -1,10 +1,10 @@
-import React, { Component, ReactNode } from "react";
+import React, { Component, ReactNode, ChangeEvent } from "react";
 
 import { ContextData, injectContext } from "components/globalContext";
 import { RoomActionButtonListComponent } from "components/room/roomActionButtonListComponent";
 import { CallbackComponent } from "components/widgets/callbackComponent";
 
-import { Roll } from "model/diceRoller/roll";
+import { Roll, InitiativeRoll } from "model/diceRoller/roll";
 import { InitiativeWinner } from "model/dungeon/room";
 
 type InitiativeActionComponentProps = ContextData & {
@@ -13,7 +13,7 @@ type InitiativeActionComponentProps = ContextData & {
 }
 interface InitiativeActionComponentState {
 	monsterRoll: number;
-	playerRoll: { dieResult: number, total: number } | undefined;
+	playerRoll: PlayerInitiativeRoll | undefined;
 }
 
 export const InitiativeActionComponent = injectContext(class extends Component<InitiativeActionComponentProps, InitiativeActionComponentState> {
@@ -41,11 +41,18 @@ export const InitiativeActionComponent = injectContext(class extends Component<I
 		}
 
 		this.setState({
-			playerRoll: {
-				dieResult: roll.dieResult,
-				total: roll.modifiedResult
-			}
+			playerRoll: new PlayerInitiativeRoll(
+				roll,
+				this.props.settings.checkInitiativeBonus ? this.props.data.partyCard.initiativeBonus : undefined
+			)
 		});
+	}
+
+	private alertnessChanged(event: ChangeEvent<HTMLInputElement>) {
+		if (this.state.playerRoll) {
+			this.state.playerRoll.alertness = event.target.checked;
+			this.forceUpdate();
+		}
 	}
 
 	private completeInitiative(quickStrike: boolean) {
@@ -107,11 +114,19 @@ export const InitiativeActionComponent = injectContext(class extends Component<I
 			<div className="initiative-action-component row">
 				<div className="initiative-action-component__roll col">
 					<h4>Monster Roll</h4>
-					{`${this.monsterTotal} (${this.state.monsterRoll})`}
+					<p>{`${this.monsterTotal} (${this.state.monsterRoll})`}</p>
 				</div>
 				<div className="initiative-action-component__roll col">
 					<h4>Player Roll</h4>
-					{this.state.playerRoll ? `${this.state.playerRoll.total} (${this.state.playerRoll.dieResult})` : "?? (??)"}
+					<p>{`${this.state.playerRoll?.total ?? "??"} (${this.state.playerRoll?.dieResult ?? "??"})`}</p>
+					{this.state.playerRoll !== undefined &&
+						<label>
+							<input type="checkbox"
+								checked={this.state.playerRoll.alertness}
+								onChange={this.alertnessChanged.bind(this)}/>
+							Alertness
+						</label>
+					}
 				</div>
 				<div className="initiative-action-component__result">
 					{this.resultText()}
@@ -128,3 +143,28 @@ export const InitiativeActionComponent = injectContext(class extends Component<I
 		</>;
 	}
 });
+
+class PlayerInitiativeRoll {
+	dieResult: number;
+	private modifier: number;
+	alertness: boolean;
+
+	get total(): number {
+		return this.dieResult + this.modifier + (this.alertness ? 10 : 0);
+	}
+
+	constructor(roll: InitiativeRoll, partyModifier: number | undefined) {
+		this.dieResult = roll.dieResult;
+		this.modifier = roll.modifiedResult - roll.dieResult;
+		this.alertness = false;
+
+		if (this.modifier > 10) {
+			this.modifier -= 10;
+			this.alertness = true;
+		}
+
+		if (partyModifier !== undefined) {
+			this.modifier = partyModifier;
+		}
+	}
+}
