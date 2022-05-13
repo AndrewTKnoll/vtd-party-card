@@ -45,13 +45,16 @@ interface RoomConstructorParams {
 	dataManager: DataManager;
 	name: string;
 	id: string;
-	idIsStandalone?: boolean;
-	initiativeBonus?: { [key: string]: number};
-	pushDamageType?: string;
-	hasInfoColumn?: boolean;
-	hideRoomTimer?: boolean;
-	hideDefaultPushDamage?: boolean;
-	hasRogueTreasure?: boolean;
+	idIsStandalone?: boolean | undefined;
+	initiativeBonus?: { [key: string]: number} | undefined;
+	pushDamageType?: string | undefined;
+	hasInfoColumn?: boolean | undefined;
+	hideRoomTimer?: boolean | undefined;
+	hideDefaultPushDamage?: boolean | undefined;
+	hasRogueTreasure?: boolean | undefined;
+	statBlocks?: StatBlock[] | undefined;
+	tokensOfInterest?: ItemOfInterest[] | undefined;
+	spellsOfInterest?: ItemOfInterest[] | undefined;
 }
 
 export class Room {
@@ -89,6 +92,10 @@ export class Room {
 	readonly hasRogueTreasure: boolean;
 	rogueTookTreasure = false;
 
+	readonly statBlocks: StatBlock[];
+	readonly tokensOfInterest: ItemOfInterest[];
+	readonly spellsOfInterest: ItemOfInterest[];
+
 	/* lifecycle */
 
 	constructor(params: RoomConstructorParams) {
@@ -111,6 +118,10 @@ export class Room {
 		this.hideDefaultPushDamage = params.hideDefaultPushDamage ?? false;
 
 		this.hasRogueTreasure = params.hasRogueTreasure ?? false;
+
+		this.statBlocks = params.statBlocks ?? [];
+		this.tokensOfInterest = params.tokensOfInterest ?? [];
+		this.spellsOfInterest = params.spellsOfInterest ?? [];
 	}
 
 	restoreFromArchive(archive: JSONValue | undefined) {
@@ -143,10 +154,6 @@ export class Room {
 		return [];
 	}
 
-	get statBlocks(): StatBlock[] {
-		return [];
-	}
-
 	defaultTargetForPlayer(player: Player): Monster {
 		let targets = this.monsters.filter((monster) => {
 			return monster.isAlive;
@@ -155,14 +162,6 @@ export class Room {
 			targets = this.monsters;
 		}
 		return targets[0];
-	}
-
-	get tokensOfInterest(): ItemOfInterest[] {
-		return [];
-	}
-
-	get spellsOfInterest(): ItemOfInterest[] {
-		return [];
 	}
 
 	infoColumnNotes(update: () => void): ReactNode {
