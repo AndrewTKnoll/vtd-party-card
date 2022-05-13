@@ -41,7 +41,10 @@ export const InitiativeActionComponent = injectContext(class extends Component<I
 		}
 
 		this.setState({
-			playerRoll: new PlayerInitiativeRoll(roll, this.props.data.partyCard.initiativeBonus)
+			playerRoll: new PlayerInitiativeRoll(
+				roll,
+				this.props.settings.checkInitiativeBonus ? this.props.data.partyCard.initiativeBonus : undefined
+			)
 		});
 	}
 
@@ -150,7 +153,7 @@ class PlayerInitiativeRoll {
 		return this.dieResult + this.modifier + (this.alertness ? 10 : 0);
 	}
 
-	constructor(roll: InitiativeRoll, partyModifier: number) {
+	constructor(roll: InitiativeRoll, partyModifier: number | undefined) {
 		this.dieResult = roll.dieResult;
 		this.modifier = roll.modifiedResult - roll.dieResult;
 		this.alertness = false;
@@ -160,6 +163,8 @@ class PlayerInitiativeRoll {
 			this.alertness = true;
 		}
 
-		this.modifier = partyModifier;
+		if (partyModifier !== undefined) {
+			this.modifier = partyModifier;
+		}
 	}
 }

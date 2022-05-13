@@ -161,13 +161,15 @@ export const SetupComponent = injectContext(class extends Component<ContextData>
 									Copy to Clipboard
 								</button>
 							</div>
-							<label className="room-component__info-line">
-								Initiative Bonus:
-								<input type="number"
-									className="setup__initiative-value"
-									value={this.props.data.partyCard.initiativeBonus}
-									onChange={this.updateInitiativeBonus.bind(this)}/>
-							</label>
+							{this.props.settings.checkInitiativeBonus &&
+								<label className="room-component__info-line">
+									Initiative Bonus:
+									<input type="number"
+										className="setup__initiative-value"
+										value={this.props.data.partyCard.initiativeBonus}
+										onChange={this.updateInitiativeBonus.bind(this)}/>
+								</label>
+							}
 						</section>
 					</div>
 					<div className="setup__time-col col">

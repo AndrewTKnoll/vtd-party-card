@@ -18,9 +18,9 @@ export const SettingsComponent = injectContext(class extends Component<ContextDa
 		};
 	}
 
-	private diceRollerBehaviorChanged(newValue: boolean) {
-		this.props.settings.roomActionAutomaticDiceRoller = newValue;
-		this.forceUpdate();
+	private settingUpdated(setting: "roomActionAutomaticDiceRoller" | "checkInitiativeBonus", newValue: boolean) {
+		this.props.settings[setting] = newValue;
+		this.props.onChange();
 	}
 
 	private downloadLogFile() {
@@ -68,7 +68,17 @@ export const SettingsComponent = injectContext(class extends Component<ContextDa
 						<ItemListSelectComponent items={[true, false]}
 							labelForItem={diceRollerBehaviorLabel}
 							selectedItem={this.props.settings.roomActionAutomaticDiceRoller}
-							onChange={this.diceRollerBehaviorChanged.bind(this)}/>
+							onChange={this.settingUpdated.bind(this, "roomActionAutomaticDiceRoller")}/>
+					</div>
+				</div>
+				<div className="settings-component__half-col col">
+					<div className="info-box">
+						<h3>Check Initiative Bonus</h3>
+						<p>Controls if the bonus on initiative rolls is double-checked against the set value.</p>
+						<ItemListSelectComponent items={[true, false]}
+							labelForItem={checkInitiativeBonusLabel}
+							selectedItem={this.props.settings.checkInitiativeBonus}
+							onChange={this.settingUpdated.bind(this, "checkInitiativeBonus")}/>
 					</div>
 				</div>
 				<div className="settings-component__half-col col">
@@ -112,4 +122,8 @@ export const SettingsComponent = injectContext(class extends Component<ContextDa
 
 function diceRollerBehaviorLabel(isAutomatic: boolean): string {
 	return isAutomatic ? "Automatic" : "Manual";
+}
+
+function checkInitiativeBonusLabel(isChecked: boolean): string {
+	return isChecked ? "Check the Bonus" : "Trust the Roll";
 }

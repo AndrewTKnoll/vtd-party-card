@@ -12,6 +12,15 @@ export class SettingsManager {
 		this.save();
 	}
 
+	private _checkInitiativeBonus = true;
+	get checkInitiativeBonus(): boolean {
+		return this._checkInitiativeBonus;
+	}
+	set checkInitiativeBonus(newValue: boolean) {
+		this._checkInitiativeBonus = newValue;
+		this.save();
+	}
+
 	constructor() {
 		const archive = localStorage.readJSON(storageKey);
 
@@ -20,11 +29,13 @@ export class SettingsManager {
 		}
 
 		this._roomActionAutomaticDiceRoller = validate(archive["roomActionAutomaticDiceRoller"], this._roomActionAutomaticDiceRoller);
+		this._checkInitiativeBonus = validate(archive["checkInitiativeBonus"], this._checkInitiativeBonus);
 	}
 
 	private save() {
 		localStorage.writeJSON(storageKey, {
-			roomActionAutomaticDiceRoller: this._roomActionAutomaticDiceRoller
+			roomActionAutomaticDiceRoller: this._roomActionAutomaticDiceRoller,
+			checkInitiativeBonus: this._checkInitiativeBonus
 		});
 	}
 }
