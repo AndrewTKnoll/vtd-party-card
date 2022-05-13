@@ -76,7 +76,19 @@ export class DataManager {
 	constructor() {
 		this.log = new Log(this);
 
-		this.dungeon = new Dungeon(this);
+		this.dungeon = new Dungeon({
+			dataManager: this,
+			dataVersion: "",
+			rooms: [],
+			eventPasswords: {
+				[Difficulty.normal]: "",
+				[Difficulty.hardcore]: "",
+				[Difficulty.nightmare]: "",
+				[Difficulty.epic]: ""
+			},
+			timezoneOffset: 0,
+			introVideoLength: 0
+		});
 		this.diceRoller = new DiceRoller(this.log);
 
 		this.restoreFromArchive(localStorage.readJSON(storageKey));

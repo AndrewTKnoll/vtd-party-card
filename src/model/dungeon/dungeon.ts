@@ -8,8 +8,38 @@ import { PartyCard } from "model/partyCard/partyCard";
 
 import { JSONValue, isObject, isArray } from "utilities/jsonUtils";
 
+interface DungeonConstructorParams {
+	dataManager: DataManager;
+	dataVersion: string;
+	rooms: Room[][];
+	eventPasswords: Record<Difficulty, string>;
+	timezoneOffset: number;
+	recapVideoLength?: number | undefined;
+	introVideoLength: number;
+}
+
 export class Dungeon {
+	readonly dataVersion: string;
 	readonly rooms: Room[][];
+	readonly eventPasswords: Record<Difficulty, string>;
+	readonly timezoneOffset: number;
+	readonly recapVideoLength: number | undefined;
+	readonly introVideoLength: number;
+
+	constructor(params: DungeonConstructorParams) {
+		this.dataVersion = params.dataVersion;
+
+		this.rooms = [
+			[new TrainingRoom(params.dataManager)],
+			...params.rooms,
+			[new EpilogueRoom(params.dataManager)]
+		];
+
+		this.eventPasswords = params.eventPasswords;
+		this.timezoneOffset = params.timezoneOffset;
+		this.recapVideoLength = params.recapVideoLength;
+		this.introVideoLength = params.introVideoLength;
+	}
 
 	restoreFromArchive(archive: JSONValue | undefined) {
 		if (!isObject(archive)) {
@@ -37,37 +67,6 @@ export class Dungeon {
 		return {
 			rooms: this.rooms
 		};
-	}
-
-	get dataVersion(): string {
-		return "";
-	}
-
-	get eventPasswords(): Record<Difficulty, string> {
-		return {
-			[Difficulty.normal]: "",
-			[Difficulty.hardcore]: "",
-			[Difficulty.nightmare]: "",
-			[Difficulty.epic]: ""
-		};
-	}
-
-	get timezoneOffset(): number {
-		return 0;
-	}
-	get recapVideoLength(): number | undefined {
-		return undefined;
-	}
-	get introVideoLength(): number {
-		return 0;
-	}
-
-	constructor(dataManager: DataManager, rooms: Room[][] = []) {
-		this.rooms = [
-			[new TrainingRoom(dataManager)],
-			...rooms,
-			[new EpilogueRoom(dataManager)]
-		];
 	}
 
 	reset(level: ResetLevel, party: PartyCard) {
