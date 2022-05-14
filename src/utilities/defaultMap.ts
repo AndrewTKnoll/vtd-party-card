@@ -2,7 +2,7 @@ import { JSONValue, isObject } from "utilities/jsonUtils";
 
 export class DefaultMap<KeyType extends keyof any, Type> {
 	private defaultValue: Type;
-	private values: { [key: string]: Type | undefined };
+	private values: { [key: string]: Type };
 
 	constructor(defaultValue: Type, initialValues: { [key: string]: Type } = {}) {
 		this.defaultValue = defaultValue;
