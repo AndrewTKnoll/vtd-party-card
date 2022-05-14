@@ -5,6 +5,7 @@ import { DefaultMap } from "utilities/defaultMap";
 
 interface StatBlockItemData {
 	readonly label: string;
+	readonly id?: string | undefined;
 	readonly numericValue?: number | { [key: string]: number } | undefined;
 	readonly value?: string | ((number: number) => string) | { [key: string]: string } | undefined;
 }
@@ -20,12 +21,19 @@ export class StatBlock {
 			return new StatBlockItem(dataManager, itemData);
 		});
 	}
+
+	get(identifier: string): StatBlockItem | undefined {
+		return this.items.find((item) => {
+			return item.id === identifier;
+		});
+	}
 }
 
-class StatBlockItem {
+export class StatBlockItem {
 	private dataManager: DataManager;
 
 	readonly label: string;
+	readonly id: string | undefined;
 
 	private _numericValue: number | DefaultMap<Difficulty, number> | undefined;
 	get numericValue(): number {
