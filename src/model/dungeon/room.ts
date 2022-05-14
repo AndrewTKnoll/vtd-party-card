@@ -4,7 +4,7 @@ import { DataManager } from "model/dataManager";
 import { Difficulty } from "model/attributes/difficulty";
 import { ResetLevel } from "model/attributes/resetLevel";
 import { Monster } from "model/dungeon/monster";
-import { StatBlock } from "model/dungeon/statBlock";
+import { StatBlock, StatBlockItem } from "model/dungeon/statBlock";
 import { PartyCard } from "model/partyCard/partyCard";
 import { Player } from "model/partyCard/player";
 import { PlayerAttack } from "model/playerAttack/playerAttack";
@@ -13,6 +13,7 @@ import { RoomAction } from "model/roomAction/roomAction";
 import { DefaultMap } from "utilities/defaultMap";
 import { JSONValue, validate, optional, isObject } from "utilities/jsonUtils";
 
+export const initiativeStatBlockId = "room initiative values";
 export const roomTimeDuration = 12 * 60 * 1000;
 
 export enum InitiativeWinner {
@@ -46,7 +47,6 @@ interface RoomConstructorParams {
 	name: string;
 	id: string;
 	idIsStandalone?: boolean | undefined;
-	initiativeBonus?: { [key: string]: number} | undefined;
 	pushDamageType?: string | undefined;
 	hasInfoColumn?: boolean | undefined;
 	hideRoomTimer?: boolean | undefined;
@@ -71,9 +71,9 @@ export class Room {
 		return this.dataManager.difficulty;
 	}
 
-	private initiativeValues: DefaultMap<Difficulty, number>;
+	private initiativeValues: StatBlockItem | undefined;
 	get initiativeBonus(): number {
-		return this.initiativeValues.get(this.difficulty);
+		return this.initiativeValues?.numericValue ?? 0;
 	}
 	initiativeWinner: InitiativeWinner | undefined = undefined;
 
@@ -105,12 +105,6 @@ export class Room {
 		this.id = params.id;
 		this.idIsStandalone = params.idIsStandalone ?? false;
 
-		this.initiativeValues = new DefaultMap(0, params.initiativeBonus ?? {
-			[Difficulty.hardcore]: 5,
-			[Difficulty.nightmare]: 10,
-			[Difficulty.epic]: 15
-		});
-
 		this.pushDamageType = params.pushDamageType ?? "";
 
 		this.hasInfoColumn = params.hasInfoColumn ?? true;
@@ -122,6 +116,10 @@ export class Room {
 		this.statBlocks = params.statBlocks ?? [];
 		this.tokensOfInterest = params.tokensOfInterest ?? [];
 		this.spellsOfInterest = params.spellsOfInterest ?? [];
+
+		this.initiativeValues = this.statBlocks.reduce((item: StatBlockItem | undefined, statBlock) => {
+			return item ?? statBlock.get(initiativeStatBlockId);
+		}, undefined);
 	}
 
 	restoreFromArchive(archive: JSONValue | undefined) {
