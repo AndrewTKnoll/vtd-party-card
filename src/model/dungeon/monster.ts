@@ -1,7 +1,7 @@
 import { DataManager } from "model/dataManager";
 import { DamageType } from "model/attributes/damageType";
-import { Difficulty } from "model/attributes/difficulty";
 import { ResetLevel } from "model/attributes/resetLevel";
+import { StatBlockItem } from "model/dungeon/statBlock";
 import { Class } from "model/partyCard/class";
 import { Player } from "model/partyCard/player";
 import { PlayerAttackCritMultiplier } from "model/playerAttack/playerAttackCritMultiplier";
@@ -41,9 +41,9 @@ export class Monster {
 		this._currentDamage = newValue < 0 ? 0 : newValue;
 	}
 
-	private maxHPValues: DefaultMap<Difficulty, number>;
+	readonly maxHPValues: StatBlockItem;
 	get maxHP(): number {
-		return this.maxHPValues.get(this.dataManager.difficulty);
+		return this.maxHPValues.numericValue;
 	}
 
 	get isAlive(): boolean {
@@ -55,11 +55,11 @@ export class Monster {
 		return true;
 	}
 
-	constructor(dataManager: DataManager, name: string, maxHP: { [key: string]: number }) {
+	constructor(dataManager: DataManager, name: string, maxHP: StatBlockItem) {
 		this.dataManager = dataManager;
 
 		this.name = name;
-		this.maxHPValues = new DefaultMap(0, maxHP);
+		this.maxHPValues = maxHP;
 	}
 
 	restoreFromArchive(archive: JSONValue | undefined) {
@@ -130,7 +130,7 @@ export class SharedHealthMonster extends Monster {
 	}
 
 	constructor(name: string, sharedHealth: Monster) {
-		super(sharedHealth.dataManager, name, {});
+		super(sharedHealth.dataManager, name, sharedHealth.maxHPValues);
 
 		this.sharedHealth = sharedHealth;
 	}
