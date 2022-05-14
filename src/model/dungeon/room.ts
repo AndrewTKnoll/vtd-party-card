@@ -67,10 +67,6 @@ export class Room {
 	readonly id: string;
 	readonly idIsStandalone: boolean;
 
-	get difficulty(): Difficulty {
-		return this.dataManager.difficulty;
-	}
-
 	private initiativeValues: StatBlockItem | undefined;
 	get initiativeBonus(): number {
 		return this.initiativeValues?.numericValue ?? 0;
@@ -80,9 +76,9 @@ export class Room {
 	private pushDamageType: string;
 	get pushDamage(): string {
 		if (this.pushDamageType) {
-			return `${pushDamage.get(this.difficulty)} ${this.pushDamageType}`;
+			return `${pushDamage.get(this.dataManager.difficulty)} ${this.pushDamageType}`;
 		}
-		return `${pushDamage.get(this.difficulty)}`;
+		return `${pushDamage.get(this.dataManager.difficulty)}`;
 	}
 
 	readonly hasInfoColumn: boolean;

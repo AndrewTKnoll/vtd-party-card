@@ -49,7 +49,7 @@ export class EpilogueRoom extends Room {
 		return <>
 			<div className="room-component__info-line">
 				<span>Difficulty:</span>
-				<span>{nameForDifficulty(this.difficulty)}</span>
+				<span>{nameForDifficulty(this.dataManager.difficulty)}</span>
 			</div>
 			<div className="room-component__info-line">
 				<span>Rogue treasures taken:</span>
