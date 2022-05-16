@@ -194,7 +194,7 @@ export class Room {
 	beforePlayerAttackCompletes(attack: PlayerAttack) {}
 }
 
-const pushDamage = new DefaultMap(0, {
+export const pushDamage = new DefaultMap(0, {
 	[Difficulty.normal]: 6,
 	[Difficulty.hardcore]: 9,
 	[Difficulty.nightmare]: 15,
