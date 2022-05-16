@@ -144,15 +144,28 @@ export const RoomActionComponent = injectContext(class extends Component<RoomAct
 	}
 
 	override render(): ReactNode {
+		let rollType = undefined;
+
+		if (this.props.result.action.associatedSave) {
+			this.props.result.attacks.forEach((attack) => {
+				if (attack instanceof MonsterSaveAttack && attack.save === this.props.result.action.associatedSave) {
+					rollType = {
+						type: "save",
+						save: this.props.result.action.associatedSave
+					};
+				}
+			});
+		}
+
 		return <>
 			<CallbackComponent registry={this.props.data.diceRoller.rollCallbacks}
 				callback={this.handlePlayerRoll.bind(this)}/>
 			<h3>{this.props.result.action.name}</h3>
-			<RoomActionButtonListComponent rollType={this.props.result.action.associatedSave !== undefined ? { type: "save", save: this.props.result.action.associatedSave } : undefined}
+			<RoomActionButtonListComponent rollType={rollType}
 				cancelAction={this.props.clearAction}
 				completeAction={this.completeRoomAction.bind(this)}/>
 			<ul className="room-action-result-list">
-				{this.props.result?.attacks.map((attack, index) => {
+				{this.props.result.attacks.map((attack, index) => {
 					return <li key={index}
 						className="room-action-result-list__attack row">
 
