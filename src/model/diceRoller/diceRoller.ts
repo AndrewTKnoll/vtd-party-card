@@ -12,7 +12,7 @@ import { JSONValue, optional, isObject } from "utilities/jsonUtils";
 const authTokenStorageKey = "diceRollerAuthToken";
 
 const endpointUrl = "https://us-central1-tdroller-1ac5a.cloudfunctions.net/gm";
-const socketUrl = "wss://s-usc1f-nss-2550.firebaseio.com/.ws?v=5&ns=tdroller-1ac5a-default-rtdb";
+const socketUrl = "wss://s-usc1f-nss-2549.firebaseio.com/.ws?v=5&ns=tdroller-1ac5a-default-rtdb";
 const socketSdk = "sdk.js.9-4-1";
 
 export const slotIdPattern = /^[a-z,A-Z]{6}$/;
