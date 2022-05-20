@@ -11,7 +11,7 @@ export function checkTaunt<T>(monster: Monster, party: PartyCard, generator: (dw
 		dwarf.isGuarded = false;
 	}
 
-	const result = generator(monster.isTaunted ? [dwarf] : []);
+	const result = generator((monster.isTaunted && dwarf.isActive) ? [dwarf] : []);
 
 	dwarf.isGuarded = guarded;
 
